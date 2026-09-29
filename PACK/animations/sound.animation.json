@@ -1,0 +1,31 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.sound.battle.easy.animation": {
+      "animation_length": 40.5,
+      "sound_effects": {
+        "0.0": {
+          "effect": "bgm.battle.a"
+        },
+        "6.0": {
+          "effect": "bgm.battle.b"
+        },
+        "14.0": {
+          "effect": "bgm.battle.c"
+        },
+        "23.0": {
+          "effect": "bgm.battle.d"
+        }
+      }
+    },
+    "animation.sound.battle.easy.loop": {
+      "loop": true,
+      "animation_length": 15.75,
+      "sound_effects": {
+        "0.0": {
+          "effect": "bgm.battle.d.loop"
+        }
+      }
+    }
+  }
+}

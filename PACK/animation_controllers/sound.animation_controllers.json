@@ -1,0 +1,89 @@
+{
+  "format_version": "1.10.0",
+  "animation_controllers": {
+    "controller.animation.player_bgm": {
+      "initial_state": "default",
+      "states": {
+        "default": {
+          "on_entry": [
+            "variable.music_state = variable.music_state;",
+            "variable.music_lock = variable.music_lock;"
+          ],
+          "transitions": [
+            {
+              "play_music": "query.has_target && query.in_range(query.distance_from_camera, 0, 32) && variable.music_state == 0 && variable.music_lock == 0"
+            },
+            {
+              "reset_lock": "variable.music_lock == 1 && (!query.has_target || !query.in_range(query.distance_from_camera, 0, 32) || query.health <= 0)"
+            }
+          ],
+          "sound_effects": [
+            {
+              "effect": "debug2"
+            }
+          ]
+        },
+        "reset_lock": {
+          "on_entry": [
+            "variable.music_lock = 0;",
+            "variable.music_state = 0;"
+          ],
+          "sound_effects": [
+            {
+              "effect": "debug_reset"
+            }
+          ],
+          "transitions": [
+            {
+              "default": "1.0"
+            }
+          ]
+        },
+        "play_music": {
+          "on_entry": [
+            "variable.music_state = 1;",
+            "variable.music_lock = 1;"
+          ],
+          "animations": [
+            "sound.battle.easy.animation"
+          ],
+          "transitions": [
+            {
+              "maintain_battle": "query.anim_time >= 40.5"
+            },
+            {
+              "reset_lock": "!query.has_target || query.health <= 0"
+            }
+          ],
+          "sound_effects": [
+            {
+              "effect": "debug3"
+            }
+          ]
+        },
+        "maintain_battle": {
+          "on_entry": [
+            "variable.music_state = 2;"
+          ],
+          "animations": [
+            "sound.battle.easy.loop"
+          ],
+          "on_exit": [
+            "variable.music_state = 0;",
+            "variable.music_lock = 0;"
+          ],
+          "sound_effects": [
+            {
+              "effect": "debug4"
+            }
+          ],
+          "transitions": [
+            {
+              "reset_lock": "!query.has_target || !query.in_range(query.distance_from_camera, 0, 32) || query.health <= 0"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

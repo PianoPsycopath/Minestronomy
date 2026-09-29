@@ -1,0 +1,26 @@
+{
+	"format_version": "1.10.0",
+	"animation_controllers": {
+		"controller.animation.calendar.root": {
+			"initial_state": "default",
+			"states": {
+				"default": {
+					"animations": [
+						{
+							"calendar_follow_head": "variable.calendar_enabled"
+						}
+					]
+				}
+			}
+		},
+		
+        "controller.animation.calendar_fix": {
+            "initial_state": "default",
+            "states": {
+                "default": {
+                    "animations": [ "calendar_no_bob_anim" ]
+                }
+            }
+        }
+	}
+}

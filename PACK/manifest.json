@@ -1,0 +1,18 @@
+{
+    "format_version": 2,
+    "header": {
+        "description": "Vanilla Villagers Talk 1.2.2",
+        "name": "Vanilla Villagers Talk",
+        "uuid": "31f709be-0440-4fb6-bee5-c4d1548befdc",
+        "version": [1, 2, 2],
+        "min_engine_version": [ 1, 21, 80 ]
+    },
+    "modules": [
+        {
+            "description": "Vanilla Villagers Talk 1.2.2",
+            "type": "resources",
+            "uuid": "242574ec-adac-4e6b-93b4-2fde57e1b02a",
+            "version": [1, 2 , 1]
+        }
+    ]
+}

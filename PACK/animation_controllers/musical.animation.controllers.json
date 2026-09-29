@@ -1,0 +1,16 @@
+{
+    "format_version": "1.10.0",
+    "animation_controllers": {
+        
+        "controller.animation.player.musical_root": {
+            "initial_state": "first_person",
+            "states": {
+                "first_person": {
+                    "animations": [
+                        "first_person_musical_pose"
+                    ]
+                }
+            }
+        }
+    }
+}

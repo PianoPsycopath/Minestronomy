@@ -1,0 +1,13 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.star_field.new": {
+			"loop": true,
+			"bones": {
+				"axial_tilt": {
+					"rotation": [0, -120, 0]
+				}
+			}
+		}
+	}
+}

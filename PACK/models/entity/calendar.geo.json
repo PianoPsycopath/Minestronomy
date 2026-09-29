@@ -1,0 +1,313 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.calendar.year_ones",
+				"texture_width": 416,
+				"texture_height": 384,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 3,
+				"visible_bounds_offset": [0, 0, 0]
+			},
+			"bones": [
+				{ "name": "head", "pivot": [0, 24, 0] },
+				{ "name": "head_no_bob", "parent": "head", "pivot": [0, 24, 0], "rotation": [0, 0, 0] },
+				{ "name": "calendar_root", "parent": "head_no_bob", "pivot": [0, 24, 0], "rotation": [0, 0, 0] },
+				{
+					"name": "calendar_year_ones",
+					"parent": "calendar_root",
+					"pivot": [0, 24, 0],
+					"rotation": [0, 0, 0],
+					"cubes": [{ "origin": [7.25, 32.5, -8], "size": [0.36, 0.36, 0], "uv": { "south": { "uv": [0, 0], "uv_size": [32, 32] } } }]
+				}
+			]
+		},
+		{
+			"description": {
+				"identifier": "geometry.calendar.year_tens",
+				"texture_width": 416,
+				"texture_height": 384,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 3,
+				"visible_bounds_offset": [0, 0, 0]
+			},
+			"bones": [
+				{ "name": "head", "pivot": [0, 24, 0] },
+				{ "name": "head_no_bob", "parent": "head", "pivot": [0, 24, 0], "rotation": [0, 0, 0] },
+				{ "name": "calendar_root", "parent": "head_no_bob", "pivot": [0, 24, 0], "rotation": [0, 0, 0] },
+				{
+					"name": "calendar_year_tens",
+					"parent": "calendar_root",
+					"pivot": [0, 24, 0],
+					"rotation": [0, 0, 0],
+					"cubes": [{ "origin": [7.5, 32.5, -8], "size": [0.36, 0.36, 0], "uv": { "south": { "uv": [0, 0], "uv_size": [32, 32] } } }]
+				}
+			]
+		},
+		{
+			"description": {
+				"identifier": "geometry.calendar.year_hundreds",
+				"texture_width": 416,
+				"texture_height": 384,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 3,
+				"visible_bounds_offset": [0, 0, 0]
+			},
+			"bones": [
+				{ "name": "head", "pivot": [0, 24, 0] },
+				{ "name": "head_no_bob", "parent": "head", "pivot": [0, 24, 0], "rotation": [0, 0, 0] },
+				{ "name": "calendar_root", "parent": "head_no_bob", "pivot": [0, 24, 0], "rotation": [0, 0, 0] },
+				{
+					"name": "calendar_year_hundreds",
+					"parent": "calendar_root",
+					"pivot": [0, 24, 0],
+					"rotation": [0, 0, 0],
+					"cubes": [{ "origin": [7.75, 32.5, -8], "size": [0.36, 0.36, 0], "uv": { "south": { "uv": [0, 0], "uv_size": [32, 32] } } }]
+				}
+			]
+		},
+		{
+			"description": {
+				"identifier": "geometry.calendar.year_thousands",
+				"texture_width": 416,
+				"texture_height": 384,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 3,
+				"visible_bounds_offset": [0, 0, 0]
+			},
+			"bones": [
+				{ "name": "head", "pivot": [0, 24, 0] },
+				{ "name": "head_no_bob", "parent": "head", "pivot": [0, 24, 0], "rotation": [0, 0, 0] },
+				{ "name": "calendar_root", "parent": "head_no_bob", "pivot": [0, 24, 0], "rotation": [0, 0, 0] },
+				{
+					"name": "calendar_year_thousands",
+					"parent": "calendar_root",
+					"pivot": [0, 24, 0],
+					"rotation": [0, 0, 0],
+					"cubes": [{ "origin": [8, 32.5, -8], "size": [0.36, 0.36, 0], "uv": { "south": { "uv": [0, 0], "uv_size": [32, 32] } } }]
+				}
+			]
+		},
+		{
+			"description": {
+				"identifier": "geometry.calendar.month",
+				"texture_width": 416,
+				"texture_height": 384,
+				"visible_bounds_width": 6,
+				"visible_bounds_height": 3,
+				"visible_bounds_offset": [0, 0, 0]
+			},
+			"bones": [
+				{ "name": "head", "pivot": [0, 24, 0] },
+				{ "name": "head_no_bob", "parent": "head", "pivot": [0, 24, 0], "rotation": [0, 0, 0] },
+				{ "name": "calendar_root", "parent": "head_no_bob", "pivot": [0, 24, 0], "rotation": [0, 0, 0] },
+				{
+					"name": "calendar_month",
+					"parent": "calendar_root",
+					"pivot": [0, 24, 0],
+					"rotation": [0, 0, 0],
+					"cubes": [{ "origin": [5, 32.5, -8], "size": [1.89, 0.36, 0], "uv": { "south": { "uv": [0, 0], "uv_size": [192, 32] } } }]
+				}
+			]
+		},
+		{
+			"description": {
+				"identifier": "geometry.calendar.weekday",
+				"texture_width": 416,
+				"texture_height": 384,
+				"visible_bounds_width": 6,
+				"visible_bounds_height": 3,
+				"visible_bounds_offset": [0, 0, 0]
+			},
+			"bones": [
+				{ "name": "head", "pivot": [0, 24, 0] },
+				{ "name": "head_no_bob", "parent": "head", "pivot": [0, 24, 0], "rotation": [0, 0, 0] },
+				{ "name": "calendar_root", "parent": "head_no_bob", "pivot": [0, 24, 0], "rotation": [0, 0, 0] },
+				{
+					"name": "calendar_weekday",
+					"parent": "calendar_root",
+					"pivot": [0, 24, 0],
+					"rotation": [0, 0, 0],
+					"cubes": [{ "origin": [6.5, 32, -8], "size": [1.89, 0.36, 0], "uv": { "south": { "uv": [0, 0], "uv_size": [192, 32] } } }]
+				}
+			]
+		},
+		{
+			"description": {
+				"identifier": "geometry.calendar.day_ones",
+				"texture_width": 416,
+				"texture_height": 384,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 3,
+				"visible_bounds_offset": [0, 0, 0]
+			},
+			"bones": [
+				{ "name": "head", "pivot": [0, 24, 0] },
+				{ "name": "head_no_bob", "parent": "head", "pivot": [0, 24, 0], "rotation": [0, 0, 0] },
+				{ "name": "calendar_root", "parent": "head_no_bob", "pivot": [0, 24, 0], "rotation": [0, 0, 0] },
+				{
+					"name": "calendar_day_ones",
+					"parent": "calendar_root",
+					"pivot": [0, 24, 0],
+					"rotation": [0, 0, 0],
+					"cubes": [{ "origin": [5.5, 32, -8], "size": [0.36, 0.36, 0], "uv": { "south": { "uv": [0, 0], "uv_size": [32, 32] } } }]
+				}
+			]
+		},
+		{
+			"description": {
+				"identifier": "geometry.calendar.day_tens",
+				"texture_width": 416,
+				"texture_height": 384,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 3,
+				"visible_bounds_offset": [0, 0, 0]
+			},
+			"bones": [
+				{ "name": "head", "pivot": [0, 24, 0] },
+				{ "name": "head_no_bob", "parent": "head", "pivot": [0, 24, 0], "rotation": [0, 0, 0] },
+				{ "name": "calendar_root", "parent": "head_no_bob", "pivot": [0, 24, 0], "rotation": [0, 0, 0] },
+				{
+					"name": "calendar_day_tens",
+					"parent": "calendar_root",
+					"pivot": [0, 24, 0],
+					"rotation": [0, 0, 0],
+					"cubes": [{ "origin": [5.8, 32, -8], "size": [0.36, 0.36, 0], "uv": { "south": { "uv": [0, 0], "uv_size": [32, 32] } } }]
+				}
+			]
+		},
+		{
+			"description": {
+				"identifier": "geometry.clock.minute_ones",
+				"texture_width": 416,
+				"texture_height": 384,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 3,
+				"visible_bounds_offset": [0, 0, 0]
+			},
+			"bones": [
+				{ "name": "head", "pivot": [0, 24, 0] },
+				{ "name": "head_no_bob", "parent": "head", "pivot": [0, 24, 0], "rotation": [0, 0, 0] },
+				{ "name": "calendar_root", "parent": "head_no_bob", "pivot": [0, 24, 0], "rotation": [0, 0, 0] },
+				{
+					"name": "clock_minute_ones",
+					"parent": "calendar_root",
+					"pivot": [0, 24, 0],
+					"rotation": [0, 0, 0],
+					"cubes": [{ "origin": [-6.4, 31, -8], "size": [0.36, 0.36, 0], "uv": { "south": { "uv": [0, 0], "uv_size": [32, 32] } } }]
+				}
+			]
+		},
+		{
+			"description": {
+				"identifier": "geometry.clock.minute_tens",
+				"texture_width": 416,
+				"texture_height": 384,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 3,
+				"visible_bounds_offset": [0, 0, 0]
+			},
+			"bones": [
+				{ "name": "head", "pivot": [0, 24, 0] },
+				{ "name": "head_no_bob", "parent": "head", "pivot": [0, 24, 0], "rotation": [0, 0, 0] },
+				{ "name": "calendar_root", "parent": "head_no_bob", "pivot": [0, 24, 0], "rotation": [0, 0, 0] },
+				{
+					"name": "clock_minute_tens",
+					"parent": "calendar_root",
+					"pivot": [0, 24, 0],
+					"rotation": [0, 0, 0],
+					"cubes": [{ "origin": [-6.8, 31, -8], "size": [0.36, 0.36, 0], "uv": { "south": { "uv": [0, 0], "uv_size": [32, 32] } } }]
+				}
+			]
+		},
+		{
+			"description": {
+				"identifier": "geometry.clock.colon",
+				"texture_width": 416,
+				"texture_height": 384,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 3,
+				"visible_bounds_offset": [0, 0, 0]
+			},
+			"bones": [
+				{ "name": "head", "pivot": [0, 24, 0] },
+				{ "name": "head_no_bob", "parent": "head", "pivot": [0, 24, 0], "rotation": [0, 0, 0] },
+				{ "name": "calendar_root", "parent": "head_no_bob", "pivot": [0, 24, 0], "rotation": [0, 0, 0] },
+				{
+					"name": "clock_colon",
+					"parent": "calendar_root",
+					"pivot": [0, 24, 0],
+					"rotation": [0, 0, 0],
+					"cubes": [{ "origin": [-7.2, 31, -8], "size": [0.36, 0.36, 0], "uv": { "south": { "uv": [0, 0], "uv_size": [32, 32] } } }]
+				}
+			]
+		},
+		{
+			"description": {
+				"identifier": "geometry.clock.hour_ones",
+				"texture_width": 416,
+				"texture_height": 384,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 3,
+				"visible_bounds_offset": [0, 0, 0]
+			},
+			"bones": [
+				{ "name": "head", "pivot": [0, 24, 0] },
+				{ "name": "head_no_bob", "parent": "head", "pivot": [0, 24, 0], "rotation": [0, 0, 0] },
+				{ "name": "calendar_root", "parent": "head_no_bob", "pivot": [0, 24, 0], "rotation": [0, 0, 0] },
+				{
+					"name": "clock_hour_ones",
+					"parent": "calendar_root",
+					"pivot": [0, 24, 0],
+					"rotation": [0, 0, 0],
+					"cubes": [{ "origin": [-7.6, 31, -8], "size": [0.36, 0.36, 0], "uv": { "south": { "uv": [0, 0], "uv_size": [32, 32] } } }]
+				}
+			]
+		},
+		{
+			"description": {
+				"identifier": "geometry.clock.hour_tens",
+				"texture_width": 416,
+				"texture_height": 384,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 3,
+				"visible_bounds_offset": [0, 0, 0]
+			},
+			"bones": [
+				{ "name": "head", "pivot": [0, 24, 0] },
+				{ "name": "head_no_bob", "parent": "head", "pivot": [0, 24, 0], "rotation": [0, 0, 0] },
+				{ "name": "calendar_root", "parent": "head_no_bob", "pivot": [0, 24, 0], "rotation": [0, 0, 0] },
+				{
+					"name": "clock_hour_tens",
+					"parent": "calendar_root",
+					"pivot": [0, 24, 0],
+					"rotation": [0, 0, 0],
+					"cubes": [{ "origin": [-8, 31, -8], "size": [0.36, 0.36, 0], "uv": { "south": { "uv": [0, 0], "uv_size": [32, 32] } } }]
+				}
+			]
+		},
+		{
+			"description": {
+				"identifier": "geometry.clock.ampm",
+				"texture_width": 416,
+				"texture_height": 384,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 3,
+				"visible_bounds_offset": [0, 0, 0]
+			},
+			"bones": [
+				{ "name": "head", "pivot": [0, 24, 0] },
+				{ "name": "head_no_bob", "parent": "head", "pivot": [0, 24, 0], "rotation": [0, 0, 0] },
+				{ "name": "calendar_root", "parent": "head_no_bob", "pivot": [0, 24, 0], "rotation": [0, 0, 0] },
+				{
+					"name": "clock_ampm",
+					"parent": "calendar_root",
+					"pivot": [0, 24, 0],
+					"rotation": [0, 0, 0],
+					"cubes": [{ "origin": [-6, 31, -8], "size": [0.36, 0.36, 0], "uv": { "south": { "uv": [0, 0], "uv_size": [32, 32] } } }]
+				}
+			]
+		}
+	]
+}

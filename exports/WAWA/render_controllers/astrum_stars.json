@@ -1,0 +1,16 @@
+{
+  "format_version": "1.10.0",
+  "render_controllers": {
+    "controller.render.star_field": {
+      "geometry": "Geometry.star_field",
+      "materials": [
+        {
+          "*": "Material.calendar"
+        }
+      ],
+      "textures": [
+        "Texture.default"
+      ]
+    }
+  }
+}

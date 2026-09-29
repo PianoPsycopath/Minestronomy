@@ -1,0 +1,82 @@
+{
+  "format_version": "1.10.0",
+  "animation_controllers": {
+    "controller.animation.astrum.stars": {
+      "initial_state": "stars_only",
+      "states": {
+        "stars_only": {
+          "particle_effects": [
+            {
+              "effect": "star_field_px_stars",
+              "locator": "locator"
+            },
+            {
+              "effect": "star_field_nx_stars",
+              "locator": "locator"
+            },
+            {
+              "effect": "star_field_py_stars",
+              "locator": "locator"
+            },
+            {
+              "effect": "star_field_ny_stars",
+              "locator": "locator"
+            },
+            {
+              "effect": "star_field_pz_stars",
+              "locator": "locator"
+            },
+            {
+              "effect": "star_field_nz_stars",
+              "locator": "locator"
+            }
+          ],
+          "animations": [
+            "sky_rotation"
+          ],
+          "transitions": [
+            {
+              "constellations": "query.is_item_name_any('slot.weapon.mainhand', 'minecraft:spyglass')"
+            }
+          ]
+        },
+        "constellations": {
+          "particle_effects": [
+            {
+              "effect": "star_field_px_const",
+              "locator": "locator"
+            },
+            {
+              "effect": "star_field_nx_const",
+              "locator": "locator"
+            },
+            {
+              "effect": "star_field_py_const",
+              "locator": "locator"
+            },
+            {
+              "effect": "star_field_ny_const",
+              "locator": "locator"
+            },
+            {
+              "effect": "star_field_pz_const",
+              "locator": "locator"
+            },
+            {
+              "effect": "star_field_nz_const",
+              "locator": "locator"
+            }
+          ],
+          "animations": [
+            "sky_rotation"
+          ],
+          "transitions": [
+            {
+              "stars_only": "!query.is_item_name_any('slot.weapon.mainhand', 'minecraft:spyglass')"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

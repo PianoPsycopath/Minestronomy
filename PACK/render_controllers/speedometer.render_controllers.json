@@ -1,0 +1,52 @@
+{
+  "format_version": "1.8.0",
+  "render_controllers": {
+    "controller.render.speed.tens": {
+      "arrays": { "textures": { "Array.digits": ["Texture.digit_0", "Texture.digit_1", "Texture.digit_2", "Texture.digit_3", "Texture.digit_4", "Texture.digit_5", "Texture.digit_6", "Texture.digit_7", "Texture.digit_8", "Texture.digit_9"] } },
+      "geometry": "Geometry.speedometer_tens",
+      "materials": [{"*": "Material.calendar"}],
+      "textures": ["Array.digits[math.floor(variable.horizontal_speed / 10)]"]
+    },
+    "controller.render.speed.ones": {
+      "arrays": { "textures": { "Array.digits": ["Texture.digit_0", "Texture.digit_1", "Texture.digit_2", "Texture.digit_3", "Texture.digit_4", "Texture.digit_5", "Texture.digit_6", "Texture.digit_7", "Texture.digit_8", "Texture.digit_9"] } },
+      "geometry": "Geometry.speedometer_ones",
+      "materials": [{"*": "Material.calendar"}],
+      "textures": ["Array.digits[math.mod(math.floor(variable.horizontal_speed), 10)]"]
+    },
+    "controller.render.speed.decimal": {
+      "geometry": "Geometry.speedometer_decimal",
+      "materials": [{"*": "Material.calendar"}],
+      "textures": ["Texture.deci"]
+    },
+    "controller.render.speed.tenths": {
+      "arrays": { "textures": { "Array.digits": ["Texture.digit_0", "Texture.digit_1", "Texture.digit_2", "Texture.digit_3", "Texture.digit_4", "Texture.digit_5", "Texture.digit_6", "Texture.digit_7", "Texture.digit_8", "Texture.digit_9"] } },
+      "geometry": "Geometry.speedometer_tenths",
+      "materials": [{"*": "Material.calendar"}],
+      "textures": ["Array.digits[math.mod(math.floor(variable.horizontal_speed * 10), 10)]"]
+    },
+    "controller.render.speed.hundredths": {
+      "arrays": { "textures": { "Array.digits": ["Texture.digit_0", "Texture.digit_1", "Texture.digit_2", "Texture.digit_3", "Texture.digit_4", "Texture.digit_5", "Texture.digit_6", "Texture.digit_7", "Texture.digit_8", "Texture.digit_9"] } },
+      "geometry": "Geometry.speedometer_hundredths",
+      "materials": [{"*": "Material.calendar"}],
+      "textures": ["Array.digits[math.mod(math.floor(variable.horizontal_speed * 100), 10)]"]
+    },
+    "controller.render.speed.thousandths": {
+      "arrays": {
+        "textures": {
+          "Array.digits": [
+            "Texture.digit_0", "Texture.digit_1", "Texture.digit_2", "Texture.digit_3", "Texture.digit_4",
+            "Texture.digit_5", "Texture.digit_6", "Texture.digit_7", "Texture.digit_8", "Texture.digit_9"
+          ]
+        }
+      },
+      "geometry": "Geometry.speedometer_thousandths",
+      "materials": [{"*": "Material.calendar"}],
+      "textures": ["Array.digits[math.mod(math.floor(variable.horizontal_speed * 1000), 10)]"]
+    },
+    "controller.render.speed.ms_label": {
+      "geometry": "Geometry.speedometer_ms",
+      "materials": [{"*": "Material.calendar"}],
+      "textures": ["Texture.ms"]
+    }
+  }
+}

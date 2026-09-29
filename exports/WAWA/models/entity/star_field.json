@@ -1,0 +1,52 @@
+{
+  "format_version": "1.12.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.star_field",
+        "texture_width": 3072,
+        "texture_height": 2048
+      },
+      "bones": [
+        {
+          "name": "sky_anchor",
+          "pivot": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "latitude_anchor",
+          "parent": "sky_anchor",
+          "pivot": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "bone_skybox",
+          "parent": "latitude_anchor",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            90,
+            0,
+            0
+          ],
+          "locators": {
+            "locator": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
