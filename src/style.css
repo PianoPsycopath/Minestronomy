@@ -1,0 +1,415 @@
+:root {
+  /* Cosmology Ink & Parchment Theme */
+  --theme-bg: url('/parchment.jpg'); /* Assuming the image is saved here */
+  --theme-ink: #1f1a14;
+  --theme-ink-light: #3a3125;
+  --theme-ink-muted: #5c4e3a;
+  --theme-paper: #f4e8d4;
+  --theme-highlight: #8b2313; /* Wax seal red */
+  
+  --font-heading: 'Cinzel', serif;
+  --font-body: 'Cormorant Garamond', serif;
+  --font-mono: 'Courier New', Courier, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  background-color: #000;
+  font-family: var(--font-body);
+  font-size: 1.2rem;
+  color: var(--theme-ink);
+  touch-action: none;
+  user-select: none;
+}
+
+#canvas-container {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+#canvas-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+}
+
+/* Parchment UI Panels */
+.parchment-panel {
+  background-image: var(--theme-bg);
+  background-size: cover;
+  background-position: center;
+  border: 2px solid var(--theme-ink);
+  box-shadow: 0 0 20px rgba(0,0,0,0.8), inset 0 0 40px rgba(139, 69, 19, 0.2);
+  color: var(--theme-ink);
+}
+
+.panel {
+  position: absolute;
+  top: 10px;
+  height: calc(100vh - 170px);
+  width: 320px;
+  z-index: 10;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+#panel-left { left: 10px; }
+#panel-right { right: 10px; }
+
+.panel-header {
+  border-bottom: 2px solid var(--theme-ink);
+  padding-bottom: 5px;
+  text-align: center;
+}
+
+.panel-header h2 {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  letter-spacing: 2px;
+  font-weight: 700;
+}
+
+.control-group {
+  margin-top: 15px;
+  border: 1px solid var(--theme-ink-muted);
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.2); /* Lighten the parchment slightly for contrast */
+}
+
+.control-group label {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  border-bottom: 1px dotted var(--theme-ink-muted);
+}
+
+.flex-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px dotted var(--theme-ink-muted);
+  margin-bottom: 8px;
+}
+.flex-header label { border-bottom: none; margin-bottom: 0; }
+
+.field-hint {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--theme-ink-muted);
+  margin: 5px 0 0 0;
+}
+
+button {
+  background: transparent;
+  border: 1px solid var(--theme-ink);
+  color: var(--theme-ink);
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 4px 8px;
+}
+
+button:hover, button.active {
+  background: var(--theme-ink);
+  color: var(--theme-paper);
+}
+
+.icon-btn {
+  border: none;
+  font-size: 1.2rem;
+  padding: 0 4px;
+}
+.icon-btn:hover { background: transparent; color: var(--theme-highlight); }
+
+.full-btn {
+  width: 100%;
+  padding: 6px;
+  margin-bottom: 6px;
+}
+
+.export-btn {
+  border-color: var(--theme-highlight);
+  color: var(--theme-highlight);
+}
+.export-btn:hover {
+  background: var(--theme-highlight);
+  color: var(--theme-paper);
+}
+
+.btn-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.scrollable-list {
+  max-height: 180px;
+  overflow-y: auto;
+  border: 1px solid var(--theme-ink-muted);
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.list-item {
+  padding: 5px 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(31, 26, 20, 0.1);
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+}
+
+.list-item .tag {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  padding: 2px 4px;
+  border: 1px solid var(--theme-ink-muted);
+  margin-right: 5px;
+}
+
+input[type="text"] {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid var(--theme-ink);
+  color: var(--theme-ink);
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+  padding: 6px;
+  margin-bottom: 8px;
+  outline: none;
+}
+input[type="text"]:focus {
+  border-color: var(--theme-highlight);
+}
+
+/* Bottom Chronometer Deck */
+#bottom-deck {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 140px;
+  z-index: 20;
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+  padding: 10px 20px;
+}
+
+#chronometer-shape {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.chrono-header {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 15px;
+  align-items: center;
+}
+
+.command-display-card {
+  border: 1px solid var(--theme-ink);
+  padding: 4px 10px;
+  display: flex;
+  flex-direction: column;
+  background: rgba(255,255,255,0.2);
+}
+
+.command-display-card .label {
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  font-weight: bold;
+}
+
+.command-display-card code {
+  font-family: var(--font-mono);
+  color: var(--theme-highlight);
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.segment-display-wrapper {
+  text-align: center;
+  border: 2px solid var(--theme-ink);
+  padding: 4px;
+  background: rgba(255,255,255,0.3);
+}
+
+#segment-display {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+#tick-counter {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.quick-jump-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px;
+}
+
+.jump-btn {
+  font-size: 0.8rem;
+  padding: 4px 2px;
+}
+
+.chrono-controls {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.throttle-block {
+  display: flex;
+  gap: 6px;
+}
+
+.throttle-btn {
+  padding: 6px 14px;
+}
+
+.slider-block {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.slider-tag {
+  width: 140px;
+  font-size: 0.8rem;
+  font-family: var(--font-mono);
+  font-weight: bold;
+}
+
+.val-tag {
+  width: 70px;
+  font-size: 0.85rem;
+  font-family: var(--font-mono);
+  font-weight: bold;
+  text-align: right;
+}
+
+input[type="range"] {
+  flex-grow: 1;
+  accent-color: var(--theme-ink);
+  background: transparent;
+  cursor: pointer;
+}
+/* --- Radial Clock UI --- */
+.radial-clock-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+#radial-clock {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border: 3px solid var(--theme-ink);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 0 15px rgba(139, 69, 19, 0.3), 0 0 10px rgba(0,0,0,0.5);
+  cursor: pointer;
+}
+
+.clock-center {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 12px; height: 12px;
+  background: var(--theme-highlight);
+  border: 2px solid var(--theme-ink);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+}
+
+#clock-hand {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 2px;
+  height: 50px;
+  background: var(--theme-highlight);
+  transform-origin: bottom center;
+  /* Initial translation to align the bottom of the hand with the center of the clock */
+  transform: translate(-50%, -100%) rotate(0deg);
+  z-index: 4;
+  pointer-events: none;
+}
+
+#clock-hand::after {
+  content: '';
+  position: absolute;
+  top: -4px; left: -4px;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--theme-ink);
+}
+
+.clock-btn {
+  position: absolute;
+  background: var(--theme-ink);
+  color: var(--theme-paper);
+  border: 1px solid var(--theme-highlight);
+  border-radius: 4px;
+  font-size: 0.65rem;
+  padding: 2px 4px;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  box-shadow: 0 0 5px rgba(0,0,0,0.8);
+}
+.clock-btn:hover {
+  background: var(--theme-highlight);
+}
+
+/* Position the 4 cardinal points */
+.clock-btn.zenith { top: 0%; left: 50%; }
+.clock-btn.dusk { top: 50%; left: 100%; }
+.clock-btn.midnight { top: 100%; left: 50%; }
+.clock-btn.dawn { top: 50%; left: 0%; }
+
+#segment-display {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-align: center;
+  border: 2px solid var(--theme-ink);
+  padding: 4px;
+  background: rgba(255,255,255,0.3);
+}
