@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Minestronomy &middot; Celestial Workbench</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body oncontextmenu="return false;">
+
+  <!-- Left Drawer: Editor & Scene Switcher -->
+  <aside id="panel-left" class="panel parchment-panel">
+    <div class="panel-header">
+      <h2>Ocularis &middot; Cosmography</h2>
+    </div>
+
+    <div class="control-group">
+      <label>OBSERVATION MODE</label>
+      <div class="btn-grid">
+        <button id="btn-mode-sky" class="mode-btn active">OBSERVER SKY</button>
+        <button id="btn-mode-helios" class="mode-btn">ORRERY MODEL</button>
+      </div>
+      <p class="field-hint">Toggle between the terrestrial dome and the heliocentric sphere.</p>
+    </div>
+
+    <!-- Observer State Controls (Fixes the JS Error) -->
+    <div class="control-group">
+      <label>OBSERVER STATE</label>
+      <div class="slider-row" style="margin-bottom: 8px;">
+        <span class="slider-tag">LATITUDE</span>
+        <input type="range" id="lat-slider" min="-90" max="90" step="0.1" value="32.7" />
+        <span class="val-tag" id="val-latitude">32.7&deg;</span>
+      </div>
+      <div class="slider-row" style="margin-bottom: 8px;">
+        <span class="slider-tag">PLAYER YAW</span>
+        <input type="range" id="yaw-slider" min="-180" max="180" step="1" value="0" />
+        <span class="val-tag" id="val-yaw">0&deg;</span>
+      </div>
+      <button class="full-btn" id="btn-spyglass">SPYGLASS: STOWED</button>
+    </div>
+
+    <div class="control-group">
+      <div class="flex-header">
+        <label>CELESTIAL BODIES</label>
+        <button id="btn-add-body" class="icon-btn" title="Add Object">+</button>
+      </div>
+      <div class="scrollable-list" id="system-tree">
+        <!-- Rendered by main.js -->
+      </div>
+    </div>
+  </aside>
+
+  <!-- Right Drawer: Textures & Bedrock Pack Exporter -->
+  <aside id="panel-right" class="panel parchment-panel">
+    <div class="panel-header">
+      <h2>Sensorium &middot; Cartography</h2>
+    </div>
+
+    <div class="control-group">
+      <label>ILLUSTRATIONS & PLATES</label>
+      <div class="input-stack">
+        <button class="full-btn" id="btn-load-sun-tex">SOLAR ENGRAVING: DEFAULT</button>
+        <button class="full-btn" id="btn-load-moon-tex">LUNAR ATLAS: 8-PHASE</button>
+        <button class="full-btn" id="btn-load-custom-tex">IMPORT CUSTOM PLATE...</button>
+      </div>
+      <p class="field-hint">Upload custom parchment projections or albedo maps.</p>
+    </div>
+
+    <div class="control-group">
+      <label>BEDROCK MANIFEST</label>
+      <input type="text" id="pack-name-input" value="Minestronomy_Cosmology" />
+      <button class="full-btn export-btn" id="btn-export-pack">INSCRIBE .MCPACK</button>
+    </div>
+  </aside>
+
+  <!-- 3D Canvas Anchor -->
+  <div id="canvas-container"></div>
+
+  <!-- Bottom Deck: Chronometer & Radial Clock -->
+  <footer id="bottom-deck" class="parchment-panel">
+    <div id="chronometer-shape">
+      <div class="chrono-header">
+        
+        <!-- Left: Command Output -->
+        <div class="command-display-card">
+          <span class="label">MINECRAFT CHRONOS</span>
+          <code id="cmd-output">/time set 0</code>
+          <div id="tick-counter">TOTAL TICKS: 0</div>
+        </div>
+
+        <!-- Center: Radial Clock -->
+        <div class="radial-clock-wrapper">
+          <div id="radial-clock">
+            <div id="clock-hand"></div>
+            <div class="clock-center"></div>
+            <button class="clock-btn zenith" data-time="0.5">ZENITH</button>
+            <button class="clock-btn dusk" data-time="0.75">DUSK</button>
+            <button class="clock-btn midnight" data-time="0.0">MIDNIGHT</button>
+            <button class="clock-btn dawn" data-time="0.25">DAWN</button>
+          </div>
+        </div>
+
+        <!-- Right: Time Transport Controls -->
+        <div class="throttle-block">
+          <div id="segment-display">DAY 0<br>06:00:00 [DAWN]</div>
+          <div class="btn-grid" style="margin-top: 5px;">
+            <button id="btn-time-rev" class="throttle-btn">&laquo; REV</button>
+            <button id="btn-time-play" class="throttle-btn active">PLAY</button>
+            <button id="btn-time-fwd" class="throttle-btn">FWD &raquo;</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
