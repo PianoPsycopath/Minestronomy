@@ -1,0 +1,182 @@
+{
+  "format_version": "1.10.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "minecraft:horse",
+      "min_engine_version": "1.17.10",
+      "materials": {
+        "default": "horse_leather_armor",
+        "calendar": "entity_alphatest"
+      },
+      
+      "textures": {
+        "base_brown": "textures/entity/horse2/horse_brown",
+        "base_white": "textures/entity/horse2/horse_white",
+        "base_creamy": "textures/entity/horse2/horse_creamy",
+        "base_chestnut": "textures/entity/horse2/horse_chestnut",
+        "base_black": "textures/entity/horse2/horse_black",
+        "base_gray": "textures/entity/horse2/horse_gray",
+        "base_darkbrown": "textures/entity/horse2/horse_darkbrown",
+        "markings_none": "textures/entity/horse2/horse_markings_none",
+        "markings_white": "textures/entity/horse2/horse_markings_white",
+        "markings_whitefield": "textures/entity/horse2/horse_markings_whitefield",
+        "markings_whitedots": "textures/entity/horse2/horse_markings_whitedots",
+        "markings_blackdots": "textures/entity/horse2/horse_markings_blackdots",
+        "armor_none": "textures/entity/horse2/armor/horse_armor_none",
+        "armor_leather": "textures/entity/horse2/armor/horse_armor_leather",
+        "armor_iron": "textures/entity/horse2/armor/horse_armor_iron",
+        "armor_gold": "textures/entity/horse2/armor/horse_armor_gold",
+        "armor_diamond": "textures/entity/horse2/armor/horse_armor_diamond",
+        "armor_copper": "textures/entity/horse2/armor/horse_armor_copper",
+        "armor_netherite": "textures/entity/horse2/armor/horse_armor_netherite",
+        "baby_base_brown": "textures/entity/horse2/horse_brown_baby",
+        "baby_base_white": "textures/entity/horse2/horse_white_baby",
+        "baby_base_creamy": "textures/entity/horse2/horse_creamy_baby",
+        "baby_base_chestnut": "textures/entity/horse2/horse_chestnut_baby",
+        "baby_base_black": "textures/entity/horse2/horse_black_baby",
+        "baby_base_gray": "textures/entity/horse2/horse_gray_baby",
+        "baby_base_darkbrown": "textures/entity/horse2/horse_darkbrown_baby",
+        "baby_markings_white": "textures/entity/horse2/baby_horse_markings_white",
+        "baby_markings_whitefield": "textures/entity/horse2/baby_horse_markings_whitefield",
+        "baby_markings_whitedots": "textures/entity/horse2/baby_horse_markings_whitedots",
+        "baby_markings_blackdots": "textures/entity/horse2/baby_horse_markings_blackdots",
+
+        "digit_0": "textures/ui/calendar/0",
+        "digit_1": "textures/ui/calendar/1",
+        "digit_2": "textures/ui/calendar/2",
+        "digit_3": "textures/ui/calendar/3",
+        "digit_4": "textures/ui/calendar/4",
+        "digit_5": "textures/ui/calendar/5",
+        "digit_6": "textures/ui/calendar/6",
+        "digit_7": "textures/ui/calendar/7",
+        "digit_8": "textures/ui/calendar/8",
+        "digit_9": "textures/ui/calendar/9",
+        "deci": "textures/ui/calendar/deci",
+        "ms": "textures/ui/calendar/ms",
+        "S": "textures/ui/calendar/S",
+        "A": "textures/ui/calendar/A",
+        "B": "textures/ui/calendar/B",
+        "C": "textures/ui/calendar/C",
+        "D": "textures/ui/calendar/D",
+        "E": "textures/ui/calendar/E",
+        "F": "textures/ui/calendar/F"
+      },
+      "geometry": {
+        "default": "geometry.horse.v3",
+        "baby": "geometry.horse.baby",
+
+        "speedometer_tens":"geometry.speed.ms_tens",
+        "speedometer_ones":"geometry.speed.ms_ones",
+        "speedometer_decimal":"geometry.speed.ms_decimal",
+        "speedometer_tenths":"geometry.speed.ms_tenths",
+        "speedometer_hundredths":"geometry.speed.ms_hundredths",
+        "speedometer_thousandths":"geometry.speed.ms_thousandths",
+        "speedometer_ms":"geometry.speed.ms_ms",
+        //WIP
+        "health_tens":"geometry.health.health_tens",
+        "health_ones":"geometry.health.health_ones",
+        "health_decimal":"geometry.health.health_decimal",
+        "health_tenths":"geometry.health.health_tenths",
+
+        "jump_ones":"geometry.jump.jump_ones",
+        "jump_decimal":"geometry.jump.jump_decimal",
+        "jump_tenths":"geometry.jump.jump_tenths",
+
+        "speed_rank":"geometry.rank.speed_rank",
+        "jump_rank":"geometry.rank.jump_rank",
+        "health_rank":"geometry.rank.health_rank"
+
+      },
+      "animations": {
+        "baby_transform": "animation.horse.v3.baby_transform",
+        "walk": "animation.horse.v3.walk",
+        "eat": "animation.horse.v3.eat",
+        "rear": "animation.horse.v3.rear",
+        "tail": "animation.horse.v3.tail",
+        "look_at_player": "animation.horse.v3.look_at_player"
+      },
+      "scripts": {
+        "initialize": [
+          "variable.eat_anim = 0.0;",
+          "variable.max_speed = 0;",
+          "variable.max_jump_vel = 0;",
+          "variable.jump_height = 0;",
+          "variable.start_y = 0;",
+          "variable.peak_y = 0;"
+        ],
+        "pre_animation": [
+          "variable.armor_texture_slot = query.armor_texture_slot(4);",
+          "variable.eat_anim = math.clamp(variable.eat_anim + (query.is_grazing ? ((1.0 - variable.eat_anim) * 0.4 + 0.05) : -variable.eat_anim * 0.4 - 0.05) * query.delta_time * 20.0, 0.0, 1.0);",
+          "variable.head_x_rot = query.target_x_rotation + (query.modified_move_speed > 0.2 ? (math.cos(query.modified_distance_moved * 11.46) * 11.46 * query.modified_move_speed + query.modified_move_speed * 11.46) : 0.0);",
+          "variable.inverse_max_stand_eat = (1.0 - math.max(variable.stand_anim, variable.eat_anim));",
+          "variable.leg_stand_factor = math.cos((query.modified_distance_moved * 38.38) + 180.0);",
+          "variable.leg_x_rot_anim = variable.leg_stand_factor * 45.8 * query.modified_move_speed;",
+          
+// 1. Calculate current horizontal speed
+"variable.horizontal_speed = math.max(0, query.ground_speed - math.abs(query.vertical_speed));",
+
+// 2. The Sustain Timer
+// If current speed > recorded max, count up. Otherwise, reset to 0.
+"variable.speed_timer = (variable.horizontal_speed > variable.max_speed) ? (variable.speed_timer + 1) : 0;",
+
+// 3. The Threshold Check (20 ticks / 1 second)
+// Only update max_speed if the horse has maintained this new speed for 20 frames.
+"variable.max_speed = (variable.speed_timer >= 20) ? variable.horizontal_speed : variable.max_speed;",
+
+          // Watermark Vertical Speed and convert to estimated block height
+          // 1. Lock the baseline Y when the horse is touching the ground
+          "variable.start_y = query.is_on_ground ? query.position(1) : variable.start_y;",
+
+          // 2. Track the peak Y only while in the air
+          // If on ground, we reset peak_y to the current position to prepare for the next jump
+          "variable.peak_y = !query.is_on_ground ? math.max(variable.peak_y, query.position(1)) : query.position(1);",
+
+          // 3. Update the high score ONLY if the horse is in the air or just finished a jump
+          // We use a small threshold (0.1) to ignore tiny bounces or step-ups
+          "variable.jump_height = (!query.is_on_ground && (variable.peak_y - variable.start_y) > 0.1) ? math.max(variable.jump_height, variable.peak_y - variable.start_y) : variable.jump_height;",
+          // Health logic (using vanilla query)
+          "variable.h = query.max_health;"
+        ],
+        "animate": [
+          {
+            "baby_transform": "query.is_baby"
+          },
+          "walk",
+          "look_at_player",
+          {
+            "rear": "variable.stand_anim > 0.0"
+          },
+          {
+            "eat": "!query.is_standing"
+          },
+          {
+            "tail": "variable.shake_tail"
+          }
+        ]
+      },
+      "render_controllers": [
+        "controller.render.horse.v4",
+        { "controller.render.speed.tens": "query.has_rider" },
+        { "controller.render.speed.ones": "query.has_rider" },
+        { "controller.render.speed.decimal": "query.has_rider" },
+        { "controller.render.speed.tenths": "query.has_rider" },
+        { "controller.render.speed.hundredths": "query.has_rider" },
+        { "controller.render.speed.thousandths": "query.has_rider" },
+        { "controller.render.speed.ms_label": "query.has_rider" },
+        { "controller.render.jump.ones": "query.has_rider" },
+        { "controller.render.jump.decimal": "query.has_rider" },
+        { "controller.render.jump.tenths": "query.has_rider" },
+        { "controller.render.health.tens": "query.has_rider" },
+        { "controller.render.health.ones": "query.has_rider" },
+        { "controller.render.health.decimal": "query.has_rider" },
+        { "controller.render.health.tenths": "query.has_rider" },
+        { "controller.render.rank.speed": "query.has_rider" },
+        { "controller.render.rank.jump": "query.has_rider" },
+        { "controller.render.rank.health": "query.has_rider" }
+      ],
+      "spawn_egg": {
+        "texture": "spawn_egg_horse"
+      }
+    }
+  }
+}

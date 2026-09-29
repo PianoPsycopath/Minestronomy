@@ -1,0 +1,52 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #000;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#main-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+#left-panel {
+    width: 25%; /* Fixed percentage of the screen */
+    height: 100%;
+    background: rgba(10, 10, 10, 0.95);
+    border-right: 2px solid #0f0;
+    display: flex;
+    flex-direction: column;
+    padding: 2%; /* Percentage-based padding */
+    box-sizing: border-box;
+    z-index: 10;
+}
+
+#preview-window {
+    width: 75%; /* Occupies the remaining space */
+    height: 100%;
+    position: relative;
+    background: #000;
+}
+
+.menu-view {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5vh; /* Vertical height units for consistent spacing */
+}
+
+input[type="text"], button {
+    width: 100%; /* Fill the container width */
+    box-sizing: border-box;
+}
+
+.control-group h3 {
+    color: #0f0;
+    font-size: 1.2vw; /* Scales with window width */
+    margin-bottom: 1vh;
+}

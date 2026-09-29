@@ -1,0 +1,44 @@
+{
+  "format_version": "1.10.0",
+  "animation_controllers": {
+    "controller.animation.hostile_battle_reporter": {
+      "initial_state": "default",
+      "states": {
+        "default": {
+          "on_entry": [
+            "temp.entity_battle_range = temp.entity_battle_range ?? 32;",
+            "temp.my_entity_id = math.random(1000, 9999);"
+          ],
+          "transitions": [
+            {
+              "in_battle": "query.distance_from_camera <= (temp.entity_battle_range ?? 32) && query.has_target && query.is_alive"
+            },
+            {
+              "out_of_battle": "query.distance_from_camera > (temp.entity_battle_range ?? 32) || !query.has_target || !query.is_alive"
+            }
+          ]
+        },
+        "in_battle": {
+          "on_entry": [
+            "temp.hostile_entity_count = (temp.hostile_entity_count ?? 0) + 1;"
+          ],
+          "transitions": [
+            {
+              "out_of_battle": "query.distance_from_camera > (temp.entity_battle_range ?? 32) || !query.has_target || !query.is_alive"
+            }
+          ]
+        },
+        "out_of_battle": {
+          "on_entry": [
+            "temp.hostile_entity_count = math.max(0, (temp.hostile_entity_count ?? 0) - 1);"
+          ],
+          "transitions": [
+            {
+              "in_battle": "query.distance_from_camera <= (temp.entity_battle_range ?? 32) && query.has_target && query.is_alive"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

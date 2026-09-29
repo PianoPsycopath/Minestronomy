@@ -1,0 +1,28 @@
+{
+  "format_version": "1.10.0",
+  "render_controllers": {
+    "controller.render.wolf.v3": {
+      "arrays": {
+        "textures": {
+          "Array.tex_biomes": [ "Texture.pale_default", "Texture.ashen_default", "Texture.black_default", "Texture.chestnut_default", "Texture.rusty_default", "Texture.snowy_default", "Texture.spotted_default", "Texture.striped_default", "Texture.woods_default" ],
+          "Array.tex_big": [ "Texture.sheepdog", "Texture.white_swiss_shepherd", "Texture.rottweiler", "Texture.doberman", "Texture.german_shepherd", "Texture.white_swiss_shepherd", "Texture.dalmata", "Texture.rottweiler", "Texture.german_shepherd" ],
+          "Array.tex_cute": [ "Texture.poodle", "Texture.alaskan_klee_kai", "Texture.chihuahua", "Texture.shiba_inu", "Texture.chihuahua", "Texture.poodle", "Texture.chihuahua", "Texture.shiba_inu", "Texture.beagle" ],
+          "Array.tex_puglin": [ "Texture.bulldog", "Texture.shar_pei", "Texture.bulldog", "Texture.bulldog", "Texture.shar_pei", "Texture.bulldog", "Texture.bulldog", "Texture.bulldog", "Texture.bulldog" ],
+          "Array.tex_sad": [ "Texture.bloodhound", "Texture.basset_hound", "Texture.bloodhound", "Texture.bloodhound", "Texture.basset_hound", "Texture.bloodhound", "Texture.basset_hound", "Texture.basset_hound", "Texture.basset_hound" ],
+          "Array.tex_grumpy": [ "Texture.shar_pei", "Texture.shar_pei", "Texture.shar_pei", "Texture.shar_pei", "Texture.perro_peruano", "Texture.shar_pei", "Texture.perro_peruano", "Texture.shar_pei", "Texture.bull_terrier" ]
+        },
+        "geometries": {
+          "Array.geo_biomes": [ "geometry.default", "geometry.default", "geometry.default", "geometry.default", "geometry.default", "geometry.default", "geometry.default", "geometry.default", "geometry.default" ],
+          "Array.geo_big": [ "geometry.sheepdog", "geometry.white_swiss_shepherd", "geometry.rottweiler", "geometry.doberman", "geometry.german_shepherd", "geometry.white_swiss_shepherd", "geometry.dalmata", "geometry.rottweiler", "geometry.german_shepherd" ],
+          "Array.geo_cute": [ "geometry.poodle", "geometry.alaskan_klee_kai", "geometry.chihuahua", "geometry.shiba_inu", "geometry.chihuahua", "geometry.poodle", "geometry.chihuahua", "geometry.shiba_inu", "geometry.beagle" ],
+          "Array.geo_puglin": [ "geometry.bulldog", "geometry.shar_pei", "geometry.bulldog", "geometry.bulldog", "geometry.shar_pei", "geometry.bulldog", "geometry.bulldog", "geometry.bulldog", "geometry.bulldog" ],
+          "Array.geo_sad": [ "geometry.bloodhound", "geometry.basset_hound", "geometry.bloodhound", "geometry.bloodhound", "geometry.basset_hound", "geometry.bloodhound", "geometry.basset_hound", "geometry.basset_hound", "geometry.basset_hound" ],
+          "Array.geo_grumpy": [ "geometry.shar_pei", "geometry.shar_pei", "geometry.shar_pei", "geometry.shar_pei", "geometry.perro_peruano", "geometry.shar_pei", "geometry.perro_peruano", "geometry.shar_pei", "geometry.bull_terrier" ]
+        }
+      },
+      "geometry": "query.has_property('minecraft:sound_variant') == '0' ? Array.geo_big[query.variant] : (query.has_property('minecraft:sound_variant') == 'cute' ? Array.geo_cute[query.variant] : (query.has_property('minecraft:sound_variant') == 'puglin' ? Array.geo_puglin[query.variant] : (query.has_property('minecraft:sound_variant') == 'sad' ? Array.geo_sad[query.variant] : (query.has_property('minecraft:sound_variant') == 'grumpy' ? Array.geo_grumpy[query.variant] : Array.geo_big[query.variant]))))",
+      "materials": [ { "*": "Material.default" } ],
+      "textures": [ "query.has_property('minecraft:sound_variant') == '0' ? Array.tex_big[query.variant] : (query.has_property('minecraft:sound_variant') == 'cute' ? Array.tex_cute[query.variant] : (query.has_property('minecraft:sound_variant') == 'puglin' ? Array.tex_puglin[query.variant] : (query.has_property('minecraft:sound_variant') == 'sad' ? Array.tex_sad[query.variant] : (query.has_property('minecraft:sound_variant') == 'grumpy' ? Array.tex_grumpy[query.variant] : Array.tex_big[query.variant]))))" ]
+    }
+  }
+}

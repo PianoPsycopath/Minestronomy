@@ -1,0 +1,28 @@
+{
+  "format_version": "1.8.0",
+  "render_controllers": {
+    "controller.render.jump.tens": {
+      "arrays": { "textures": { "Array.digits": ["Texture.digit_0", "Texture.digit_1", "Texture.digit_2", "Texture.digit_3", "Texture.digit_4", "Texture.digit_5", "Texture.digit_6", "Texture.digit_7", "Texture.digit_8", "Texture.digit_9"] } },
+      "geometry": "Geometry.jump_tens",
+      "materials": [{"*": "Material.calendar"}],
+      "textures": ["Array.digits[math.floor(variable.jump_height / 10)]"]
+    },
+    "controller.render.jump.ones": {
+      "arrays": { "textures": { "Array.digits": ["Texture.digit_0", "Texture.digit_1", "Texture.digit_2", "Texture.digit_3", "Texture.digit_4", "Texture.digit_5", "Texture.digit_6", "Texture.digit_7", "Texture.digit_8", "Texture.digit_9"] } },
+      "geometry": "Geometry.jump_ones",
+      "materials": [{"*": "Material.calendar"}],
+      "textures": ["Array.digits[math.mod(math.floor(variable.jump_height), 10)]"]
+    },
+    "controller.render.jump.decimal": {
+      "geometry": "Geometry.jump_decimal",
+      "materials": [{"*": "Material.calendar"}],
+      "textures": ["Texture.deci"]
+    },
+    "controller.render.jump.tenths": {
+      "arrays": { "textures": { "Array.digits": ["Texture.digit_0", "Texture.digit_1", "Texture.digit_2", "Texture.digit_3", "Texture.digit_4", "Texture.digit_5", "Texture.digit_6", "Texture.digit_7", "Texture.digit_8", "Texture.digit_9"] } },
+      "geometry": "Geometry.jump_tenths",
+      "materials": [{"*": "Material.calendar"}],
+      "textures": ["Array.digits[math.mod(math.floor(variable.jump_height * 10), 10)]"]
+    }
+  }
+}

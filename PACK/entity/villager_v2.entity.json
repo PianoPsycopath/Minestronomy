@@ -1,0 +1,216 @@
+{
+  "format_version": "1.8.0",
+  "minecraft:client_entity": {
+    "description": {
+      "identifier": "minecraft:villager_v2",
+      "materials": {
+        "default": "villager_v2",
+        "masked": "villager_v2_masked"
+      },
+      "textures": {
+        "base": "textures/entity/villager2/villager",
+        "base2": "textures/entity/villager2/villager",
+        "base3": "textures/entity/villager2/villager",
+        "base4": "textures/entity/villager2/villager",
+        "base5": "textures/entity/villager2/villager",
+        "base6": "textures/entity/villager2/villager",
+
+        "desert":   "textures/entity/villager2/biomes/biome_desert","desert1":  "textures/entity/villager2/biomes/biome_desert/biome_desert-very-light-blonde","desert2":  "textures/entity/villager2/biomes/biome_desert/biome_desert-medium-light-blonde","desert3":  "textures/entity/villager2/biomes/biome_desert/biome_desert-light-blonde","desert4":  "textures/entity/villager2/biomes/biome_desert/biome_desert-medium-blonde","desert5":  "textures/entity/villager2/biomes/biome_desert/biome_desert-dark-blonde","desert6":  "textures/entity/villager2/biomes/biome_desert/biome_desert-vibrant-orange","desert7":  "textures/entity/villager2/biomes/biome_desert/biome_desert-soft-blonde","desert8":  "textures/entity/villager2/biomes/biome_desert/biome_desert-soft-magenta","desert9":  "textures/entity/villager2/biomes/biome_desert/biome_desert-copper-red","desert10": "textures/entity/villager2/biomes/biome_desert/biome_desert-light-red","desert11": "textures/entity/villager2/biomes/biome_desert/biome_desert-auburn-red","desert12": "textures/entity/villager2/biomes/biome_desert/biome_desert-dark-red","desert13": "textures/entity/villager2/biomes/biome_desert/biome_desert-light-brown","desert14": "textures/entity/villager2/biomes/biome_desert/biome_desert-medium-brown","desert15": "textures/entity/villager2/biomes/biome_desert/biome_desert-white","desert16": "textures/entity/villager2/biomes/biome_desert/biome_desert-dark-brown","desert17": "textures/entity/villager2/biomes/biome_desert/biome_desert-deep-brown","desert18": "textures/entity/villager2/biomes/biome_desert/biome_desert-soft-black","desert19": "textures/entity/villager2/biomes/biome_desert/biome_desert-reddish-black","desert20": "textures/entity/villager2/biomes/biome_desert/biome_desert-blueish-black","desert21": "textures/entity/villager2/biomes/biome_desert/biome_desert-purpleish-black","desert22": "textures/entity/villager2/biomes/biome_desert/biome_desert-deep-black","desert23": "textures/entity/villager2/biomes/biome_desert/biome_desert-dark-gray","desert24": "textures/entity/villager2/biomes/biome_desert/biome_desert-light-gray","desert25": "textures/entity/villager2/biomes/biome_desert/biome_desert-pink","desert26": "textures/entity/villager2/biomes/biome_desert/biome_desert-magenta","desert27": "textures/entity/villager2/biomes/biome_desert/biome_desert-purple","desert28": "textures/entity/villager2/biomes/biome_desert/biome_desert-blue","desert29": "textures/entity/villager2/biomes/biome_desert/biome_desert-light-blue","desert30": "textures/entity/villager2/biomes/biome_desert/biome_desert-cyan","desert31": "textures/entity/villager2/biomes/biome_desert/biome_desert-green","desert32": "textures/entity/villager2/biomes/biome_desert/biome_desert-lime-green","desert33": "textures/entity/villager2/biomes/biome_desert/biome_desert-yellow","desert34": "textures/entity/villager2/biomes/biome_desert/biome_desert-orange","desert35": "textures/entity/villager2/biomes/biome_desert/biome_desert-red",
+
+        "jungle":   "textures/entity/villager2/biomes/biome_jungle","jungle1":  "textures/entity/villager2/biomes/biome_jungle/biome_jungle-very-light-blonde","jungle2":  "textures/entity/villager2/biomes/biome_jungle/biome_jungle-medium-light-blonde","jungle3":  "textures/entity/villager2/biomes/biome_jungle/biome_jungle-light-blonde","jungle4":  "textures/entity/villager2/biomes/biome_jungle/biome_jungle-medium-blonde","jungle5":  "textures/entity/villager2/biomes/biome_jungle/biome_jungle-dark-blonde","jungle6":  "textures/entity/villager2/biomes/biome_jungle/biome_jungle-vibrant-orange","jungle7":  "textures/entity/villager2/biomes/biome_jungle/biome_jungle-soft-blonde","jungle8":  "textures/entity/villager2/biomes/biome_jungle/biome_jungle-soft-magenta","jungle9":  "textures/entity/villager2/biomes/biome_jungle/biome_jungle-copper-red","jungle10": "textures/entity/villager2/biomes/biome_jungle/biome_jungle-light-red","jungle11": "textures/entity/villager2/biomes/biome_jungle/biome_jungle-auburn-red","jungle12": "textures/entity/villager2/biomes/biome_jungle/biome_jungle-dark-red","jungle13": "textures/entity/villager2/biomes/biome_jungle/biome_jungle-light-brown","jungle14": "textures/entity/villager2/biomes/biome_jungle/biome_jungle-medium-brown","jungle15": "textures/entity/villager2/biomes/biome_jungle/biome_jungle-white","jungle16": "textures/entity/villager2/biomes/biome_jungle/biome_jungle-dark-brown","jungle17": "textures/entity/villager2/biomes/biome_jungle/biome_jungle-deep-brown","jungle18": "textures/entity/villager2/biomes/biome_jungle/biome_jungle-soft-black","jungle19": "textures/entity/villager2/biomes/biome_jungle/biome_jungle-reddish-black","jungle20": "textures/entity/villager2/biomes/biome_jungle/biome_jungle-blueish-black","jungle21": "textures/entity/villager2/biomes/biome_jungle/biome_jungle-purpleish-black","jungle22": "textures/entity/villager2/biomes/biome_jungle/biome_jungle-deep-black","jungle23": "textures/entity/villager2/biomes/biome_jungle/biome_jungle-dark-gray","jungle24": "textures/entity/villager2/biomes/biome_jungle/biome_jungle-light-gray","jungle25": "textures/entity/villager2/biomes/biome_jungle/biome_jungle-pink","jungle26": "textures/entity/villager2/biomes/biome_jungle/biome_jungle-magenta","jungle27": "textures/entity/villager2/biomes/biome_jungle/biome_jungle-purple","jungle28": "textures/entity/villager2/biomes/biome_jungle/biome_jungle-blue","jungle29": "textures/entity/villager2/biomes/biome_jungle/biome_jungle-light-blue","jungle30": "textures/entity/villager2/biomes/biome_jungle/biome_jungle-cyan","jungle31": "textures/entity/villager2/biomes/biome_jungle/biome_jungle-green","jungle32": "textures/entity/villager2/biomes/biome_jungle/biome_jungle-lime-green","jungle33": "textures/entity/villager2/biomes/biome_jungle/biome_jungle-yellow","jungle34": "textures/entity/villager2/biomes/biome_jungle/biome_jungle-orange","jungle35": "textures/entity/villager2/biomes/biome_jungle/biome_jungle-red",
+        
+        "plains":   "textures/entity/villager2/biomes/biome_plains","plains1":  "textures/entity/villager2/biomes/biome_plains/biome_plains-very-light-blonde","plains2":  "textures/entity/villager2/biomes/biome_plains/biome_plains-medium-light-blonde","plains3":  "textures/entity/villager2/biomes/biome_plains/biome_plains-light-blonde","plains4":  "textures/entity/villager2/biomes/biome_plains/biome_plains-medium-blonde","plains5":  "textures/entity/villager2/biomes/biome_plains/biome_plains-dark-blonde","plains6":  "textures/entity/villager2/biomes/biome_plains/biome_plains-vibrant-orange","plains7":  "textures/entity/villager2/biomes/biome_plains/biome_plains-soft-blonde","plains8":  "textures/entity/villager2/biomes/biome_plains/biome_plains-soft-magenta","plains9":  "textures/entity/villager2/biomes/biome_plains/biome_plains-copper-red","plains10": "textures/entity/villager2/biomes/biome_plains/biome_plains-light-red","plains11": "textures/entity/villager2/biomes/biome_plains/biome_plains-auburn-red","plains12": "textures/entity/villager2/biomes/biome_plains/biome_plains-dark-red","plains13": "textures/entity/villager2/biomes/biome_plains/biome_plains-light-brown","plains14": "textures/entity/villager2/biomes/biome_plains/biome_plains-medium-brown","plains15": "textures/entity/villager2/biomes/biome_plains/biome_plains-white","plains16": "textures/entity/villager2/biomes/biome_plains/biome_plains-dark-brown","plains17": "textures/entity/villager2/biomes/biome_plains/biome_plains-deep-brown","plains18": "textures/entity/villager2/biomes/biome_plains/biome_plains-soft-black","plains19": "textures/entity/villager2/biomes/biome_plains/biome_plains-reddish-black","plains20": "textures/entity/villager2/biomes/biome_plains/biome_plains-blueish-black","plains21": "textures/entity/villager2/biomes/biome_plains/biome_plains-purpleish-black","plains22": "textures/entity/villager2/biomes/biome_plains/biome_plains-deep-black","plains23": "textures/entity/villager2/biomes/biome_plains/biome_plains-dark-gray","plains24": "textures/entity/villager2/biomes/biome_plains/biome_plains-light-gray","plains25": "textures/entity/villager2/biomes/biome_plains/biome_plains-pink","plains26": "textures/entity/villager2/biomes/biome_plains/biome_plains-magenta","plains27": "textures/entity/villager2/biomes/biome_plains/biome_plains-purple","plains28": "textures/entity/villager2/biomes/biome_plains/biome_plains-blue","plains29": "textures/entity/villager2/biomes/biome_plains/biome_plains-light-blue","plains30": "textures/entity/villager2/biomes/biome_plains/biome_plains-cyan","plains31": "textures/entity/villager2/biomes/biome_plains/biome_plains-green","plains32": "textures/entity/villager2/biomes/biome_plains/biome_plains-lime-green","plains33": "textures/entity/villager2/biomes/biome_plains/biome_plains-yellow","plains34": "textures/entity/villager2/biomes/biome_plains/biome_plains-orange","plains35": "textures/entity/villager2/biomes/biome_plains/biome_plains-red",
+
+        "savanna":   "textures/entity/villager2/biomes/biome_savanna","savanna1":  "textures/entity/villager2/biomes/biome_savanna/biome_savanna-very-light-blonde","savanna2":  "textures/entity/villager2/biomes/biome_savanna/biome_savanna-medium-light-blonde","savanna3":  "textures/entity/villager2/biomes/biome_savanna/biome_savanna-light-blonde","savanna4":  "textures/entity/villager2/biomes/biome_savanna/biome_savanna-medium-blonde","savanna5":  "textures/entity/villager2/biomes/biome_savanna/biome_savanna-dark-blonde","savanna6":  "textures/entity/villager2/biomes/biome_savanna/biome_savanna-vibrant-orange","savanna7":  "textures/entity/villager2/biomes/biome_savanna/biome_savanna-soft-blonde","savanna8":  "textures/entity/villager2/biomes/biome_savanna/biome_savanna-soft-magenta","savanna9":  "textures/entity/villager2/biomes/biome_savanna/biome_savanna-copper-red","savanna10": "textures/entity/villager2/biomes/biome_savanna/biome_savanna-light-red","savanna11": "textures/entity/villager2/biomes/biome_savanna/biome_savanna-auburn-red","savanna12": "textures/entity/villager2/biomes/biome_savanna/biome_savanna-dark-red","savanna13": "textures/entity/villager2/biomes/biome_savanna/biome_savanna-light-brown","savanna14": "textures/entity/villager2/biomes/biome_savanna/biome_savanna-medium-brown","savanna15": "textures/entity/villager2/biomes/biome_savanna/biome_savanna-white","savanna16": "textures/entity/villager2/biomes/biome_savanna/biome_savanna-dark-brown","savanna17": "textures/entity/villager2/biomes/biome_savanna/biome_savanna-deep-brown","savanna18": "textures/entity/villager2/biomes/biome_savanna/biome_savanna-soft-black","savanna19": "textures/entity/villager2/biomes/biome_savanna/biome_savanna-reddish-black","savanna20": "textures/entity/villager2/biomes/biome_savanna/biome_savanna-blueish-black","savanna21": "textures/entity/villager2/biomes/biome_savanna/biome_savanna-purpleish-black","savanna22": "textures/entity/villager2/biomes/biome_savanna/biome_savanna-deep-black","savanna23": "textures/entity/villager2/biomes/biome_savanna/biome_savanna-dark-gray","savanna24": "textures/entity/villager2/biomes/biome_savanna/biome_savanna-light-gray","savanna25": "textures/entity/villager2/biomes/biome_savanna/biome_savanna-pink","savanna26": "textures/entity/villager2/biomes/biome_savanna/biome_savanna-magenta","savanna27": "textures/entity/villager2/biomes/biome_savanna/biome_savanna-purple","savanna28": "textures/entity/villager2/biomes/biome_savanna/biome_savanna-blue","savanna29": "textures/entity/villager2/biomes/biome_savanna/biome_savanna-light-blue","savanna30": "textures/entity/villager2/biomes/biome_savanna/biome_savanna-cyan","savanna31": "textures/entity/villager2/biomes/biome_savanna/biome_savanna-green","savanna32": "textures/entity/villager2/biomes/biome_savanna/biome_savanna-lime-green","savanna33": "textures/entity/villager2/biomes/biome_savanna/biome_savanna-yellow","savanna34": "textures/entity/villager2/biomes/biome_savanna/biome_savanna-orange","savanna35": "textures/entity/villager2/biomes/biome_savanna/biome_savanna-red",
+
+        "snow":   "textures/entity/villager2/biomes/biome_snow","snow1":  "textures/entity/villager2/biomes/biome_snow/biome_snow-very-light-blonde","snow2":  "textures/entity/villager2/biomes/biome_snow/biome_snow-medium-light-blonde","snow3":  "textures/entity/villager2/biomes/biome_snow/biome_snow-light-blonde","snow4":  "textures/entity/villager2/biomes/biome_snow/biome_snow-medium-blonde","snow5":  "textures/entity/villager2/biomes/biome_snow/biome_snow-dark-blonde","snow6":  "textures/entity/villager2/biomes/biome_snow/biome_snow-vibrant-orange","snow7":  "textures/entity/villager2/biomes/biome_snow/biome_snow-soft-blonde","snow8":  "textures/entity/villager2/biomes/biome_snow/biome_snow-soft-magenta","snow9":  "textures/entity/villager2/biomes/biome_snow/biome_snow-copper-red","snow10": "textures/entity/villager2/biomes/biome_snow/biome_snow-light-red","snow11": "textures/entity/villager2/biomes/biome_snow/biome_snow-auburn-red","snow12": "textures/entity/villager2/biomes/biome_snow/biome_snow-dark-red","snow13": "textures/entity/villager2/biomes/biome_snow/biome_snow-light-brown","snow14": "textures/entity/villager2/biomes/biome_snow/biome_snow-medium-brown","snow15": "textures/entity/villager2/biomes/biome_snow/biome_snow-white","snow16": "textures/entity/villager2/biomes/biome_snow/biome_snow-dark-brown","snow17": "textures/entity/villager2/biomes/biome_snow/biome_snow-deep-brown","snow18": "textures/entity/villager2/biomes/biome_snow/biome_snow-soft-black","snow19": "textures/entity/villager2/biomes/biome_snow/biome_snow-reddish-black","snow20": "textures/entity/villager2/biomes/biome_snow/biome_snow-blueish-black","snow21": "textures/entity/villager2/biomes/biome_snow/biome_snow-purpleish-black","snow22": "textures/entity/villager2/biomes/biome_snow/biome_snow-deep-black","snow23": "textures/entity/villager2/biomes/biome_snow/biome_snow-dark-gray","snow24": "textures/entity/villager2/biomes/biome_snow/biome_snow-light-gray","snow25": "textures/entity/villager2/biomes/biome_snow/biome_snow-pink","snow26": "textures/entity/villager2/biomes/biome_snow/biome_snow-magenta","snow27": "textures/entity/villager2/biomes/biome_snow/biome_snow-purple","snow28": "textures/entity/villager2/biomes/biome_snow/biome_snow-blue","snow29": "textures/entity/villager2/biomes/biome_snow/biome_snow-light-blue","snow30": "textures/entity/villager2/biomes/biome_snow/biome_snow-cyan","snow31": "textures/entity/villager2/biomes/biome_snow/biome_snow-green","snow32": "textures/entity/villager2/biomes/biome_snow/biome_snow-lime-green","snow33": "textures/entity/villager2/biomes/biome_snow/biome_snow-yellow","snow34": "textures/entity/villager2/biomes/biome_snow/biome_snow-orange","snow35": "textures/entity/villager2/biomes/biome_snow/biome_snow-red",
+
+        "swamp":   "textures/entity/villager2/biomes/biome_swamp","swamp1":  "textures/entity/villager2/biomes/biome_swamp/biome_swamp-very-light-blonde","swamp2":  "textures/entity/villager2/biomes/biome_swamp/biome_swamp-medium-light-blonde","swamp3":  "textures/entity/villager2/biomes/biome_swamp/biome_swamp-light-blonde","swamp4":  "textures/entity/villager2/biomes/biome_swamp/biome_swamp-medium-blonde","swamp5":  "textures/entity/villager2/biomes/biome_swamp/biome_swamp-dark-blonde","swamp6":  "textures/entity/villager2/biomes/biome_swamp/biome_swamp-vibrant-orange","swamp7":  "textures/entity/villager2/biomes/biome_swamp/biome_swamp-soft-blonde","swamp8":  "textures/entity/villager2/biomes/biome_swamp/biome_swamp-soft-magenta","swamp9":  "textures/entity/villager2/biomes/biome_swamp/biome_swamp-copper-red","swamp10": "textures/entity/villager2/biomes/biome_swamp/biome_swamp-light-red","swamp11": "textures/entity/villager2/biomes/biome_swamp/biome_swamp-auburn-red","swamp12": "textures/entity/villager2/biomes/biome_swamp/biome_swamp-dark-red","swamp13": "textures/entity/villager2/biomes/biome_swamp/biome_swamp-light-brown","swamp14": "textures/entity/villager2/biomes/biome_swamp/biome_swamp-medium-brown","swamp15": "textures/entity/villager2/biomes/biome_swamp/biome_swamp-white","swamp16": "textures/entity/villager2/biomes/biome_swamp/biome_swamp-dark-brown","swamp17": "textures/entity/villager2/biomes/biome_swamp/biome_swamp-deep-brown","swamp18": "textures/entity/villager2/biomes/biome_swamp/biome_swamp-soft-black","swamp19": "textures/entity/villager2/biomes/biome_swamp/biome_swamp-reddish-black","swamp20": "textures/entity/villager2/biomes/biome_swamp/biome_swamp-blueish-black","swamp21": "textures/entity/villager2/biomes/biome_swamp/biome_swamp-purpleish-black","swamp22": "textures/entity/villager2/biomes/biome_swamp/biome_swamp-deep-black","swamp23": "textures/entity/villager2/biomes/biome_swamp/biome_swamp-dark-gray","swamp24": "textures/entity/villager2/biomes/biome_swamp/biome_swamp-light-gray","swamp25": "textures/entity/villager2/biomes/biome_swamp/biome_swamp-pink","swamp26": "textures/entity/villager2/biomes/biome_swamp/biome_swamp-magenta","swamp27": "textures/entity/villager2/biomes/biome_swamp/biome_swamp-purple","swamp28": "textures/entity/villager2/biomes/biome_swamp/biome_swamp-blue","swamp29": "textures/entity/villager2/biomes/biome_swamp/biome_swamp-light-blue","swamp30": "textures/entity/villager2/biomes/biome_swamp/biome_swamp-cyan","swamp31": "textures/entity/villager2/biomes/biome_swamp/biome_swamp-green","swamp32": "textures/entity/villager2/biomes/biome_swamp/biome_swamp-lime-green","swamp33": "textures/entity/villager2/biomes/biome_swamp/biome_swamp-yellow","swamp34": "textures/entity/villager2/biomes/biome_swamp/biome_swamp-orange","swamp35": "textures/entity/villager2/biomes/biome_swamp/biome_swamp-red",
+
+        "taiga":   "textures/entity/villager2/biomes/biome_taiga","taiga1":  "textures/entity/villager2/biomes/biome_taiga/biome_taiga-very-light-blonde","taiga2":  "textures/entity/villager2/biomes/biome_taiga/biome_taiga-medium-light-blonde","taiga3":  "textures/entity/villager2/biomes/biome_taiga/biome_taiga-light-blonde","taiga4":  "textures/entity/villager2/biomes/biome_taiga/biome_taiga-medium-blonde","taiga5":  "textures/entity/villager2/biomes/biome_taiga/biome_taiga-dark-blonde","taiga6":  "textures/entity/villager2/biomes/biome_taiga/biome_taiga-vibrant-orange","taiga7":  "textures/entity/villager2/biomes/biome_taiga/biome_taiga-soft-blonde","taiga8":  "textures/entity/villager2/biomes/biome_taiga/biome_taiga-soft-magenta","taiga9":  "textures/entity/villager2/biomes/biome_taiga/biome_taiga-copper-red","taiga10": "textures/entity/villager2/biomes/biome_taiga/biome_taiga-light-red","taiga11": "textures/entity/villager2/biomes/biome_taiga/biome_taiga-auburn-red","taiga12": "textures/entity/villager2/biomes/biome_taiga/biome_taiga-dark-red","taiga13": "textures/entity/villager2/biomes/biome_taiga/biome_taiga-light-brown","taiga14": "textures/entity/villager2/biomes/biome_taiga/biome_taiga-medium-brown","taiga15": "textures/entity/villager2/biomes/biome_taiga/biome_taiga-white","taiga16": "textures/entity/villager2/biomes/biome_taiga/biome_taiga-dark-brown","taiga17": "textures/entity/villager2/biomes/biome_taiga/biome_taiga-deep-brown","taiga18": "textures/entity/villager2/biomes/biome_taiga/biome_taiga-soft-black","taiga19": "textures/entity/villager2/biomes/biome_taiga/biome_taiga-reddish-black","taiga20": "textures/entity/villager2/biomes/biome_taiga/biome_taiga-blueish-black","taiga21": "textures/entity/villager2/biomes/biome_taiga/biome_taiga-purpleish-black","taiga22": "textures/entity/villager2/biomes/biome_taiga/biome_taiga-deep-black","taiga23": "textures/entity/villager2/biomes/biome_taiga/biome_taiga-dark-gray","taiga24": "textures/entity/villager2/biomes/biome_taiga/biome_taiga-light-gray","taiga25": "textures/entity/villager2/biomes/biome_taiga/biome_taiga-pink","taiga26": "textures/entity/villager2/biomes/biome_taiga/biome_taiga-magenta","taiga27": "textures/entity/villager2/biomes/biome_taiga/biome_taiga-purple","taiga28": "textures/entity/villager2/biomes/biome_taiga/biome_taiga-blue","taiga29": "textures/entity/villager2/biomes/biome_taiga/biome_taiga-light-blue","taiga30": "textures/entity/villager2/biomes/biome_taiga/biome_taiga-cyan","taiga31": "textures/entity/villager2/biomes/biome_taiga/biome_taiga-green","taiga32": "textures/entity/villager2/biomes/biome_taiga/biome_taiga-lime-green","taiga33": "textures/entity/villager2/biomes/biome_taiga/biome_taiga-yellow","taiga34": "textures/entity/villager2/biomes/biome_taiga/biome_taiga-orange","taiga35": "textures/entity/villager2/biomes/biome_taiga/biome_taiga-red",
+
+        "eyes0":  "textures/entity/villager2/eyes/eyes_green",
+        "eyes1":  "textures/entity/villager2/eyes/eyes_amber-dark",
+        "eyes2":  "textures/entity/villager2/eyes/eyes_amber-darksoft",
+        "eyes3":  "textures/entity/villager2/eyes/eyes_amber-light",
+        "eyes4":  "textures/entity/villager2/eyes/eyes_black",
+        "eyes5":  "textures/entity/villager2/eyes/eyes_blue",
+        "eyes6":  "textures/entity/villager2/eyes/eyes_blue-dark",
+        "eyes7":  "textures/entity/villager2/eyes/eyes_blue-light",
+        "eyes8":  "textures/entity/villager2/eyes/eyes_blue-mid",
+        "eyes9":  "textures/entity/villager2/eyes/eyes_brown-dark",
+        "eyes10": "textures/entity/villager2/eyes/eyes_brown-light",
+        "eyes11": "textures/entity/villager2/eyes/eyes_brown-mid",
+        "eyes12": "textures/entity/villager2/eyes/eyes_brown-verydark",
+        "eyes13": "textures/entity/villager2/eyes/eyes_cyan",
+        "eyes14": "textures/entity/villager2/eyes/eyes_gray",
+        "eyes15": "textures/entity/villager2/eyes/eyes_grayblue",
+        "eyes16": "textures/entity/villager2/eyes/eyes_green",
+        "eyes17": "textures/entity/villager2/eyes/eyes_green-bright",
+        "eyes18": "textures/entity/villager2/eyes/eyes_green-cooldark",
+        "eyes19": "textures/entity/villager2/eyes/eyes_green-light",
+        "eyes20": "textures/entity/villager2/eyes/eyes_green-mid",
+        "eyes21": "textures/entity/villager2/eyes/eyes_green-warmdark",
+        "eyes22": "textures/entity/villager2/eyes/eyes_light-blue",
+        "eyes23": "textures/entity/villager2/eyes/eyes_light-gray",
+        "eyes24": "textures/entity/villager2/eyes/eyes_lime-green",
+        "eyes25": "textures/entity/villager2/eyes/eyes_magenta",
+        "eyes26": "textures/entity/villager2/eyes/eyes_orange",
+        "eyes27": "textures/entity/villager2/eyes/eyes_pink",
+        "eyes28": "textures/entity/villager2/eyes/eyes_purple",
+        "eyes29": "textures/entity/villager2/eyes/eyes_red",
+        "eyes30": "textures/entity/villager2/eyes/eyes_red-dark",
+        "eyes31": "textures/entity/villager2/eyes/eyes_vivid",
+        "eyes32": "textures/entity/villager2/eyes/eyes_white",
+        "eyes33": "textures/entity/villager2/eyes/eyes_yellow",
+        "eyes34": "textures/entity/villager2/eyes/eyes_yellow-green",
+
+        "hair0": "textures/entity/villager2/hair/bald",
+
+        "hair1":  "textures/entity/villager2/hair/ari/ari-very-light-blonde",
+        "hair2":  "textures/entity/villager2/hair/ari/ari-medium-light-blonde",
+        "hair3":  "textures/entity/villager2/hair/ari/ari-light-blonde",
+        "hair4":  "textures/entity/villager2/hair/ari/ari-medium-blonde",
+        "hair5":  "textures/entity/villager2/hair/ari/ari-dark-blonde",
+        "hair6":  "textures/entity/villager2/hair/ari/ari-vibrant-orange",
+        "hair7":  "textures/entity/villager2/hair/ari/ari-soft-blonde",
+        "hair8":  "textures/entity/villager2/hair/ari/ari-soft-magenta",
+        "hair9":  "textures/entity/villager2/hair/ari/ari-copper-red",
+        "hair10": "textures/entity/villager2/hair/ari/ari-light-red",
+        "hair11": "textures/entity/villager2/hair/ari/ari-auburn-red",
+        "hair12": "textures/entity/villager2/hair/ari/ari-dark-red",
+        "hair13": "textures/entity/villager2/hair/ari/ari-light-brown",
+        "hair14": "textures/entity/villager2/hair/ari/ari-medium-brown",
+        "hair15": "textures/entity/villager2/hair/ari/ari-white",
+        "hair16": "textures/entity/villager2/hair/ari/ari-dark-brown",
+        "hair17": "textures/entity/villager2/hair/ari/ari-deep-brown",
+        "hair18": "textures/entity/villager2/hair/ari/ari-soft-black",
+        "hair19": "textures/entity/villager2/hair/ari/ari-reddish-black",
+        "hair20": "textures/entity/villager2/hair/ari/ari-blueish-black",
+        "hair21": "textures/entity/villager2/hair/ari/ari-purpleish-black",
+        "hair22": "textures/entity/villager2/hair/ari/ari-deep-black",
+        "hair23": "textures/entity/villager2/hair/ari/ari-dark-gray",
+        "hair24": "textures/entity/villager2/hair/ari/ari-light-gray",
+        "hair25": "textures/entity/villager2/hair/ari/ari-pink",
+        "hair26": "textures/entity/villager2/hair/ari/ari-magenta",
+        "hair27": "textures/entity/villager2/hair/ari/ari-purple",
+        "hair28": "textures/entity/villager2/hair/ari/ari-blue",
+        "hair29": "textures/entity/villager2/hair/ari/ari-light-blue",
+        "hair30": "textures/entity/villager2/hair/ari/ari-cyan",
+        "hair31": "textures/entity/villager2/hair/ari/ari-green",
+        "hair32": "textures/entity/villager2/hair/ari/ari-lime-green",
+        "hair33": "textures/entity/villager2/hair/ari/ari-yellow",
+        "hair34": "textures/entity/villager2/hair/ari/ari-orange",
+        "hair35": "textures/entity/villager2/hair/ari/ari-red",
+
+        "hair37": "textures/entity/villager2/hair/alex/alex-medium-light-blonde",
+        "hair38": "textures/entity/villager2/hair/alex/alex-light-blonde",
+        "hair39": "textures/entity/villager2/hair/alex/alex-medium-blonde",
+        "hair40": "textures/entity/villager2/hair/alex/alex-dark-blonde",
+        "hair41": "textures/entity/villager2/hair/alex/alex-vibrant-orange",
+        "hair42": "textures/entity/villager2/hair/alex/alex-soft-blonde",
+        "hair43": "textures/entity/villager2/hair/alex/alex-soft-magenta",
+        "hair44": "textures/entity/villager2/hair/alex/alex-copper-red",
+        "hair45": "textures/entity/villager2/hair/alex/alex-light-red",
+        "hair46": "textures/entity/villager2/hair/alex/alex-auburn-red",
+        "hair47": "textures/entity/villager2/hair/alex/alex-dark-red",
+        "hair48": "textures/entity/villager2/hair/alex/alex-light-brown",
+        "hair49": "textures/entity/villager2/hair/alex/alex-medium-brown",
+        "hair50": "textures/entity/villager2/hair/alex/alex-white",
+        "hair51": "textures/entity/villager2/hair/alex/alex-dark-brown",
+        "hair52": "textures/entity/villager2/hair/alex/alex-deep-brown",
+        "hair53": "textures/entity/villager2/hair/alex/alex-soft-black",
+        "hair54": "textures/entity/villager2/hair/alex/alex-reddish-black",
+        "hair55": "textures/entity/villager2/hair/alex/alex-blueish-black",
+        "hair56": "textures/entity/villager2/hair/alex/alex-purpleish-black",
+        "hair57": "textures/entity/villager2/hair/alex/alex-deep-black",
+        "hair58": "textures/entity/villager2/hair/alex/alex-dark-gray",
+        "hair59": "textures/entity/villager2/hair/alex/alex-light-gray",
+        "hair61": "textures/entity/villager2/hair/alex/alex-pink",
+        "hair62": "textures/entity/villager2/hair/alex/alex-magenta",
+        "hair63": "textures/entity/villager2/hair/alex/alex-purple",
+        "hair64": "textures/entity/villager2/hair/alex/alex-blue",
+        "hair65": "textures/entity/villager2/hair/alex/alex-light-blue",
+        "hair66": "textures/entity/villager2/hair/alex/alex-cyan",
+        "hair67": "textures/entity/villager2/hair/alex/alex-green",
+        "hair68": "textures/entity/villager2/hair/alex/alex-lime-green",
+        "hair69": "textures/entity/villager2/hair/alex/alex-yellow",
+        "hair70": "textures/entity/villager2/hair/alex/alex-orange",
+        "hair71": "textures/entity/villager2/hair/alex/alex-red",
+
+        "hair72": "textures/entity/villager2/hair/bald",
+        "hair73": "textures/entity/villager2/hair/bald",
+        "hair74": "textures/entity/villager2/hair/bald",
+        "hair75": "textures/entity/villager2/hair/bald",
+
+        "armorer": "textures/entity/villager2/professions/armorer",
+        "butcher": "textures/entity/villager2/professions/butcher",
+        "cartographer": "textures/entity/villager2/professions/cartographer",
+        "cleric": "textures/entity/villager2/professions/cleric",
+        "farmer": "textures/entity/villager2/professions/farmer",
+        "fisherman": "textures/entity/villager2/professions/fisherman",
+        "fletcher": "textures/entity/villager2/professions/fletcher",
+        "leatherworker": "textures/entity/villager2/professions/leatherworker",
+        "librarian": "textures/entity/villager2/professions/librarian",
+        "shepherd": "textures/entity/villager2/professions/shepherd",
+        "tool_smith": "textures/entity/villager2/professions/toolsmith",
+        "weapon_smith": "textures/entity/villager2/professions/weaponsmith",
+        "stonemason": "textures/entity/villager2/professions/stonemason",
+
+        "nitwit": "textures/entity/villager2/professions/nitwit",
+        "unskilled": "textures/entity/villager2/professions/unskilled",
+
+        "level_stone": "textures/entity/villager2/levels/level_stone",
+        "level_iron": "textures/entity/villager2/levels/level_iron",
+        "level_gold": "textures/entity/villager2/levels/level_gold",
+        "level_emerald": "textures/entity/villager2/levels/level_emerald",
+        "level_diamond": "textures/entity/villager2/levels/level_diamond"
+      },
+      "geometry": {
+        "default": "geometry.villager_v2"
+      },
+      "scripts": {
+        "scale": "0.9375",
+        "pre_animation": [
+          "variable.num_professions = 15;",
+          "variable.num_tiers = 3;",
+          "variable.profession_index = (query.variant < variable.num_professions ? query.variant : 0);",
+          "variable.level_index = query.trade_tier;"
+        ]
+      },
+      "animations": {
+        "general": "animation.villager.general",
+        "look_at_target": "animation.common.look_at_target",
+        "move": "animation.villager.move",
+        "raise_arms": "animation.villager.raise_arms",
+        "baby_transform": "animation.villager.baby_transform",
+        "get_in_bed": "animation.villager.get_in_bed"
+      },
+      "animation_controllers": [
+        {
+          "general": "controller.animation.villager_v2.general"
+        },
+        {
+          "move": "controller.animation.villager_v2.move"
+        },
+        {
+          "raise_arms": "controller.animation.villager_v2.raise_arms"
+        },
+        {
+          "baby": "controller.animation.villager_v2.baby"
+        }
+      ],
+      "render_controllers": [
+        "controller.render.villager_v2_base",
+        "controller.render.villager_v2_hair",
+        "controller.render.villager_v2_masked",
+        "controller.render.villager_v2_eyes",
+        
+        "controller.render.villager_v2_level"
+      ],
+      "spawn_egg": {
+        "texture": "spawn_egg_villager"
+      }
+    }
+  }
+}

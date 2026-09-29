@@ -1,0 +1,23 @@
+{
+  "format_version": "1.8.0",
+  "render_controllers": {
+    "controller.render.rank.speed": {
+      "arrays": { "textures": { "Array.ranks": ["Texture.S", "Texture.A", "Texture.B", "Texture.C", "Texture.D", "Texture.E", "Texture.F"] } },
+      "geometry": "Geometry.speed_rank",
+      "materials": [{"*": "Material.calendar"}],
+      "textures": ["Array.ranks[variable.max_speed > 14 ? 0 : (variable.max_speed > 12 ? 1 : (variable.max_speed > 10.5 ? 2 : (variable.max_speed > 9 ? 3 : (variable.max_speed > 7.5 ? 4 : (variable.max_speed > 6 ? 5 : 6)))))]"]
+    },
+"controller.render.rank.jump": {
+  "arrays": { "textures": { "Array.ranks": ["Texture.S", "Texture.A", "Texture.B", "Texture.C", "Texture.D", "Texture.E", "Texture.F"] } },
+  "geometry": "Geometry.jump_rank",
+  "materials": [{"*": "Material.calendar"}],
+  "textures": ["Array.ranks[variable.jump_height > 4.8 ? 0 : (variable.jump_height > 4.0 ? 1 : (variable.jump_height > 3.3 ? 2 : (variable.jump_height > 2.7 ? 3 : (variable.jump_height > 2.0 ? 4 : (variable.jump_height > 1.2 ? 5 : 6)))))]"]
+},
+    "controller.render.rank.health": {
+      "arrays": { "textures": { "Array.ranks": ["Texture.S", "Texture.A", "Texture.B", "Texture.C", "Texture.D", "Texture.E", "Texture.F"] } },
+      "geometry": "Geometry.health_rank",
+      "materials": [{"*": "Material.calendar"}],
+      "textures": ["Array.ranks[query.max_health > 29 ? 0 : (query.max_health > 26 ? 1 : (query.max_health > 24 ? 2 : (query.max_health > 22 ? 3 : (query.max_health > 20 ? 4 : (query.max_health > 18 ? 5 : 6)))))]"]
+    }
+  }
+}

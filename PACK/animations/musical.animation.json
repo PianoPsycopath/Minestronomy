@@ -1,0 +1,20 @@
+{
+    "format_version": "1.8.0",
+    "animations": {
+        "animation.player.first_person.musical_pose": {
+            "loop": true,
+            
+            "bones": {
+                
+                "speed_root": {
+					"relative_to" : {
+						"rotation" : "entity"
+					},
+					"rotation" : [ "query.camera_rotation(0) - this", "query.camera_rotation(1) - this",  0.0 ]
+				
+                }
+
+            }
+        }
+    }
+}

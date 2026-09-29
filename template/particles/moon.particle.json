@@ -1,0 +1,57 @@
+{
+  "format_version": "1.10.0",
+  "particle_effect": {
+    "description": {
+      "identifier": "astrum:moon_particle",
+      "basic_render_parameters": {
+        "material": "particles_add",
+        "texture": "textures/environment/moon_phasesASTRUM"
+      }
+    },
+    "components": {
+      "minecraft:emitter_local_space": {
+        "position": true,
+        "rotation": false
+      },
+      "minecraft:emitter_rate_instant": {
+        "num_particles": 1
+      },
+      "minecraft:emitter_lifetime_looping": {
+        "active_time": 1
+      },
+      "minecraft:emitter_shape_point": {
+        "offset": [0, 250, 0]
+      },
+      "minecraft:particle_lifetime_expression": {
+        "max_lifetime": 1.0
+      },
+      "minecraft:particle_initialization": {
+        "per_update_expression":
+
+          "variable.moon_lon = math.mod((query.day / 27.32) * 360, 360); variable.sun_lon  = math.mod((query.day / 365.25) * 360, 360); variable.phase_angle = math.mod(variable.moon_lon - variable.sun_lon, 360); variable.raw_idx = math.floor(math.mod(variable.phase_angle + 22.5, 360) / 45); variable.phase   = math.mod(variable.raw_idx + 4, 8); variable.sep_from_full = math.abs(variable.phase_angle - 180); variable.blood_intensity = math.clamp((16.0 - variable.sep_from_full) / 8.0, 0, 1); variable.blood_transition = math.clamp((16.0 - variable.sep_from_full) / 16.0, 0, 1);"
+      },
+      "minecraft:particle_initial_speed": 0,
+      "minecraft:particle_appearance_billboard": {
+        "size": [80, 80],
+        "facing_camera_mode": "lookat_xyz",
+        "uv": {
+          "texture_width": 128,
+          "texture_height": 64,
+          "uv": [
+            "math.mod(variable.phase, 4) * 32",
+            "math.floor(variable.phase / 4) * 32"
+          ],
+          "uv_size": [32, 32]
+        }
+      },
+      "minecraft:particle_appearance_tinting": {
+        "color": [
+          "1.0",
+          "1.0 - (variable.blood_intensity * 0.8)",
+          "1.0 - (variable.blood_intensity * 0.8)",
+          "math.lerp(1.0, 0.5, math.clamp(math.sin(query.time_of_day * 360), 0, 1))"
+        ]
+      }
+    }
+  }
+}

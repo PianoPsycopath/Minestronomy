@@ -1,0 +1,20 @@
+{
+    "format_version": "1.10.0",
+    "animation_controllers": {
+        "controller.animation.death": {
+            "initial_state": "default",
+            "states": {
+                "default": {
+                    "transitions": [
+                        {
+                            "dead": "q.is_alive"
+                        }
+                    ]
+                },
+                "dead": {
+                    "on_entry": ["/say :had died"]
+                }
+            }
+        }
+    }
+}

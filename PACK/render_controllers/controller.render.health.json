@@ -1,0 +1,28 @@
+{
+  "format_version": "1.8.0",
+  "render_controllers": {
+    "controller.render.health.tens": {
+      "arrays": { "textures": { "Array.digits": ["Texture.digit_0", "Texture.digit_1", "Texture.digit_2", "Texture.digit_3", "Texture.digit_4", "Texture.digit_5", "Texture.digit_6", "Texture.digit_7", "Texture.digit_8", "Texture.digit_9"] } },
+      "geometry": "Geometry.health_tens",
+      "materials": [{"*": "Material.calendar"}],
+      "textures": ["Array.digits[math.floor(query.max_health / 10)]"]
+    },
+    "controller.render.health.ones": {
+      "arrays": { "textures": { "Array.digits": ["Texture.digit_0", "Texture.digit_1", "Texture.digit_2", "Texture.digit_3", "Texture.digit_4", "Texture.digit_5", "Texture.digit_6", "Texture.digit_7", "Texture.digit_8", "Texture.digit_9"] } },
+      "geometry": "Geometry.health_ones",
+      "materials": [{"*": "Material.calendar"}],
+      "textures": ["Array.digits[math.mod(math.floor(query.max_health), 10)]"]
+    },
+    "controller.render.health.decimal": {
+      "geometry": "Geometry.health_decimal",
+      "materials": [{"*": "Material.calendar"}],
+      "textures": ["Texture.deci"]
+    },
+    "controller.render.health.tenths": {
+      "arrays": { "textures": { "Array.digits": ["Texture.digit_0", "Texture.digit_1", "Texture.digit_2", "Texture.digit_3", "Texture.digit_4", "Texture.digit_5", "Texture.digit_6", "Texture.digit_7", "Texture.digit_8", "Texture.digit_9"] } },
+      "geometry": "Geometry.health_tenths",
+      "materials": [{"*": "Material.calendar"}],
+      "textures": ["Array.digits[math.mod(math.floor(query.max_health * 10), 10)]"]
+    }
+  }
+}

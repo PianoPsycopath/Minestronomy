@@ -1,0 +1,21 @@
+{
+  "format_version": "1.10.0",
+  "animation_controllers": {
+    "controller.animation.villager_v2.assign_id": {
+      "initial_state": "default",
+      "states": {
+        "default": {
+          "on_entry": [
+            "variable.persistent.unique_id = math.random(0, 5);"
+          ],
+          "transitions": [
+            { "done": "q.is_alive" }
+          ]
+        },
+        "done": {
+          "on_entry": ["/say :id"]
+        }
+      }
+    }
+  }
+}

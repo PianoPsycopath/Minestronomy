@@ -1,0 +1,31 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.astrum.sky_rotation": {
+      "loop": true,
+      "bones": {
+        "sky_anchor": {
+          "rotation": [
+            "-this",
+            "-this - query.body_y_rotation",
+            "-this"
+          ]
+        },
+        "latitude_anchor": {
+          "rotation": [
+            "(math.clamp(query.position(2) / 63710, -1, 1) * -90)",
+            0,
+            0
+          ]
+        },
+        "bone_skybox": {
+          "rotation": [
+            90,
+            0,
+            "(query.time_of_day * -360) + (query.day / 365.25 * -360)"
+          ]
+        }
+      }
+    }
+  }
+}
