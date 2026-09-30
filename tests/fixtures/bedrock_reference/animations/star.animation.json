@@ -1,0 +1,55 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.astrum.sky_rotation": {
+			"loop": true,
+			"bones": {
+				"sky_anchor": {                         
+					"rotation": [ "-this", "-this - query.body_y_rotation", "-this" ]
+				},
+				"latitude_anchor": {
+					"rotation": [
+						"(math.clamp(query.position(2) / 63710, -1, 1) * -90)",
+						0,
+						0
+					]
+				},
+				"bone_skybox": {
+					"rotation": [
+						90,
+						0,
+						"(query.time_of_day * -360) + (query.day / 365.25 * -360)"
+					]
+				},
+				"bone_sun_pivot": {
+					"rotation": [
+						0,
+						0,
+						"(query.time_of_day * -360) + ((math.sin(((query.day - 2) / 182.5) * 360) * -7.65) + (math.sin(((query.day - 12) / 365) * 360) * -9.87))"
+					]
+				},
+				"bone_sun_declination": {
+					"rotation": [
+						"math.sin(((query.day - 80) / 365) * 360) * 23.5",
+						0,
+						0
+					]
+				},
+				"bone_moon_pivot": {
+					"rotation": [ 
+						0, 
+						0, 
+						"(query.time_of_day * -360) + (((query.day + query.time_of_day) / 29.53) * 360) + 180" 
+					]
+				},
+				"bone_moon_declination": {
+					"rotation": [ 
+						"(math.sin((((query.day - 80) / 365.25) * 360) + 180 + (((query.day + query.time_of_day) / 29.53) * 360)) * (23.5 + (math.cos(((query.day + query.time_of_day) / 6793.5) * 360) * 5.14))) + (query.position(2) / 63710 * 2.9)", 
+						0, 
+						0 
+					]
+				}
+			}
+		}
+	}
+}
