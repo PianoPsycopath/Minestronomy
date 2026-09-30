@@ -1,7 +1,13 @@
 import pytest
 import numpy as np
 import math
-from main import ra_dec_to_xyz, get_face_coords
+import os
+from pathlib import Path
+from stars import ra_dec_to_xyz, get_face_coords
+
+DATA_DIR = Path(__file__).resolve().parent.parent / 'data'
+CSV_FILE = DATA_DIR / 'hyg_v42.csv'
+NGC_FILE = DATA_DIR / 'NGC.csv'
 
 def test_coordinate_conversion():
     # Test Zenith (Dec 90)
@@ -23,7 +29,5 @@ def test_face_mapping():
 
 def test_data_integrity():
     # Ensure critical paths exist
-    import os
-    from main import CSV_FILE, NGC_FILE
     assert os.path.exists(CSV_FILE), f"Missing star catalog: {CSV_FILE}"
     assert os.path.exists(NGC_FILE), f"Missing NGC catalog: {NGC_FILE}"
