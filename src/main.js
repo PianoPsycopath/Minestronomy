@@ -2,6 +2,8 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { TimeState } from './timeState.js';
 import { compileMolang, molangMath } from './molang.js';
+import { AstronomyEngine } from './astronomy.js';
+const astronomy = new AstronomyEngine();
 
 // --- Scene Initialization ---
 const container = document.getElementById('canvas-container');
@@ -195,6 +197,7 @@ for (const stateName in controllerStates) {
 
 // --- Heliocentric Mock ---
 const orreryGroup = new THREE.Group();
+const heliosPlanetMeshes = new Map();
 sceneHelios.add(orreryGroup);
 
 const defaultBodies = [
@@ -216,27 +219,31 @@ try {
 
 function renderOrrery() {
     orreryGroup.clear();
+    heliosPlanetMeshes.clear();
+    
+    // Sun at center
     const sun = new THREE.Sprite(sunMat);
     sun.scale.set(40, 40, 1);
     orreryGroup.add(sun);
     
-    let distanceCounter = 50;
     celestialBodies.forEach(body => {
-        if (body.id === 'sun') return;
+        if (body.id === 'sun' || body.id === 'moon') return;
+        
         const mesh = new THREE.Mesh(
             new THREE.SphereGeometry(4, 16, 16),
             new THREE.MeshBasicMaterial({ color: 0x8b7355, wireframe: true })
         );
-        mesh.position.set(distanceCounter, 0, 0);
         orreryGroup.add(mesh);
+        heliosPlanetMeshes.set(body.id, mesh);
 
+        // Visual orbital ring placeholder
+        const distance = (body.id === 'earth') ? 100 : (body.id === 'mercury' ? 38 : (body.id === 'venus' ? 72 : 152));
         const ring = new THREE.Mesh(
-            new THREE.RingGeometry(distanceCounter - 0.5, distanceCounter + 0.5, 64),
+            new THREE.RingGeometry(distance - 0.5, distance + 0.5, 64),
             new THREE.MeshBasicMaterial({ color: 0x5c4e3a, side: THREE.DoubleSide })
         );
         ring.rotation.x = Math.PI / 2;
         orreryGroup.add(ring);
-        distanceCounter += 40;
     });
 }
 
@@ -371,12 +378,11 @@ function animate(now) {
       time_of_day: timeState.timeOfDay,
       day: timeState.daysPassed,
       body_y_rotation: timeState.bodyYaw,
-      // Maps latitude to Z position matching JSON
       position_2: (timeState.latitude / 90) * 63710, 
       is_item_name_any: (slot, item) => timeState.holdingSpyglass && item === 'minecraft:spyglass'
   };
 
-  // 2. Evaluate Controller State Machine
+  // 2. Evaluate Controller State Machine (Spyglass toggle)
   if (activeScene === sceneSky) {
     const currentStateData = controllerStates[activeControllerState];
     for (const transition of currentStateData.compiledTransitions) {
@@ -387,26 +393,51 @@ function animate(now) {
         }
     }
 
-    // 3. Evaluate Bone Animations
-    for (const boneName in compiledAnims) {
+    // 3. Evaluate Legacy Animations (For Skybox, Anchors, and Latitude ONLY)
+    const bonesToEvaluate = ['sky_anchor', 'latitude_anchor', 'bone_skybox', 'axial_tilt'];
+    for (const boneName of bonesToEvaluate) {
         const bone = boneMap.get(boneName);
-        if (bone) {
+        if (bone && compiledAnims[boneName]) {
             const baseRot = bone.userData.baseRotation;
             const funcs = compiledAnims[boneName];
-            
             const rx = baseRot[0] + funcs[0](molangMath, query, 0);
             const ry = baseRot[1] + funcs[1](molangMath, query, 0);
             const rz = baseRot[2] + funcs[2](molangMath, query, 0);
 
-            // Apply ZYX order to match Bedrock's accumulation logic
             bone.rotation.set(
                 THREE.MathUtils.degToRad(rx),
-                THREE.MathUtils.degToRad(ry),
-                THREE.MathUtils.degToRad(rz),
+                THREE.MathUtils.degToRad(-ry),
+                THREE.MathUtils.degToRad(-rz),
                 'ZYX' 
             );
         }
     }
+
+    // 4. INJECT ASTRONOMY ENGINE (Replaces Ptolemaic Molang)
+    const sunAngles = astronomy.getApparentGeocentricAngles('sun', timeState.daysPassed, timeState.timeOfDay);
+    if (boneMap.has('bone_sun_pivot')) {
+        boneMap.get('bone_sun_pivot').rotation.set(0, THREE.MathUtils.degToRad(-sunAngles.pivotY), 0, 'ZYX');
+    }
+    if (boneMap.has('bone_sun_declination')) {
+        boneMap.get('bone_sun_declination').rotation.set(THREE.MathUtils.degToRad(sunAngles.declinationX), 0, 0, 'ZYX');
+    }
+
+    const moonAngles = astronomy.getApparentGeocentricAngles('moon', timeState.daysPassed, timeState.timeOfDay);
+    if (boneMap.has('bone_moon_pivot')) {
+        boneMap.get('bone_moon_pivot').rotation.set(0, THREE.MathUtils.degToRad(-moonAngles.pivotY), 0, 'ZYX');
+    }
+    if (boneMap.has('bone_moon_declination')) {
+        boneMap.get('bone_moon_declination').rotation.set(THREE.MathUtils.degToRad(moonAngles.declinationX), 0, 0, 'ZYX');
+    }
+  }
+
+  // 5. Update Orrery Positions
+  if (activeScene === sceneHelios) {
+      heliosPlanetMeshes.forEach((mesh, id) => {
+          const coords = astronomy.getHeliocentricCoords(id, timeState.daysPassed);
+          // Scale up AU for visual purposes
+          mesh.position.set(coords.x * 100, coords.z * 100, coords.y * 100); 
+      });
   }
 
   renderer.render(activeScene, camera);
