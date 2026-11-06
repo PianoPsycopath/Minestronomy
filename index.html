@@ -1,118 +1,225 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>Minestronomy &middot; Celestial Workbench</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/src/style.css" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Minestronomy Channel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap">
+  <link rel="stylesheet" href="/css/style.css">
 </head>
-<body oncontextmenu="return false;">
+<body>
+  <canvas id="c" aria-label="3D Sky View"></canvas>
 
-  <!-- Left Drawer: Editor & Scene Switcher -->
-  <aside id="panel-left" class="panel parchment-panel">
-    <div class="panel-header">
-      <h2>Ocularis &middot; Cosmography</h2>
-    </div>
+  <div id="targetBanner" class="wii-lock-banner" hidden>
+    <span class="lock-reticle-dot"></span>
+    <span id="targetText">Tracking Celestial Event</span>
+    <button id="resetFov" class="wii-pill-btn sm">Reset Zoom</button>
+  </div>
 
-    <div class="control-group">
-      <label>OBSERVATION MODE</label>
-      <div class="btn-grid">
-        <button id="btn-mode-sky" class="mode-btn active">OBSERVER SKY</button>
-        <button id="btn-mode-helios" class="mode-btn">ORRERY MODEL</button>
+  <header class="wii-topbar">
+    <div class="wii-brand">
+      <div class="wii-orb-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <circle cx="12" cy="12" r="9"/>
+          <ellipse cx="12" cy="12" rx="9" ry="3.8" transform="rotate(-22 12 12)"/>
+          <circle cx="12" cy="12" r="2" fill="currentColor"/>
+        </svg>
       </div>
-      <p class="field-hint">Toggle between the terrestrial dome and the heliocentric sphere.</p>
-    </div>
-
-    <!-- Observer State Controls (Fixes the JS Error) -->
-    <div class="control-group">
-      <label>OBSERVER STATE</label>
-      <div class="slider-row" style="margin-bottom: 8px;">
-        <span class="slider-tag">LATITUDE</span>
-        <input type="range" id="lat-slider" min="-90" max="90" step="0.1" value="32.7" />
-        <span class="val-tag" id="val-latitude">32.7&deg;</span>
-      </div>
-      <div class="slider-row" style="margin-bottom: 8px;">
-        <span class="slider-tag">PLAYER YAW</span>
-        <input type="range" id="yaw-slider" min="-180" max="180" step="1" value="0" />
-        <span class="val-tag" id="val-yaw">0&deg;</span>
-      </div>
-      <button class="full-btn" id="btn-spyglass">SPYGLASS: STOWED</button>
-    </div>
-
-    <div class="control-group">
-      <div class="flex-header">
-        <label>CELESTIAL BODIES</label>
-        <button id="btn-add-body" class="icon-btn" title="Add Object">+</button>
-      </div>
-      <div class="scrollable-list" id="system-tree">
-        <!-- Rendered by main.js -->
+      <div class="wii-title-stack">
+        <span class="wii-sub-tag">MINESTRONOMY CHANNEL</span>
+        <h1>Sky Forecast</h1>
       </div>
     </div>
-  </aside>
 
-  <!-- Right Drawer: Textures & Bedrock Pack Exporter -->
-  <aside id="panel-right" class="panel parchment-panel">
-    <div class="panel-header">
-      <h2>Sensorium &middot; Cartography</h2>
+    <nav class="wii-nav" role="tablist">
+      <button class="wii-tab active" data-tab="sky" role="tab" aria-selected="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <circle cx="12" cy="12" r="4"/>
+          <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/>
+        </svg>
+        <span>Sky View</span>
+      </button>
+
+      <button class="wii-tab" data-tab="forecast" role="tab" aria-selected="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <rect x="2" y="4" width="20" height="16" rx="3"/>
+          <path d="M2 9h20M7 9v11M12 9v11M17 9v11"/>
+        </svg>
+        <span>Forecast</span>
+      </button>
+
+      <button class="wii-tab" data-tab="settings" role="tab" aria-selected="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.6.77 1.05 1.39 1.19H21a2 2 0 1 1 0 4h-.09c-.62.14-1.13.59-1.51 1.81z"/>
+        </svg>
+        <span>Settings</span>
+      </button>
+    </nav>
+
+    <div class="wii-clock-box">
+      <button id="topModeToggle" class="wii-date-pill" title="Toggle Calendar Date / Minecraft Ticks">
+        <span id="topDateText">Tuesday, January 1st, Year 0</span>
+      </button>
+      <div id="clk" class="wii-digital-clock">12:00 AM</div>
     </div>
+  </header>
 
-    <div class="control-group">
-      <label>ILLUSTRATIONS & PLATES</label>
-      <div class="input-stack">
-        <button class="full-btn" id="btn-load-sun-tex">SOLAR ENGRAVING: DEFAULT</button>
-        <button class="full-btn" id="btn-load-moon-tex">LUNAR ATLAS: 8-PHASE</button>
-        <button class="full-btn" id="btn-load-custom-tex">IMPORT CUSTOM PLATE...</button>
+  <section id="panel-forecast" class="wii-overlay" hidden>
+    <div class="wii-window forecast-window">
+      <div class="wii-window-header">
+        <div>
+          <h2>Celestial Weather Outlook</h2>
+          <p>Automatically updates each day. Click any broadcast column to jump to that event and lock the camera onto the sky.</p>
+        </div>
+        <div class="strip-scroll-btns">
+          <button id="scrollLeft" class="wii-step-btn lg" title="Scroll Left" aria-label="Scroll Left">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <button id="scrollRight" class="wii-step-btn lg" title="Scroll Right" aria-label="Scroll Right">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
       </div>
-      <p class="field-hint">Upload custom parchment projections or albedo maps.</p>
-    </div>
 
-    <div class="control-group">
-      <label>BEDROCK MANIFEST</label>
-      <input type="text" id="pack-name-input" value="Minestronomy_Cosmology" />
-      <button class="full-btn export-btn" id="btn-export-pack">INSCRIBE .MCPACK</button>
-    </div>
-  </aside>
-
-  <!-- 3D Canvas Anchor -->
-  <div id="canvas-container"></div>
-
-  <!-- Bottom Deck: Chronometer & Radial Clock -->
-  <footer id="bottom-deck" class="parchment-panel">
-    <div id="chronometer-shape">
-      <div class="chrono-header">
-        
-        <!-- Left: Command Output -->
-        <div class="command-display-card">
-          <span class="label">MINECRAFT CHRONOS</span>
-          <code id="cmd-output">/time set 0</code>
-          <div id="tick-counter">TOTAL TICKS: 0</div>
+      <div class="wii-filter-bar">
+        <div class="wii-seg-group" id="evtGroup">
+          <button class="wii-seg active" data-evt="lun">Lunar Eclipses</button>
+          <button class="wii-seg" data-evt="sol">Solar Eclipses</button>
+          <button class="wii-seg" data-evt="mm">Moon–Planet Conjunctions</button>
+          <button class="wii-seg" data-evt="opp">Oppositions &amp; Elongations</button>
         </div>
 
-        <!-- Center: Radial Clock -->
-        <div class="radial-clock-wrapper">
-          <div id="radial-clock">
-            <div id="clock-hand"></div>
-            <div class="clock-center"></div>
-            <button class="clock-btn zenith" data-time="0.5">ZENITH</button>
-            <button class="clock-btn dusk" data-time="0.75">DUSK</button>
-            <button class="clock-btn midnight" data-time="0.0">MIDNIGHT</button>
-            <button class="clock-btn dawn" data-time="0.25">DAWN</button>
+        <div class="wii-seg-group planet-bar" id="plGroup">
+          <button class="wii-pl-btn" data-pl="mercury"><span class="sw-dot" style="background:#d8d2c6"></span>Mercury</button>
+          <button class="wii-pl-btn" data-pl="venus"><span class="sw-dot" style="background:#fff7e0"></span>Venus</button>
+          <button class="wii-pl-btn active" data-pl="mars"><span class="sw-dot" style="background:#ff5933"></span>Mars</button>
+          <button class="wii-pl-btn" data-pl="jupiter"><span class="sw-dot" style="background:#ffebcc"></span>Jupiter</button>
+          <button class="wii-pl-btn" data-pl="saturn"><span class="sw-dot" style="background:#ffe099"></span>Saturn</button>
+        </div>
+      </div>
+
+      <div id="ev" class="wii-forecast-strip"></div>
+    </div>
+  </section>
+
+  <section id="panel-settings" class="wii-overlay" hidden>
+    <div class="wii-window settings-window">
+      <div class="settings-column">
+        <div class="wii-card">
+          <h3>Observer Coordinates</h3>
+          <label class="wii-field-row">
+            <span>Player Z (Blocks)</span>
+            <input id="z" type="number" step="1000" value="0">
+          </label>
+          <div id="lat" class="wii-info-strip">Latitude 0.0° (north = −Z)</div>
+        </div>
+
+        <div class="wii-card">
+          <h3>Celestial Disc &amp; Sky Guides</h3>
+          <label class="wii-slider-block">
+            <div class="slider-head">
+              <span>Sun / Moon Disc Diameter</span>
+              <strong id="discVal">8.0°</strong>
+            </div>
+            <input id="disc" type="range" min="0.5" max="18" step="0.1" value="8">
+          </label>
+
+          <label class="wii-slider-block">
+            <div class="slider-head">
+              <span>Planet Disc Scale</span>
+              <strong id="mdiscVal">0.9°</strong>
+            </div>
+            <input id="mdisc" type="range" min="0.2" max="4" step="0.1" value="0.9">
+          </label>
+
+          <div class="wii-checks">
+            <label class="wii-check">
+              <input id="ecl" type="checkbox" checked>
+              <span>Show Ecliptic Plane</span>
+            </label>
+            <label class="wii-check">
+              <input id="equ" type="checkbox">
+              <span>Show Celestial Equator</span>
+            </label>
+            <label class="wii-check">
+              <input id="xray" type="checkbox">
+              <span>Translucent Ground (View Below-Horizon Events)</span>
+            </label>
           </div>
         </div>
+      </div>
 
-        <!-- Right: Time Transport Controls -->
-        <div class="throttle-block">
-          <div id="segment-display">DAY 0<br>06:00:00 [DAWN]</div>
-          <div class="btn-grid" style="margin-top: 5px;">
-            <button id="btn-time-rev" class="throttle-btn">&laquo; REV</button>
-            <button id="btn-time-play" class="throttle-btn active">PLAY</button>
-            <button id="btn-time-fwd" class="throttle-btn">FWD &raquo;</button>
-          </div>
+      <div class="settings-column">
+        <div class="wii-card telemetry-box">
+          <h3>Live Orbital Telemetry</h3>
+          <pre id="out"></pre>
         </div>
-
       </div>
     </div>
+  </section>
+
+  <footer class="wii-bottombar">
+    <button id="play" class="wii-orb-play" title="Play / Pause" aria-label="Play">
+      <svg id="playIco" viewBox="0 0 24 24" fill="currentColor">
+        <polygon points="7,4 20,12 7,20"/>
+      </svg>
+    </button>
+
+    <div class="wii-day-ctrl">
+      <div class="dock-header-row">
+        <span id="modeLabel" class="dock-caption">WORLD DAY</span>
+        <button id="modeToggleBtn" class="mode-switch-chip" title="Toggle between Calendar Date and Raw Ticks">
+          Switch to Ticks
+        </button>
+      </div>
+
+      <div id="dayInputGroup" class="day-spin">
+        <button id="dayPrev" class="wii-step-btn" title="Previous Day">−</button>
+        <input id="day" type="number" step="1" value="0" aria-label="World Day">
+        <button id="dayNext" class="wii-step-btn" title="Next Day">+</button>
+      </div>
+
+      <div id="tickInputGroup" class="day-spin" hidden>
+        <button id="tickPrev" class="wii-step-btn" title="-1000 Ticks">−</button>
+        <input id="totalTickInput" type="number" step="100" value="18000" aria-label="Total Ticks">
+        <button id="tickNext" class="wii-step-btn" title="+1000 Ticks">+</button>
+      </div>
+    </div>
+
+    <div class="wii-scrubber">
+      <div class="scrubber-ticks">
+        <span>00:00 (18000t)</span>
+        <span>06:00 (0t)</span>
+        <span>12:00 (6000t)</span>
+        <span>18:00 (12000t)</span>
+        <span id="todReadout">TOD: 18000t</span>
+      </div>
+      <input id="tod" type="range" min="0" max="0.9999" step="0.0005" value="0" aria-label="Time of day">
+    </div>
+
+    <div class="wii-speed-ctrl">
+      <span class="dock-caption">WARP SPEED</span>
+      <select id="spd" aria-label="Speed">
+        <option value="0.02" selected>0.02 d/s</option>
+        <option value="0.1">0.1 d/s</option>
+        <option value="0.5">0.5 d/s</option>
+        <option value="2">2 d/s</option>
+        <option value="10">10 d/s</option>
+      </select>
+    </div>
+
+    <button id="copyCmdBtn" class="wii-cmd-btn" title="Copy /time set command to clipboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <rect x="9" y="9" width="13" height="13" rx="2"/>
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+      </svg>
+      <div class="cmd-btn-stack">
+        <span class="cmd-caption">COPY COMMAND</span>
+        <code id="cmdPreview">/time set 18000</code>
+      </div>
+    </button>
   </footer>
 
   <script type="module" src="/src/main.js"></script>
