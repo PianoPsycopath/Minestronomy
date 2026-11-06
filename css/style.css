@@ -1,0 +1,860 @@
+:root {
+  --wii-chrome: repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.82) 0px,
+      rgba(255, 255, 255, 0.82) 2px,
+      rgba(226, 243, 255, 0.78) 2px,
+      rgba(226, 243, 255, 0.78) 4px
+    );
+  --aero-btn: linear-gradient(180deg, #ffffff 0%, #eaf7ff 48%, #ccebff 52%, #e8f8ff 100%);
+  --aero-aqua: linear-gradient(180deg, #74e0ff 0%, #199cf5 48%, #0076d6 52%, #47cfff 100%);
+  --wii-border: #ffffff;
+  --wii-outline: rgba(0, 128, 220, 0.38);
+  --wii-text: #123052;
+  --wii-muted: #4b7196;
+  --wii-cyan: #0080e6;
+}
+
+* {
+  box-sizing: border-box;
+  user-select: none;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: "M PLUS Rounded 1c", "Segoe UI", system-ui, sans-serif;
+  color: var(--wii-text);
+  background: #070d19;
+}
+
+#c {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  cursor: grab;
+  z-index: 1;
+}
+
+#c:active {
+  cursor: grabbing;
+}
+
+.wii-topbar {
+  position: fixed;
+  top: 12px;
+  left: 16px;
+  right: 16px;
+  height: 64px;
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  background: var(--wii-chrome);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 2.5px solid var(--wii-border);
+  border-radius: 999px;
+  box-shadow: 0 6px 24px rgba(0, 25, 65, 0.45), 0 0 0 1px var(--wii-outline), inset 0 2px 2px #fff;
+}
+
+.wii-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.wii-orb-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 26%, #ffffff 0%, #6ce5ff 30%, #0082eb 72%, #003e8a 100%);
+  border: 2px solid #ffffff;
+  box-shadow: 0 3px 10px rgba(0, 130, 255, 0.45), inset 0 2px 3px rgba(255, 255, 255, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+}
+
+.wii-orb-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.wii-title-stack {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.05;
+}
+
+.wii-sub-tag {
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  color: var(--wii-cyan);
+}
+
+.wii-title-stack h1 {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 900;
+  color: var(--wii-text);
+  text-shadow: 0 1px 0 #fff;
+}
+
+.wii-nav {
+  display: flex;
+  gap: 10px;
+}
+
+.wii-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 42px;
+  padding: 0 20px;
+  border-radius: 999px;
+  border: 2px solid #ffffff;
+  background: var(--aero-btn);
+  color: var(--wii-text);
+  font: 800 14px "M PLUS Rounded 1c", sans-serif;
+  box-shadow: 0 3px 8px rgba(0, 65, 130, 0.16), 0 0 0 1px rgba(0, 140, 230, 0.25), inset 0 1px 1px #fff;
+  cursor: pointer;
+  transition: transform 0.14s ease, box-shadow 0.14s ease, filter 0.14s ease;
+}
+
+.wii-tab svg {
+  width: 18px;
+  height: 18px;
+  color: var(--wii-cyan);
+}
+
+.wii-tab:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+  box-shadow: 0 5px 14px rgba(0, 150, 255, 0.32), 0 0 0 1.5px #44c4ff;
+}
+
+.wii-tab.active {
+  background: var(--aero-aqua);
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 45, 100, 0.65);
+  border-color: #d8f6ff;
+  box-shadow: 0 0 16px rgba(0, 175, 255, 0.65), inset 0 1px 2px #fff;
+}
+
+.wii-tab.active svg {
+  color: #ffffff;
+}
+
+.wii-clock-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.wii-date-pill {
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--aero-btn);
+  border: 1.5px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 60, 120, 0.14), 0 0 0 1px rgba(0, 136, 238, 0.25);
+  font: 800 12.5px "M PLUS Rounded 1c", sans-serif;
+  color: var(--wii-text);
+  cursor: pointer;
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+
+.wii-date-pill:hover {
+  filter: brightness(1.04);
+  transform: translateY(-1px);
+}
+
+.wii-digital-clock {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #0f2744 0%, #071426 100%);
+  color: #7df9ff;
+  border: 2px solid #b5ebff;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.75), 0 1px 2px #fff;
+  text-shadow: 0 0 8px rgba(0, 225, 255, 0.6);
+  white-space: nowrap;
+}
+
+.wii-lock-banner {
+  position: fixed;
+  top: 86px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 22;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 7px 16px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(16, 42, 76, 0.88), rgba(8, 22, 44, 0.92));
+  backdrop-filter: blur(10px);
+  border: 2px solid #75dcff;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), 0 0 14px rgba(0, 180, 255, 0.4);
+}
+
+.wii-lock-banner[hidden] {
+  display: none !important;
+}
+
+.lock-reticle-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #38f88f;
+  box-shadow: 0 0 8px #38f88f;
+}
+
+.wii-bottombar {
+  position: fixed;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(96vw, 1140px);
+  height: 78px;
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 20px;
+  background: var(--wii-chrome);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 2.5px solid var(--wii-border);
+  border-radius: 999px;
+  box-shadow: 0 8px 28px rgba(0, 20, 55, 0.5), 0 0 0 1px var(--wii-outline), inset 0 2px 2px #fff;
+}
+
+.wii-orb-play {
+  width: 48px;
+  height: 48px;
+  flex: none;
+  border-radius: 50%;
+  border: 2.5px solid #ffffff;
+  background: radial-gradient(circle at 32% 24%, #ffffff 0%, #68e4ff 28%, #0088ee 68%, #004590 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 125, 255, 0.5), inset 0 2px 3px #fff;
+  transition: transform 0.14s ease, filter 0.14s ease;
+}
+
+.wii-orb-play svg {
+  width: 22px;
+  height: 22px;
+}
+
+.wii-orb-play:hover {
+  transform: scale(1.06);
+  filter: brightness(1.06);
+}
+
+.wii-orb-play:active {
+  transform: scale(0.96);
+}
+
+.dock-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  margin-bottom: 3px;
+}
+
+.dock-caption {
+  display: block;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  color: var(--wii-muted);
+}
+
+.mode-switch-chip {
+  padding: 1px 7px;
+  font: 800 9.5px "M PLUS Rounded 1c", sans-serif;
+  border-radius: 999px;
+  border: 1px solid #75c6ff;
+  background: #ffffff;
+  color: var(--wii-cyan);
+  cursor: pointer;
+}
+
+.mode-switch-chip:hover {
+  background: #e3f4ff;
+}
+
+.wii-day-ctrl, .wii-speed-ctrl {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.day-spin {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.day-spin[hidden] {
+  display: none !important;
+}
+
+.wii-step-btn {
+  width: 28px;
+  height: 30px;
+  border-radius: 999px;
+  border: 1.5px solid #fff;
+  background: var(--aero-btn);
+  color: var(--wii-text);
+  font-weight: 900;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 60, 120, 0.15);
+}
+
+.wii-step-btn.lg {
+  width: 36px;
+  height: 36px;
+}
+
+.wii-step-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.day-spin input[type="number"] {
+  width: 96px;
+  height: 30px;
+  text-align: center;
+  font: 700 13.5px "JetBrains Mono", monospace;
+  color: var(--wii-text);
+  background: #ffffff;
+  border: 1.5px solid #86c5ef;
+  border-radius: 10px;
+}
+
+.wii-scrubber {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 200px;
+}
+
+.scrubber-ticks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10.5px;
+  font-weight: 800;
+  color: var(--wii-muted);
+  padding: 0 4px;
+}
+
+#todReadout {
+  font-family: "JetBrains Mono", monospace;
+  color: var(--wii-cyan);
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 12px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #0d213f 0%, #f59c6b 25%, #5ec8ff 50%, #f07b58 75%, #0d213f 100%);
+  border: 2px solid #ffffff;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.45), 0 1px 2px #fff;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ffffff 0%, #7ee0ff 45%, #0082e6 95%);
+  border: 2.5px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 75, 160, 0.65);
+  cursor: grab;
+}
+
+.wii-speed-ctrl select {
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1.5px solid #fff;
+  background: var(--aero-btn);
+  font: 800 13px "M PLUS Rounded 1c", sans-serif;
+  color: var(--wii-text);
+  box-shadow: 0 2px 4px rgba(0, 60, 120, 0.15);
+  cursor: pointer;
+}
+
+.wii-cmd-btn {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  height: 46px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 2px solid #ffffff;
+  background: var(--aero-btn);
+  color: var(--wii-text);
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(0, 60, 120, 0.18), 0 0 0 1px rgba(0, 136, 238, 0.28), inset 0 1px 1px #fff;
+  transition: transform 0.14s ease, filter 0.14s ease, background 0.14s ease;
+}
+
+.wii-cmd-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.04);
+}
+
+.wii-cmd-btn:active {
+  transform: translateY(1px);
+}
+
+.wii-cmd-btn.copied {
+  background: linear-gradient(180deg, #6bf2b3 0%, #16b86f 50%, #0d9656 100%);
+  color: #ffffff;
+}
+
+.wii-cmd-btn svg {
+  width: 18px;
+  height: 18px;
+  color: var(--wii-cyan);
+  flex: none;
+}
+
+.wii-cmd-btn.copied svg {
+  color: #ffffff;
+}
+
+.cmd-btn-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.15;
+}
+
+.cmd-caption {
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  color: var(--wii-muted);
+}
+
+.wii-cmd-btn.copied .cmd-caption {
+  color: #e6fff3;
+}
+
+#cmdPreview {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.wii-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  padding: 86px 20px 102px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 35%, rgba(12, 52, 108, 0.42), rgba(4, 12, 26, 0.74));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.wii-overlay[hidden] {
+  display: none !important;
+}
+
+.wii-window {
+  width: min(1240px, 96vw);
+  height: 100%;
+  max-height: 720px;
+  background: var(--wii-chrome);
+  backdrop-filter: blur(20px) saturate(190%);
+  border: 3px solid #ffffff;
+  border-radius: 30px;
+  box-shadow: 0 20px 55px rgba(0, 18, 50, 0.6), 0 0 0 1.5px var(--wii-outline), inset 0 2px 3px #fff;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.wii-window-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.wii-window-header h2 {
+  margin: 0;
+  font-size: 21px;
+  font-weight: 900;
+  color: var(--wii-text);
+  text-shadow: 0 1px 0 #fff;
+}
+
+.wii-window-header p {
+  margin: 2px 0 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--wii-muted);
+}
+
+.strip-scroll-btns {
+  display: flex;
+  gap: 8px;
+}
+
+.wii-pill-btn {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 2px solid #ffffff;
+  background: var(--aero-btn);
+  color: var(--wii-text);
+  font: 800 13px "M PLUS Rounded 1c", sans-serif;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(0, 60, 120, 0.18);
+}
+
+.wii-pill-btn.sm {
+  padding: 4px 12px;
+  font-size: 12px;
+}
+
+.wii-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 14px;
+  margin-bottom: 14px;
+  background: rgba(255, 255, 255, 0.65);
+  border: 2px solid #ffffff;
+  border-radius: 20px;
+  box-shadow: inset 0 1px 3px rgba(0, 80, 160, 0.1);
+}
+
+.wii-seg-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.wii-seg, .wii-pl-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1.5px solid #ffffff;
+  background: var(--aero-btn);
+  color: var(--wii-text);
+  font: 800 13px "M PLUS Rounded 1c", sans-serif;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 60, 120, 0.14);
+}
+
+.wii-seg.active, .wii-pl-btn.active {
+  background: var(--aero-aqua);
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 45, 100, 0.6);
+  box-shadow: 0 0 12px rgba(0, 165, 255, 0.5);
+}
+
+.sw-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+}
+
+.wii-forecast-strip {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 14px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 4px 4px 10px;
+  scroll-behavior: smooth;
+}
+
+.forecast-column {
+  flex: 0 0 210px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 24px;
+  background: linear-gradient(180deg, #ffffff 0%, #ebf6ff 50%, #d4ecff 100%);
+  border: 2.5px solid #ffffff;
+  box-shadow: 0 8px 20px rgba(0, 65, 140, 0.18), 0 0 0 1px rgba(0, 136, 238, 0.25), inset 0 2px 3px #fff;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.18s ease;
+}
+
+.forecast-column:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 14px 28px rgba(0, 135, 255, 0.35), 0 0 0 2.5px #3ec2ff;
+}
+
+.fc-col-head {
+  padding: 10px 12px;
+  background: linear-gradient(180deg, #1b74d4 0%, #0d4b96 100%);
+  color: #ffffff;
+  text-align: center;
+  border-bottom: 2px solid #99deff;
+}
+
+.fc-dow {
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  color: #9ee8ff;
+  text-transform: uppercase;
+}
+
+.fc-date-main {
+  font-size: 16px;
+  font-weight: 900;
+  margin-top: 1px;
+  text-shadow: 0 1px 2px rgba(0, 20, 50, 0.6);
+}
+
+.fc-sub-meta {
+  margin-top: 4px;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: #d4f4ff;
+}
+
+.fc-col-stage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 12px 10px;
+  text-align: center;
+}
+
+.fc-art-lg {
+  width: 96px;
+  height: 96px;
+  border-radius: 24px;
+  background: radial-gradient(circle at 30% 25%, #16305c, #060d1c);
+  border: 2.5px solid #ffffff;
+  box-shadow: 0 6px 14px rgba(0, 45, 100, 0.28);
+  margin-bottom: 12px;
+}
+
+.fc-col-title {
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--wii-text);
+  line-height: 1.2;
+}
+
+.fc-col-metric {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--wii-muted);
+  margin-top: 4px;
+}
+
+.fc-alt-pill {
+  margin-top: 10px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.fc-alt-pill.up {
+  background: #d2f8e6;
+  color: #057443;
+}
+
+.fc-alt-pill.down {
+  background: #ffe6d4;
+  color: #964200;
+}
+
+.fc-col-foot {
+  padding: 9px 12px;
+  background: rgba(255, 255, 255, 0.72);
+  border-top: 1.5px solid rgba(0, 120, 210, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.fc-view-label {
+  font-size: 12px;
+  font-weight: 900;
+  color: var(--wii-cyan);
+}
+
+.fc-copy-mini {
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 1px solid #99d2ff;
+  background: #ffffff;
+  color: var(--wii-text);
+  font: 700 10.5px "JetBrains Mono", monospace;
+  cursor: pointer;
+}
+
+.fc-copy-mini:hover {
+  background: #e3f4ff;
+}
+
+.settings-window {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 22px;
+}
+
+.settings-column {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 0;
+}
+
+.wii-card {
+  background: rgba(255, 255, 255, 0.78);
+  border: 2px solid #ffffff;
+  border-radius: 22px;
+  padding: 16px 20px;
+  box-shadow: 0 5px 15px rgba(0, 65, 130, 0.1);
+}
+
+.wii-card h3 {
+  margin: 0 0 12px;
+  font-size: 16px;
+  font-weight: 900;
+  color: var(--wii-text);
+}
+
+.wii-field-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.wii-field-row input[type="number"] {
+  width: 130px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 1.5px solid #86c5ef;
+  font: 700 14px "JetBrains Mono", monospace;
+}
+
+.wii-info-strip {
+  margin-top: 10px;
+  padding: 7px 12px;
+  border-radius: 12px;
+  background: rgba(0, 136, 238, 0.12);
+  color: var(--wii-cyan);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.wii-slider-block {
+  display: block;
+  margin-bottom: 14px;
+}
+
+.slider-head {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.wii-checks {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.wii-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.wii-check input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--wii-cyan);
+}
+
+.telemetry-box {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: linear-gradient(180deg, #0d213d 0%, #071326 100%);
+  border-color: #82d4ff;
+  color: #9eeeff;
+}
+
+.telemetry-box h3 {
+  color: #ffffff;
+}
+
+#out {
+  flex: 1;
+  overflow: auto;
+  margin: 0;
+  font: 500 12.5px/1.65 "JetBrains Mono", Consolas, monospace;
+  white-space: pre-wrap;
+}
