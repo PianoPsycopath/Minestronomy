@@ -858,3 +858,99 @@ input[type="range"]::-webkit-slider-thumb {
   font: 500 12.5px/1.65 "JetBrains Mono", Consolas, monospace;
   white-space: pre-wrap;
 }
+.wii-pill-btn.aqua {
+  background: var(--aero-aqua);
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 45, 100, 0.65);
+  border-color: #d8f6ff;
+  box-shadow: 0 4px 12px rgba(0, 145, 255, 0.4), inset 0 1px 2px #fff;
+}
+
+.wii-pill-btn.aqua:hover {
+  filter: brightness(1.06);
+}
+
+.export-head-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.export-head-row h3 {
+  margin: 0;
+}
+
+.card-sub {
+  margin: 2px 0 0;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--wii-muted);
+}
+
+.tex-status-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 155px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.tex-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1.5px solid #cde8ff;
+  font-size: 12px;
+}
+
+.tex-row-left {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.tex-body-name {
+  font-weight: 900;
+  color: var(--wii-text);
+  text-transform: capitalize;
+}
+
+.tex-path-code {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  color: var(--wii-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tex-row-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+}
+
+.tex-badge {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.tex-badge.ok {
+  background: #d2f8e6;
+  color: #057443;
+}
+
+.tex-badge.fallback {
+  background: #e6f2ff;
+  color: #155ca0;
+}

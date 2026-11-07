@@ -3,12 +3,14 @@ import { PLN, PH } from "../config/constants.js";
 import { calc, sepEq, getTargetAltAz, zToLatitude } from "../core/astronomy.js";
 import { getCalendarInfo, getTickInfo, totalTicksToTime, hhmm12, hhmm24 } from "../core/calendar.js";
 import { findForecastEvents, paintForecastGraphic } from "../forecast/ForecastScanner.js";
+import { exportBedrockAddon } from "../export/McAddonExporter.js";
 
 const $ = id => document.getElementById(id);
 
 export class UIController {
-  constructor(skyScene) {
+  constructor(skyScene, particleLoader) {
     this.skyScene = skyScene;
+    this.particleLoader = particleLoader;
     this.t = 0;
     this.playing = false;
     this.tickMode = false;
@@ -21,13 +23,16 @@ export class UIController {
     this.trackedTarget = null;
     this.selectedEvt = "lun";
     this.selectedPlanet = "mars";
+    this.pendingTexBody = null;
 
     this.bindTabs();
     this.bindTimeControls();
     this.bindSettingsControls();
     this.bindCameraControls();
     this.bindForecastControls();
+    this.bindExportControls();
     this.updateTimeReadouts();
+    this.renderTextureStatusList();
   }
 
   bindTabs() {
@@ -139,6 +144,70 @@ export class UIController {
       this.trackedTarget = null;
       $("targetBanner").hidden = true;
     };
+  }
+
+  bindExportControls() {
+    $("exportAddonBtn").onclick = async () => {
+      const btn = $("exportAddonBtn");
+      const prev = btn.textContent;
+      btn.textContent = "Packaging...";
+      await exportBedrockAddon(this.particleLoader, this.skyScene, "Minestronomy");
+      btn.textContent = "Exported!";
+      setTimeout(() => {
+        btn.textContent = prev;
+      }, 1400);
+    };
+
+    $("customTexInput").onchange = async e => {
+      const file = e.target.files?.[0];
+      if (!file || !this.pendingTexBody) return;
+      await this.particleLoader.setCustomTextureFile(this.pendingTexBody, file);
+      this.skyScene.syncStarboxTexturesFromLoader();
+      this.renderTextureStatusList();
+      e.target.value = "";
+    };
+  }
+
+  renderTextureStatusList() {
+    const list = $("texStatusList");
+    if (!list || !this.particleLoader) return;
+    list.innerHTML = "";
+
+    const entries = [
+      ...Object.entries(this.particleLoader.configs).map(([key, cfg]) => ({
+        targetKey: key,
+        label: key === "moon" ? "moon (4x2 phase atlas)" : `${key} (${cfg.material})`,
+        cfg
+      })),
+      ...Object.entries(this.particleLoader.starboxConfigs).map(([faceKey, cfg]) => ({
+        targetKey: `starbox_${faceKey}`,
+        label: `starbox ${faceKey.toUpperCase()} (${cfg.material})`,
+        cfg
+      }))
+    ];
+
+    for (const item of entries) {
+      const { targetKey, label, cfg } = item;
+      const row = document.createElement("div");
+      row.className = "tex-row";
+      row.innerHTML = `
+        <div class="tex-row-left">
+          <span class="tex-body-name">${label}</span>
+          <span class="tex-path-code">public/${cfg.texturePath}.png</span>
+        </div>
+        <div class="tex-row-right">
+          <span class="tex-badge ${cfg.hasTextureFile ? "ok" : "fallback"}">
+            ${cfg.hasTextureFile ? "PNG Loaded" : "Fallback"}
+          </span>
+          <button class="fc-copy-mini load-png-btn" type="button">Load PNG</button>
+        </div>
+      `;
+      row.querySelector(".load-png-btn").onclick = () => {
+        this.pendingTexBody = targetKey;
+        $("customTexInput").click();
+      };
+      list.appendChild(row);
+    }
   }
 
   bindCameraControls() {
