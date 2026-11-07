@@ -54,7 +54,7 @@
           <circle cx="12" cy="12" r="3"/>
           <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.6.77 1.05 1.39 1.19H21a2 2 0 1 1 0 4h-.09c-.62.14-1.13.59-1.51 1.81z"/>
         </svg>
-        <span>Settings</span>
+        <span>Settings &amp; Export</span>
       </button>
     </nav>
 
@@ -148,6 +148,18 @@
               <span>Translucent Ground (View Below-Horizon Events)</span>
             </label>
           </div>
+        </div>
+
+        <div class="wii-card">
+          <div class="export-head-row">
+            <div>
+              <h3>Bedrock Resource Pack (.mcaddon)</h3>
+              <p class="card-sub">Reads JSON paths from public/particles and textures from public/textures/environment</p>
+            </div>
+            <button id="exportAddonBtn" class="wii-pill-btn aqua">Export .mcaddon</button>
+          </div>
+          <div id="texStatusList" class="tex-status-list"></div>
+          <input id="customTexInput" type="file" accept="image/png" hidden>
         </div>
       </div>
 
