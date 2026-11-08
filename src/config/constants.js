@@ -141,6 +141,152 @@ export const PLN = {
   }
 };
 
+export const COMET_BASE = {
+  material: "starfield:sun_moon",
+  texture: "textures/environment/comet",
+  fluxRef: 4.2,
+  fluxPow: 0.3,
+  brightFade: 6,        // clamp((6 - r) / 2, 0, 1)
+  visBase: -4,          // vis = clamp((visBase + visGain * bright^3 - sunAlt) / visSpan, 0, 1)
+  visGain: 30,
+  visSpan: 6,
+  sizeBase: 14,         // size = (base + gain * clamp(0.3 / r, 0, 1) ^ 1.5) * sizeScale
+  sizeGain: 150,
+  emitterDistance: 250, // particle offset used for the angular size
+  tailSign: 1,          // Bedrock tuning knobs (kept in sync with the pack)
+  tailOffset: 0,
+  webTextureRot: 0      // extra rotation (deg) if your comet.png tail doesn't point up
+};
+
+export const COMETS = {
+  comet: {
+    key: "comet",
+    label: "Original",
+    short: "COM",
+    identifier: "astrum:comet_particle",
+    ...COMET_BASE,
+    perihelionDay: 60,
+    period: 365.25,
+    window: null,
+    rate: 0.17624,        // Barker's equation time scale
+    q: 0.35,              // perihelion distance (AU)
+    uOffset: 70,          // argument offset (deg)
+    P: [0.882947, 0.469472],            // orbit-plane basis (ecliptic x,y)
+    Q: [0.160568, -0.301986, 0.939693], // orbit-plane basis (ecliptic x,y,z)
+    fluxScale: 1,
+    sizeScale: 1,
+    tint: [1.0, 1.0, 1.0]
+  },
+  comet_annual: {
+    key: "comet_annual",
+    label: "Annual",
+    short: "ANN",
+    identifier: "astrum:comet_annual_particle",
+    ...COMET_BASE,
+    perihelionDay: 200,
+    period: 365.25,
+    window: 90,
+    rate: 0.07852,
+    q: 0.6,
+    uOffset: 130,
+    P: [-0.866025, -0.5],
+    Q: [0.489073, -0.847101, 0.207912],
+    fluxScale: 0.4,
+    sizeScale: 0.5,
+    tint: [0.55, 1, 0.7]
+  },
+  comet_medium: {
+    key: "comet_medium",
+    label: "Medium",
+    short: "MED",
+    identifier: "astrum:comet_medium_particle",
+    ...COMET_BASE,
+    perihelionDay: 1500,
+    period: 2556.75,      // 7 years: a whole number of years keeps Earth in the same place at every return
+    window: 150,
+    rate: 0.042741,
+    q: 0.9,
+    uOffset: 300,
+    P: [-0.939693, -0.34202],
+    Q: [0.280166, -0.769751, 0.573576],
+    fluxScale: 1,
+    sizeScale: 0.85,
+    tint: [0.65, 0.8, 1]
+  },
+  comet_great_red: {
+    key: "comet_great_red",
+    label: "Great Red",
+    short: "GRD",
+    identifier: "astrum:comet_great_red_particle",
+    ...COMET_BASE,
+    perihelionDay: 4200,
+    period: 9131,
+    window: 200,
+    rate: 0.291944,
+    q: 0.25,
+    uOffset: 20,
+    P: [-0.788011, 0.615661],
+    Q: [0.533179, 0.682437, 0.5],
+    fluxScale: 4,
+    sizeScale: 1.15,
+    tint: [1, 0.45, 0.35]
+  },
+  comet_great_green: {
+    key: "comet_great_green",
+    label: "Great Green",
+    short: "GGR",
+    identifier: "astrum:comet_great_green_particle",
+    ...COMET_BASE,
+    perihelionDay: 2800,
+    period: 7305,
+    window: 200,
+    rate: 0.144251,
+    q: 0.4,
+    uOffset: 200,
+    P: [-0.258819, 0.965926],
+    Q: [-0.167732, -0.044944, 0.984808],
+    fluxScale: 6,
+    sizeScale: 1.15,
+    tint: [0.45, 1, 0.6]
+  },
+  comet_great_blue: {
+    key: "comet_great_blue",
+    label: "Great Blue",
+    short: "GBL",
+    identifier: "astrum:comet_great_blue_particle",
+    ...COMET_BASE,
+    perihelionDay: 11000,
+    period: 18262,
+    window: 260,
+    rate: 0.628163,
+    q: 0.15,
+    uOffset: 250,
+    P: [-0.848047, -0.52992],
+    Q: [0.223953, -0.358401, 0.906308],
+    fluxScale: 12,
+    sizeScale: 1.15,
+    tint: [0.5, 0.7, 1]
+  },
+  comet_super: {
+    key: "comet_super",
+    label: "Super",
+    short: "SUP",
+    identifier: "astrum:comet_super_particle",
+    ...COMET_BASE,
+    perihelionDay: 0,     // year 0 and every 100 years after (36525 d)
+    period: 36525,
+    window: 400,
+    rate: 3.264033,
+    q: 0.05,
+    uOffset: 330,
+    P: [0.601815, 0.798635],
+    Q: [0.069606, -0.052452, 0.996195],
+    fluxScale: 100,
+    sizeScale: 1.3,
+    tint: [1, 0.93, 0.75]
+  }
+};
+
 export const VIS = {
   mercury: [-5, -1],
   venus: [-6, 0],

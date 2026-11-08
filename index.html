@@ -89,6 +89,7 @@
           <button class="wii-seg" data-evt="sol">Solar Eclipses</button>
           <button class="wii-seg" data-evt="mm">Moon–Planet Conjunctions</button>
           <button class="wii-seg" data-evt="opp">Oppositions &amp; Elongations</button>
+          <button class="wii-seg" data-evt="com">Comets</button>
         </div>
 
         <div class="wii-seg-group planet-bar" id="plGroup">
@@ -98,6 +99,9 @@
           <button class="wii-pl-btn" data-pl="jupiter"><span class="sw-dot" style="background:#ffebcc"></span>Jupiter</button>
           <button class="wii-pl-btn" data-pl="saturn"><span class="sw-dot" style="background:#ffe099"></span>Saturn</button>
         </div>
+
+        <!-- Filled by UIController.buildCometButtons() from the COMETS registry; shown only for the Comets tab -->
+        <div class="wii-seg-group planet-bar" id="cmGroup" style="display:none"></div>
       </div>
 
       <div id="ev" class="wii-forecast-strip"></div>

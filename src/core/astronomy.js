@@ -1,5 +1,5 @@
 import { RD, sin, cos, atan2, asin, acos, wrap, clamp, lerp } from "./math.js";
-import { E, K, OM0, PLN, EARTH_RADIUS_BLOCKS } from "../config/constants.js";
+import { E, K, OM0, PLN, COMETS, COMET_BASE, EARTH_RADIUS_BLOCKS } from "../config/constants.js";
 
 export function eq(lam, beta) {
   return {
@@ -36,6 +36,79 @@ export function planetCalc(p, t, ls, er) {
   };
 }
 
+const posMod = (x, m) => ((x % m) + m) % m;
+
+// Signed days from perihelion, wrapped to [-period/2, period/2). Matches
+// variable.dt = math.mod(t + A, period) - period / 2 in the particle files.
+export function cometDt(C, t) {
+  return posMod(t - C.perihelionDay + C.period / 2, C.period) - C.period / 2;
+}
+
+// Days until this comet's next perihelion (0 if it is exactly now).
+export function cometDaysToPerihelion(C, t) {
+  return posMod(C.perihelionDay - t, C.period);
+}
+
+// Mirrors the Molang in <key>.particle.json / player.entity.json.
+// Angles in degrees (math.js trig is degree-based).
+// Windowed comets are only "on" within +/- C.window days of perihelion and fade over the outer window/5.
+export function cometCalc(C, t, ls, er) {
+  const dt = cometDt(C, t);
+  const windowed = C.window != null;
+  const on = windowed ? Math.abs(dt) < C.window : true;
+  const fade = windowed ? (on ? clamp((C.window - Math.abs(dt)) / (C.window / 5), 0, 1) : 0) : 1;
+
+  const w = on ? C.rate * dt : 0;
+  const cb = Math.pow(w / 2 + Math.sqrt((w * w) / 4 + 1), 0.333333);
+  const s = cb - 1 / cb;
+  const r = Math.max(C.q * (1 + s * s), 0.001);
+  const u = 2 * atan2(s, 1) + C.uOffset;
+
+  const hx = r * (C.P[0] * cos(u) + C.Q[0] * sin(u));
+  const hy = r * (C.P[1] * cos(u) + C.Q[1] * sin(u));
+  const hz = r * sin(u) * C.Q[2];
+
+  const gx = hx + er * cos(ls);
+  const gy = hy + er * sin(ls);
+  const gz = hz;
+  const dist = Math.max(Math.hypot(gx, gy, gz), 0.001);
+
+  const ey = gy * cos(E) - gz * sin(E);
+  const ez = gy * sin(E) + gz * cos(E);
+  const ra = atan2(ey, gx);
+  const dec = asin(ez / dist);
+
+  // Tail points away from the Sun: project the heliocentric vector onto the local sky tangent plane.
+  const ty = hy * cos(E) - hz * sin(E);
+  const tz = hy * sin(E) + hz * cos(E);
+  const te = -sin(ra) * hx + cos(ra) * ty;
+  const tn = -sin(dec) * (cos(ra) * hx + sin(ra) * ty) + cos(dec) * tz;
+  const pa = atan2(te, tn); // position angle, north -> east
+  const rot = C.tailSign * pa + C.tailOffset;
+
+  const flux = C.fluxScale / (Math.pow(r, 4) * dist * dist);
+  const bright = on
+    ? clamp(Math.pow(flux / C.fluxRef, C.fluxPow), 0, 1) * clamp((C.brightFade - r) / 2, 0, 1) * fade
+    : 0;
+  const tf = clamp(0.3 / r, 0, 1);
+  const size = (C.sizeBase + C.sizeGain * Math.pow(tf, 1.5)) * C.sizeScale;
+
+  return { key: C.key, ra, dec, dist, r, pa, rot, flux, bright, size, dt, on, fade };
+}
+
+export function cometVisibility(bright, sunAlt) {
+  return clamp(
+    (COMET_BASE.visBase + COMET_BASE.visGain * Math.pow(bright, 3) - sunAlt) / COMET_BASE.visSpan,
+    0,
+    1
+  );
+}
+
+// Apparent angular diameter (deg) of the comet billboard, as the Bedrock particle would subtend it.
+export function cometAngularSize(size) {
+  return 2 * atan2(size / 2, COMET_BASE.emitterDistance);
+}
+
 export function calc(t, Z) {
   const tod = t - Math.floor(t);
   const lm = ((t - 80) / 365.25) * 360;
@@ -52,6 +125,10 @@ export function calc(t, Z) {
   const pl = {};
   for (const n in PLN) {
     pl[n] = planetCalc(PLN[n], t, ls, er);
+  }
+  const comets = {};
+  for (const k in COMETS) {
+    comets[k] = cometCalc(COMETS[k], t, ls, er);
   }
 
   const d = lmoon - ls;
@@ -70,6 +147,7 @@ export function calc(t, Z) {
     sun,
     moon,
     pl,
+    comets,
     bmoon,
     elong,
     ph: (Math.floor(((elong + 22.5) % 360) / 45) + 4) % 8,
@@ -99,6 +177,7 @@ export function getTargetAltAz(target, s, phi) {
   if (target.type === "sun") return altaz(s.sun, s, phi);
   if (target.type === "moon") return altaz(s.moon, s, phi);
   if (target.type === "planet" && target.planet) return altaz(s.pl[target.planet], s, phi);
+  if (target.type === "comet") return altaz(s.comets[target.comet || "comet"], s, phi);
   return null;
 }
 

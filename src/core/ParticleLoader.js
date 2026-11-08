@@ -1,5 +1,6 @@
-import { PLN, CELESTIAL_DEFAULTS, STARBOX_FACES } from "../config/constants.js";
+import { PLN, COMETS, PARTICLE_FILE_ALIASES, CELESTIAL_DEFAULTS, STARBOX_FACES } from "../config/constants.js";
 import {
+  buildCometParticleJson,
   buildSunParticleJson,
   buildMoonParticleJson,
   buildPlanetParticleJson,
@@ -75,7 +76,7 @@ export class ParticleLoader {
   }
 
   async loadAll() {
-    const bodies = ["sun", "moon", ...Object.keys(PLN)];
+    const bodies = ["sun", "moon", ...Object.keys(PLN), ...Object.keys(COMETS)];
     const faces = Object.keys(STARBOX_FACES);
     await Promise.all([
       ...bodies.map(b => this.loadBodyParticle(b)),
@@ -103,11 +104,16 @@ export class ParticleLoader {
   getDefaultParticleJson(body) {
     if (body === "sun") return buildSunParticleJson(CELESTIAL_DEFAULTS.sun);
     if (body === "moon") return buildMoonParticleJson(CELESTIAL_DEFAULTS.moon);
+    if (COMETS[body]) return buildCometParticleJson(body);
     return buildPlanetParticleJson(body, PLN[body], false);
   }
 
   async loadBodyParticle(body) {
-    let json = await this.fetchBedrockJson(`/particles/${body}.particle.json`);
+    let json = null;
+    for (const name of [body, ...(PARTICLE_FILE_ALIASES[body] || [])]) {
+      json = await this.fetchBedrockJson(`/particles/${name}.particle.json`);
+      if (json?.particle_effect) break;
+    }
     const fromPublicJson = Boolean(json?.particle_effect);
 
     if (!json || !json.particle_effect) {
@@ -120,11 +126,15 @@ export class ParticleLoader {
     const billboard = pe?.components?.["minecraft:particle_appearance_billboard"] || {};
     const tintComp = pe?.components?.["minecraft:particle_appearance_tinting"] || {};
 
+    const comet = COMETS[body];
     const defaultTint =
-      body === "sun" || body === "moon" ? [1, 1, 1] : PLN[body]?.tint || [1, 1, 1];
+      body === "sun" || body === "moon" ? [1, 1, 1] : comet ? comet.tint : PLN[body]?.tint || [1, 1, 1];
 
-    let texturePath = (renderParams.texture || "textures/environment/planet").replace(/\.png$/i, "");
-    const material = renderParams.material || (body === "sun" || body === "moon" ? "particles_alpha" : "particles_add");
+    const defaultTexture = comet ? comet.texture : "textures/environment/planet";
+    let texturePath = (renderParams.texture || defaultTexture).replace(/\.png$/i, "");
+    const material =
+      renderParams.material ||
+      (comet ? comet.material : body === "sun" || body === "moon" ? "particles_alpha" : "particles_add");
     const size = billboard.size || [4, 4];
     const uv = billboard.uv || null;
     const tint = parseTintColor(tintComp.color, defaultTint);
@@ -148,6 +158,10 @@ export class ParticleLoader {
       PLN[body].billboardSize = size;
       PLN[body].tint = tint;
       PLN[body].col = `${Math.round(tint[0] * 255)},${Math.round(tint[1] * 255)},${Math.round(tint[2] * 255)}`;
+    } else if (comet) {
+      comet.texture = texturePath;
+      comet.material = material;
+      comet.tint = tint;
     } else if (CELESTIAL_DEFAULTS[body]) {
       CELESTIAL_DEFAULTS[body].texture = texturePath;
       CELESTIAL_DEFAULTS[body].material = material;
