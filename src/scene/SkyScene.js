@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { D, sin, cos, clamp, lerp, ang } from "../core/math.js";
-import { PLN, VIS, STARBOX_FACES } from "../config/constants.js";
-import { eq, altaz, getTargetAltAz } from "../core/astronomy.js";
+import { PLN, VIS, STARBOX_FACES, COMETS, COMET_BASE } from "../config/constants.js";
+import { eq, altaz, getTargetAltAz, cometVisibility, cometAngularSize } from "../core/astronomy.js";
 
 function dir(p, r) {
   return new THREE.Vector3(cos(p.alt) * sin(p.az) * r, sin(p.alt) * r, -cos(p.alt) * cos(p.az) * r);
@@ -33,6 +33,15 @@ export class SkyScene {
     this.PS = {};
     for (const n in PLN) {
       this.PS[n] = this.mkSprite(64, 64, 2);
+    }
+
+    // One sprite per comet (tinted per particle file); they share comet.png.
+    this.CS = {};
+    for (const key in COMETS) {
+      const o = this.mkSprite(256, 256, 2);
+      o.s.visible = false;
+      o.paintedImg = undefined;
+      this.CS[key] = o;
     }
 
     this.RETICLE = this.mkSprite(128, 128, 4);
@@ -344,6 +353,89 @@ export class SkyScene {
     o.tex.needsUpdate = true;
   }
 
+  // Repaints only when the texture source changes (default vs loaded PNG).
+  drawCometTexture(key) {
+    const o = this.CS[key];
+    const cfg = this.particleLoader?.configs?.[key];
+    const C = COMETS[key];
+    const img = cfg?.image || null;
+    this.applyMaterialBlending(o, cfg?.material || C.material);
+
+    const [tr, tg, tb] = cfg?.tint || C.tint;
+    o.s.material.color.setRGB(tr, tg, tb);
+
+    if (o.paintedImg === img) return;
+    o.paintedImg = img;
+
+    const g = o.g;
+    g.setTransform(1, 0, 0, 1, 0, 0);
+    g.clearRect(0, 0, 256, 256);
+
+    if (img) {
+      g.imageSmoothingEnabled = false;
+      g.drawImage(img, 0, 0, 256, 256);
+    } else {
+      // Fallback: coma at centre, tail streaming "up" (rotated to the sky position angle later).
+      const tail = g.createLinearGradient(128, 128, 128, 0);
+      tail.addColorStop(0, "rgba(190, 225, 255, 0.85)");
+      tail.addColorStop(1, "rgba(190, 225, 255, 0)");
+      g.fillStyle = tail;
+      g.beginPath();
+      g.moveTo(112, 128);
+      g.lineTo(144, 128);
+      g.lineTo(158, 0);
+      g.lineTo(98, 0);
+      g.closePath();
+      g.fill();
+
+      const coma = g.createRadialGradient(128, 128, 0, 128, 128, 34);
+      coma.addColorStop(0, "rgba(255,255,255,1)");
+      coma.addColorStop(0.35, "rgba(215,238,255,0.8)");
+      coma.addColorStop(1, "rgba(180,215,255,0)");
+      g.fillStyle = coma;
+      g.beginPath();
+      g.arc(128, 128, 34, 0, Math.PI * 2);
+      g.fill();
+    }
+    o.tex.needsUpdate = true;
+  }
+
+  // Must run after the camera pose and aspect are final for this frame.
+  updateComets(s, phi, cometAltAz, sunAlt) {
+    this.cam.updateMatrixWorld(true);
+    for (const key in COMETS) {
+      this.updateComet(key, s, phi, cometAltAz[key], sunAlt);
+    }
+  }
+
+  updateComet(key, s, phi, ca, sunAlt) {
+    const c = s.comets[key];
+    const o = this.CS[key];
+    this.drawCometTexture(key);
+
+    const op = c.bright * cometVisibility(c.bright, sunAlt);
+    o.s.visible = op > 0.002;
+    o.s.material.opacity = op;
+    if (!o.s.visible) return;
+
+    const R = 97;
+    const P = dir(ca, R);
+    o.s.position.copy(P);
+    o.s.scale.setScalar(ang(cometAngularSize(c.size), R));
+
+    // Tail direction on the sky: position angle measured north -> east, resolved to a screen angle.
+    const d = 0.5;
+    const north = dir(altaz({ ra: c.ra, dec: clamp(c.dec + d, -89.5, 89.5) }, s, phi), R).sub(P).normalize();
+    const east = dir(altaz({ ra: c.ra + d, dec: c.dec }, s, phi), R).sub(P).normalize();
+    const T = north.multiplyScalar(cos(c.pa)).add(east.multiplyScalar(sin(c.pa)));
+
+    const p0 = P.clone().project(this.cam);
+    const p1 = P.clone().add(T.multiplyScalar(4)).project(this.cam);
+    const dx = (p1.x - p0.x) * this.cam.aspect;
+    const dy = p1.y - p0.y;
+    o.s.material.rotation = Math.atan2(-dx, dy) + COMET_BASE.webTextureRot * D;
+  }
+
   lineUpd(L, pts, s, phi) {
     const a = L.geometry.attributes.position;
     pts.forEach((p, i) => {
@@ -414,6 +506,12 @@ export class SkyScene {
       this.cam.aspect = w / h;
       this.cam.updateProjectionMatrix();
     }
+
+    pa.comets = {};
+    for (const key in COMETS) {
+      pa.comets[key] = altaz(s.comets[key], s, phi);
+    }
+    this.updateComets(s, phi, pa.comets, su.alt);
 
     this.ren.render(this.scene, this.cam);
     return { su, mo, pa };

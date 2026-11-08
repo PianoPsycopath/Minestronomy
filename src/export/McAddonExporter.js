@@ -1,5 +1,5 @@
 import { ZipBuilder } from "./ZipBuilder.js";
-import { PLN, CELESTIAL_DEFAULTS, STARBOX_FACES } from "../config/constants.js";
+import { PLN, COMETS, CELESTIAL_DEFAULTS, STARBOX_FACES } from "../config/constants.js";
 import { cos } from "../core/math.js";
 import {
   buildManifestJson,
@@ -11,6 +11,7 @@ import {
   buildCalendarRenderControllersJson,
   buildPlayerRenderControllersJson,
   buildPlayerEntityJson,
+  buildCometParticleJson,
   buildSunParticleJson,
   buildMoonParticleJson,
   buildPlanetParticleJson,
@@ -96,6 +97,14 @@ export async function exportBedrockAddon(particleLoader, skyScene, packName = "M
   zip.addJson(`${root}/particles/sun.particle.json`, sunJson);
   zip.addJson(`${root}/particles/moon.particle.json`, moonJson);
 
+  // One particle file per comet (comet, comet_annual, comet_medium, comet_great_red, ...).
+  for (const key of Object.keys(COMETS)) {
+    zip.addJson(
+      `${root}/particles/${key}.particle.json`,
+      particleLoader.rawJsons[key] || buildCometParticleJson(key)
+    );
+  }
+
   for (const [name, pCfg] of Object.entries(PLN)) {
     const pJson = buildPlanetParticleJson(name, pCfg, false);
     const pHiResJson = buildPlanetParticleJson(name, pCfg, true);
@@ -123,6 +132,8 @@ export async function exportBedrockAddon(particleLoader, skyScene, packName = "M
     if (!bytes) {
       if (body === "sun") {
         bytes = await canvasToPngBytes(skyScene.SUN.c);
+      } else if (COMETS[body]) {
+        bytes = await canvasToPngBytes(skyScene.CS[body].c);
       } else if (body === "moon") {
         bytes = await canvasToPngBytes(createDefaultMoonAtlasCanvas());
       } else {

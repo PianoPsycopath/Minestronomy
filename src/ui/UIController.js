@@ -1,6 +1,6 @@
 import { clamp, lerp } from "../core/math.js";
-import { PLN, PH } from "../config/constants.js";
-import { calc, sepEq, getTargetAltAz, zToLatitude } from "../core/astronomy.js";
+import { PLN, PH, COMETS } from "../config/constants.js";
+import { calc, sepEq, getTargetAltAz, zToLatitude, cometVisibility, cometDaysToPerihelion } from "../core/astronomy.js";
 import { getCalendarInfo, getTickInfo, totalTicksToTime, hhmm12, hhmm24 } from "../core/calendar.js";
 import { findForecastEvents, paintForecastGraphic } from "../forecast/ForecastScanner.js";
 import { exportBedrockAddon } from "../export/McAddonExporter.js";
@@ -23,13 +23,16 @@ export class UIController {
     this.trackedTarget = null;
     this.selectedEvt = "lun";
     this.selectedPlanet = "mars";
+    this.selectedComet = "all";
     this.pendingTexBody = null;
 
     this.bindTabs();
     this.bindTimeControls();
     this.bindSettingsControls();
     this.bindCameraControls();
+    this.buildCometButtons();
     this.bindForecastControls();
+    this.syncFilterBars();
     this.bindExportControls();
     this.updateTimeReadouts();
     this.renderTextureStatusList();
@@ -252,6 +255,7 @@ export class UIController {
         document.querySelectorAll("#evtGroup .wii-seg").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
         this.selectedEvt = btn.dataset.evt;
+        this.syncFilterBars();
         this.updateForecastBoard();
       };
     });
@@ -264,6 +268,38 @@ export class UIController {
         this.updateForecastBoard();
       };
     });
+
+    document.querySelectorAll("#cmGroup .wii-pl-btn").forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll("#cmGroup .wii-pl-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        this.selectedComet = btn.dataset.cm;
+        this.updateForecastBoard();
+      };
+    });
+  }
+
+  // One button per comet in COMETS, plus "All" (the next arrival of each). Swatch colour = particle tint.
+  buildCometButtons() {
+    const group = $("cmGroup");
+    if (!group) return;
+    const swatch = t => `rgb(${t.map(c => Math.round(255 * c)).join(",")})`;
+    group.innerHTML =
+      `<button class="wii-pl-btn active" data-cm="all"><span class="sw-dot" style="background:#ffffff"></span>All</button>` +
+      Object.values(COMETS)
+        .map(
+          C =>
+            `<button class="wii-pl-btn" data-cm="${C.key}"><span class="sw-dot" style="background:${swatch(C.tint)}"></span>${C.label}</button>`
+        )
+        .join("");
+  }
+
+  // Planet picker only matters for Moon-Planet / Opposition events; comet picker only for comets.
+  syncFilterBars() {
+    const pl = $("plGroup");
+    const cm = $("cmGroup");
+    if (pl) pl.style.display = this.selectedEvt === "mm" || this.selectedEvt === "opp" ? "" : "none";
+    if (cm) cm.style.display = this.selectedEvt === "com" ? "" : "none";
   }
 
   focusOnEvent(evData) {
@@ -309,6 +345,7 @@ export class UIController {
     const events = findForecastEvents({
       type: this.selectedEvt,
       pn: this.selectedPlanet,
+      cm: this.selectedComet,
       t0,
       Z,
       disc,
@@ -359,7 +396,7 @@ export class UIController {
         </div>
       `;
 
-      paintForecastGraphic(col.querySelector(".fc-art-lg"), this.selectedEvt, ev.v, this.selectedPlanet);
+      paintForecastGraphic(col.querySelector(".fc-art-lg"), this.selectedEvt, ev.v, this.selectedPlanet, ev.target?.comet);
 
       const copyBtn = col.querySelector(".fc-copy-mini");
       copyBtn.onclick = e => {
@@ -420,6 +457,17 @@ export class UIController {
       })
       .join("\n");
 
+    const fmtSpan = d => (d >= 730 ? `${f1(d / 365.25)}y` : `${Math.round(d)}d`);
+    const ctxt = Object.values(COMETS)
+      .map(C => {
+        const c = s.comets[C.key];
+        if (!c.on) return `${C.short} dormant  returns in ${fmtSpan(cometDaysToPerihelion(C, s.t))}`;
+        const ca = pa.comets[C.key];
+        const cvis = cometVisibility(c.bright, su.alt);
+        return `${C.short} alt ${f1(ca.alt)} az ${f1(ca.az)}  ${f1(c.dist, 2)}AU sun ${f1(c.r, 2)}AU br ${f1(c.bright, 2)} vis ${f1(cvis, 2)} Δ${f1(c.dt, 0)}d`;
+      })
+      .join("\n");
+
     $("lat").textContent = `Latitude ${phi.toFixed(1)}° (north = −Z)`;
     $("out").textContent =
 `Date  ${cal.fullText}
@@ -430,7 +478,8 @@ Moon  alt ${f1(mo.alt)}°  az ${f1(mo.az)}°
 Lunar eclipse  dist ${f1(s.ecl_d, 2)}°  blood ${f1(s.blood, 2)}
 Solar eclipse  sep ${f1(s.sep, 2)}°  tint ${f1(s.eclipse, 2)}
 ────────────────────────────────────────────────────────
-${ptxt}`;
+${ptxt}
+${ctxt}`;
   }
 
   tick(dt) {
