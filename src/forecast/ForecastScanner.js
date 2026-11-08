@@ -1,6 +1,6 @@
 import { clamp, cap } from "../core/math.js";
-import { PLN } from "../config/constants.js";
-import { calc, sepEq } from "../core/astronomy.js";
+import { PLN, COMETS } from "../config/constants.js";
+import { calc, sepEq, cometDaysToPerihelion } from "../core/astronomy.js";
 
 export function scan(fn, t0, t1, step, thr) {
   const out = [];
@@ -15,7 +15,17 @@ export function scan(fn, t0, t1, step, thr) {
   return out;
 }
 
-export function findForecastEvents({ type, pn, t0, Z, disc, md }) {
+// Perihelion is analytic (t = perihelionDay + k * period), so no scanning is needed. Comet periods run
+// from 1 to 100 years, far past the fixed scan windows the other event types use.
+function cometPerihelia(key, t0, count) {
+  const C = COMETS[key];
+  const first = t0 + cometDaysToPerihelion(C, t0);
+  const out = [];
+  for (let i = 0; i < count; i++) out.push({ t: first + i * C.period, v: C.q, key });
+  return out;
+}
+
+export function findForecastEvents({ type, pn, cm = "all", t0, Z, disc, md }) {
   let raw = [];
   let describe;
 
@@ -49,6 +59,22 @@ export function findForecastEvents({ type, pn, t0, Z, disc, md }) {
       sub: `Closest sep ${q.v.toFixed(2)}°`,
       target: { type: "planet", planet: pn }
     });
+  } else if (type === "com") {
+    // "all" = the next arrival of every comet, soonest first; otherwise the next 14 returns of one comet.
+    raw =
+      cm === "all" || !COMETS[cm]
+        ? Object.keys(COMETS)
+            .flatMap(k => cometPerihelia(k, t0, 1))
+            .sort((a, b) => a.t - b.t)
+        : cometPerihelia(cm, t0, 14);
+    describe = q => {
+      const C = COMETS[q.key];
+      return {
+        title: q.key === "comet" ? "Comet Perihelion" : `${C.label} Comet Perihelion`,
+        sub: `${q.v.toFixed(2)} AU${C.window != null ? ` • visible ±${C.window}d` : ""}`,
+        target: { type: "comet", comet: q.key }
+      };
+    };
   } else if (type === "opp") {
     const inner = pn === "mercury" || pn === "venus";
     raw = inner
@@ -68,7 +94,7 @@ export function findForecastEvents({ type, pn, t0, Z, disc, md }) {
   }));
 }
 
-export function paintForecastGraphic(canvas, type, val, pn) {
+export function paintForecastGraphic(canvas, type, val, pn, cometKey = "comet") {
   const g = canvas.getContext("2d");
   const w = canvas.width;
   const h = canvas.height;
@@ -126,6 +152,27 @@ export function paintForecastGraphic(canvas, type, val, pn) {
     g.fillStyle = `rgb(${col})`;
     g.beginPath();
     g.arc(cx + 16, cy - 14, 7, 0, Math.PI * 2);
+    g.fill();
+  } else if (type === "com") {
+    // Tint the tail and coma with the comet's own particle colour (mixed toward white so they stay readable).
+    const [tr, tg, tb] = (COMETS[cometKey] || COMETS.comet).tint.map(c => Math.round(255 * (0.35 + 0.65 * c)));
+    const tail = g.createLinearGradient(cx + 16, cy - 14, cx - 34, cy + 30);
+    tail.addColorStop(0, `rgba(${tr}, ${tg}, ${tb}, 0.85)`);
+    tail.addColorStop(1, `rgba(${tr}, ${tg}, ${tb}, 0)`);
+    g.fillStyle = tail;
+    g.beginPath();
+    g.moveTo(cx + 12, cy - 20);
+    g.lineTo(cx + 22, cy - 8);
+    g.lineTo(cx - 38, cy + 34);
+    g.closePath();
+    g.fill();
+
+    const coma = g.createRadialGradient(cx + 16, cy - 14, 1, cx + 16, cy - 14, 14);
+    coma.addColorStop(0, "rgba(255,255,255,1)");
+    coma.addColorStop(1, `rgba(${tr}, ${tg}, ${tb}, 0)`);
+    g.fillStyle = coma;
+    g.beginPath();
+    g.arc(cx + 16, cy - 14, 14, 0, Math.PI * 2);
     g.fill();
   } else {
     const col = PLN[pn]?.col || "255,220,150";
