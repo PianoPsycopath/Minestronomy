@@ -10,12 +10,48 @@
 </head>
 <body>
   <canvas id="c" aria-label="3D Sky View"></canvas>
+  <canvas id="solarCanvas" aria-label="3D Solar System View" hidden></canvas>
 
   <div id="targetBanner" class="wii-lock-banner" hidden>
     <span class="lock-reticle-dot"></span>
     <span id="targetText">Tracking Celestial Event</span>
-    <button id="resetFov" class="wii-pill-btn sm">Reset Zoom</button>
+    <button id="resetFov" class="wii-pill-btn sm">Clear Lock</button>
+    <button id="copyFaceBtn" class="wii-pill-btn sm">Copy /tp</button>
   </div>
+
+  <button id="findBtn" class="wii-pill-btn aqua find-btn" type="button">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.6"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+    Find Object
+  </button>
+  <div id="findPanel" class="wii-find" hidden>
+    <div class="find-head"><strong>Find Object</strong><button id="findClose" class="pick-x" type="button" aria-label="Close">×</button></div>
+    <div id="findList" class="find-list"></div>
+  </div>
+
+  <div id="pickCard" class="wii-pick" hidden></div>
+
+  <aside id="solarHud" class="wii-solar-hud" hidden>
+    <div class="find-head"><strong>Solar System</strong></div>
+
+    <div class="solar-group-label">SCALE</div>
+    <div class="wii-seg-group" id="solarScaleGroup">
+      <button class="wii-seg active" data-scale="compressed" type="button" title="Distance uses the square root of AU">Compressed</button>
+      <button class="wii-seg" data-scale="linear" type="button" title="Distance equals AU">Linear</button>
+    </div>
+
+    <div class="wii-checks solar-checks">
+      <label class="wii-check"><input id="solarOrbits" type="checkbox" checked><span>Orbit paths</span></label>
+      <label class="wii-check"><input id="solarRings" type="checkbox" checked><span>Distance rings</span></label>
+      <label class="wii-check"><input id="solarLabels" type="checkbox" checked><span>Labels</span></label>
+      <label class="wii-check"><input id="solarComets" type="checkbox" checked><span>Comets</span></label>
+    </div>
+
+    <div class="solar-group-label">FOCUS</div>
+    <div id="solarFocusList" class="find-list"></div>
+
+    <div id="solarInfo" class="solar-info"></div>
+    <p class="solar-note">Body sizes are not to scale. The Moon distance is larger than true.</p>
+  </aside>
 
   <header class="wii-topbar">
     <div class="wii-brand">
@@ -39,6 +75,15 @@
           <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/>
         </svg>
         <span>Sky View</span>
+      </button>
+
+      <button class="wii-tab" data-tab="solar" role="tab" aria-selected="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <circle cx="12" cy="12" r="2.4" fill="currentColor"/>
+          <ellipse cx="12" cy="12" rx="10" ry="5.5"/>
+          <circle cx="19.5" cy="9.4" r="1.6" fill="currentColor"/>
+        </svg>
+        <span>Solar System</span>
       </button>
 
       <button class="wii-tab" data-tab="forecast" role="tab" aria-selected="false">
@@ -71,40 +116,53 @@
       <div class="wii-window-header">
         <div>
           <h2>Celestial Weather Outlook</h2>
-          <p>Automatically updates each day. Click any broadcast column to jump to that event and lock the camera onto the sky.</p>
+          <p>Click an event to jump to it, a comet bar for its best view, or a day to set the sky date.</p>
         </div>
-        <div class="strip-scroll-btns">
-          <button id="scrollLeft" class="wii-step-btn lg" title="Scroll Left" aria-label="Scroll Left">
+        <div class="fc-nav">
+          <div class="wii-seg-group" id="viewGroup">
+            <button class="wii-seg active" data-view="week">Week</button>
+            <button class="wii-seg" data-view="month">Month</button>
+          </div>
+          <button id="fcPrev" class="wii-step-btn lg" title="Previous" aria-label="Previous">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><polyline points="15 18 9 12 15 6"/></svg>
           </button>
-          <button id="scrollRight" class="wii-step-btn lg" title="Scroll Right" aria-label="Scroll Right">
+          <div id="fcRange" class="fc-range"></div>
+          <button id="fcNext" class="wii-step-btn lg" title="Next" aria-label="Next">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><polyline points="9 18 15 12 9 6"/></svg>
           </button>
+          <button id="fcToday" class="wii-pill-btn sm" title="Follow the current sky date">Now</button>
         </div>
       </div>
 
       <div class="wii-filter-bar">
-        <div class="wii-seg-group" id="evtGroup">
-          <button class="wii-seg active" data-evt="lun">Lunar Eclipses</button>
-          <button class="wii-seg" data-evt="sol">Solar Eclipses</button>
-          <button class="wii-seg" data-evt="mm">Moon–Planet Conjunctions</button>
-          <button class="wii-seg" data-evt="opp">Oppositions &amp; Elongations</button>
-          <button class="wii-seg" data-evt="com">Comets</button>
+        <div class="wii-seg-group" id="catGroup">
+          <button class="wii-seg active" data-cat="lun"><span class="sw-dot" style="background:#d6453d"></span>Lunar Eclipses</button>
+          <button class="wii-seg active" data-cat="sol"><span class="sw-dot" style="background:#e69a00"></span>Solar Eclipses</button>
+          <button class="wii-seg active" data-cat="mm"><span class="sw-dot" style="background:#7a5cff"></span>Moon–Planet</button>
+          <button class="wii-seg active" data-cat="pp"><span class="sw-dot" style="background:#00a8a8"></span>Planet–Planet</button>
+          <button class="wii-seg active" data-cat="opp"><span class="sw-dot" style="background:#2e9d62"></span>Oppositions &amp; Elongations</button>
+          <button class="wii-seg active" data-cat="com"><span class="sw-dot" style="background:#3a8dde"></span>Comets</button>
+          <button class="wii-seg active vis-toggle" data-cat="vis" title="Hide moon/planet events that can't be seen (daytime or below the horizon)">Visible only</button>
         </div>
-
-        <div class="wii-seg-group planet-bar" id="plGroup">
-          <button class="wii-pl-btn" data-pl="mercury"><span class="sw-dot" style="background:#d8d2c6"></span>Mercury</button>
-          <button class="wii-pl-btn" data-pl="venus"><span class="sw-dot" style="background:#fff7e0"></span>Venus</button>
-          <button class="wii-pl-btn active" data-pl="mars"><span class="sw-dot" style="background:#ff5933"></span>Mars</button>
-          <button class="wii-pl-btn" data-pl="jupiter"><span class="sw-dot" style="background:#ffebcc"></span>Jupiter</button>
-          <button class="wii-pl-btn" data-pl="saturn"><span class="sw-dot" style="background:#ffe099"></span>Saturn</button>
-        </div>
-
-        <!-- Filled by UIController.buildCometButtons() from the COMETS registry; shown only for the Comets tab -->
-        <div class="wii-seg-group planet-bar" id="cmGroup" style="display:none"></div>
       </div>
 
-      <div id="ev" class="wii-forecast-strip"></div>
+      <div class="fc-next-bar">
+        <span class="fc-next-label">NEXT</span>
+        <div class="wii-seg-group" id="nextKindGroup">
+          <button class="wii-seg" data-next="sol">Solar</button>
+          <button class="wii-seg active" data-next="lun">Lunar</button>
+          <button class="wii-seg" data-next="mm">Moon–Planet</button>
+          <button class="wii-seg" data-next="pp">Conjunctions</button>
+          <button class="wii-seg" data-next="opp">Opp. / Elong.</button>
+          <button class="wii-seg" data-next="com">Comets</button>
+        </div>
+        <div id="nextList" class="fc-next-list"></div>
+      </div>
+
+      <div class="fc-body">
+        <div id="fcBoard" class="fc-board"></div>
+        <aside id="fcSide" class="fc-side"></aside>
+      </div>
     </div>
   </section>
 

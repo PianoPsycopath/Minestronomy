@@ -1,4 +1,4 @@
-import { PLN, COMETS, PARTICLE_FILE_ALIASES, CELESTIAL_DEFAULTS, STARBOX_FACES } from "../config/constants.js";
+import { PLN, COMETS, CELESTIAL_DEFAULTS, STARBOX_FACES } from "../config/constants.js";
 import {
   buildCometParticleJson,
   buildSunParticleJson,
@@ -110,7 +110,7 @@ export class ParticleLoader {
 
   async loadBodyParticle(body) {
     let json = null;
-    for (const name of [body, ...(PARTICLE_FILE_ALIASES[body] || [])]) {
+    for (const name of [body]) {
       json = await this.fetchBedrockJson(`/particles/${name}.particle.json`);
       if (json?.particle_effect) break;
     }

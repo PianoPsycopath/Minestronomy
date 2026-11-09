@@ -8,7 +8,7 @@ export function eq(lam, beta) {
   };
 }
 
-export function planetCalc(p, t, ls, er) {
+export function planetOrbit(p, t) {
   const [P, L0, w, e, a, inc, Om] = p.el;
   const M = L0 - w + (t / P) * 360;
   const nu =
@@ -18,9 +18,20 @@ export function planetCalc(p, t, ls, er) {
     (13 / 12) * e ** 3 * RD * sin(3 * M);
   const r = (a * (1 - e * e)) / (1 + e * cos(nu));
   const u = nu + w - Om;
-  const x = r * (cos(Om) * cos(u) - sin(Om) * sin(u) * cos(inc)) + er * cos(ls);
-  const y = r * (sin(Om) * cos(u) + cos(Om) * sin(u) * cos(inc)) + er * sin(ls);
-  const z = r * sin(u) * sin(inc);
+  return {
+    r,
+    x: r * (cos(Om) * cos(u) - sin(Om) * sin(u) * cos(inc)),
+    y: r * (sin(Om) * cos(u) + cos(Om) * sin(u) * cos(inc)),
+    z: r * sin(u) * sin(inc)
+  };
+}
+
+export function planetCalc(p, t, ls, er) {
+  const o = planetOrbit(p, t);
+  const r = o.r;
+  const x = o.x + er * cos(ls);
+  const y = o.y + er * sin(ls);
+  const z = o.z;
   const dxy = Math.hypot(x, y);
   const dist = Math.hypot(dxy, z);
   const lam = atan2(y, x);
@@ -36,37 +47,64 @@ export function planetCalc(p, t, ls, er) {
   };
 }
 
+export function solarTerms(t) {
+  const lm = ((t - 80) / 365.25) * 360;
+  const me = ((t - 3) / 365.25) * 360;
+  return {
+    lm,
+    me,
+    ls: lm + 1.915 * sin(me) + 0.02 * sin(2 * me),
+    er: 1 - 0.0167 * cos(me)
+  };
+}
+
 const posMod = (x, m) => ((x % m) + m) % m;
 
-// Signed days from perihelion, wrapped to [-period/2, period/2). Matches
+// Signed days from the window centre (C.perihelionDay), wrapped to [-period/2, period/2). Matches
 // variable.dt = math.mod(t + A, period) - period / 2 in the particle files.
 export function cometDt(C, t) {
   return posMod(t - C.perihelionDay + C.period / 2, C.period) - C.period / 2;
 }
 
-// Days until this comet's next perihelion (0 if it is exactly now).
+// Days until this comet's next TRUE perihelion (0 if it is exactly now). For comets with an orbitOffset
+// (the pack's w = rate * (dt + offset)) perihelion falls `orbitOffset` days before the window centre.
 export function cometDaysToPerihelion(C, t) {
-  return posMod(C.perihelionDay - t, C.period);
+  return posMod(C.perihelionDay - (C.orbitOffset || 0) - t, C.period);
 }
 
-// Mirrors the Molang in <key>.particle.json / player.entity.json.
+// Mirrors the Molang in <key>_particle.json / player.entity.json.
 // Angles in degrees (math.js trig is degree-based).
-// Windowed comets are only "on" within +/- C.window days of perihelion and fade over the outer window/5.
-export function cometCalc(C, t, ls, er) {
+// Windowed comets are only "on" within +/- C.window days of the window centre and fade over the outer window/5.
+// The un-windowed comet is always on but fades over the last 40 days before aphelion.
+export function cometOrbit(C, t) {
   const dt = cometDt(C, t);
   const windowed = C.window != null;
   const on = windowed ? Math.abs(dt) < C.window : true;
-  const fade = windowed ? (on ? clamp((C.window - Math.abs(dt)) / (C.window / 5), 0, 1) : 0) : 1;
+  const fade = windowed
+    ? on
+      ? clamp((C.window - Math.abs(dt)) / (C.window / 5), 0, 1)
+      : 0
+    : clamp((C.period / 2 - Math.abs(dt)) / 40, 0, 1);
 
-  const w = on ? C.rate * dt : 0;
+  const w = on ? C.rate * (dt + (C.orbitOffset || 0)) : 0;
   const cb = Math.pow(w / 2 + Math.sqrt((w * w) / 4 + 1), 0.333333);
   const s = cb - 1 / cb;
   const r = Math.max(C.q * (1 + s * s), 0.001);
   const u = 2 * atan2(s, 1) + C.uOffset;
 
-  const hx = r * (C.P[0] * cos(u) + C.Q[0] * sin(u));
-  const hy = r * (C.P[1] * cos(u) + C.Q[1] * sin(u));
-  const hz = r * sin(u) * C.Q[2];
+  return {
+    dt,
+    on,
+    fade,
+    r,
+    hx: r * (C.P[0] * cos(u) + C.Q[0] * sin(u)),
+    hy: r * (C.P[1] * cos(u) + C.Q[1] * sin(u)),
+    hz: r * sin(u) * C.Q[2]
+  };
+}
+
+export function cometCalc(C, t, ls, er) {
+  const { dt, on, fade, r, hx, hy, hz } = cometOrbit(C, t);
 
   const gx = hx + er * cos(ls);
   const gy = hy + er * sin(ls);
@@ -86,22 +124,26 @@ export function cometCalc(C, t, ls, er) {
   const pa = atan2(te, tn); // position angle, north -> east
   const rot = C.tailSign * pa + C.tailOffset;
 
-  const flux = C.fluxScale / (Math.pow(r, 4) * dist * dist);
+  // Solar elongation (deg), used by comets that dim near the Sun.
+  const elong = acos(clamp((gx * cos(ls) + gy * sin(ls)) / dist, -1, 1));
+  const elongFade = C.elongFade ? clamp((elong - C.elongFade[0]) / C.elongFade[1], 0, 1) : 1;
+
+  const flux = C.fluxScale / (Math.pow(r, C.fluxRPow) * dist * dist);
   const bright = on
-    ? clamp(Math.pow(flux / C.fluxRef, C.fluxPow), 0, 1) * clamp((C.brightFade - r) / 2, 0, 1) * fade
+    ? clamp(Math.pow(flux / C.fluxRef, C.fluxPow), 0, 1) *
+      elongFade *
+      clamp((C.brightFade - r) / 2, 0, 1) *
+      fade
     : 0;
-  const tf = clamp(0.3 / r, 0, 1);
+  const tf = clamp(C.tfRef / (C.tfBy === "dist" ? dist : r), 0, 1);
   const size = (C.sizeBase + C.sizeGain * Math.pow(tf, 1.5)) * C.sizeScale;
 
-  return { key: C.key, ra, dec, dist, r, pa, rot, flux, bright, size, dt, on, fade };
+  return { key: C.key, ra, dec, dist, r, pa, rot, flux, bright, size, dt, on, fade, elong };
 }
 
-export function cometVisibility(bright, sunAlt) {
-  return clamp(
-    (COMET_BASE.visBase + COMET_BASE.visGain * Math.pow(bright, 3) - sunAlt) / COMET_BASE.visSpan,
-    0,
-    1
-  );
+// Pass the comet's config as C so per-comet visGain/visBase/visSpan apply (the Super comet uses a lower gain).
+export function cometVisibility(bright, sunAlt, C = COMET_BASE) {
+  return clamp((C.visBase + C.visGain * Math.pow(bright, 3) - sunAlt) / C.visSpan, 0, 1);
 }
 
 // Apparent angular diameter (deg) of the comet billboard, as the Bedrock particle would subtend it.
@@ -111,9 +153,7 @@ export function cometAngularSize(size) {
 
 export function calc(t, Z) {
   const tod = t - Math.floor(t);
-  const lm = ((t - 80) / 365.25) * 360;
-  const me = ((t - 3) / 365.25) * 360;
-  const ls = lm + 1.915 * sin(me) + 0.02 * sin(2 * me);
+  const { lm, ls, er } = solarTerms(t);
   const sun = eq(ls, 0);
   const lmoon = lm + (t / 29.53) * 360 + 180 + 6.29 * sin((t / 27.55) * 360);
   const bmoon = 5.145 * sin(lmoon - (OM0 - (t / 6793.5) * 360));
@@ -121,7 +161,6 @@ export function calc(t, Z) {
   const moon = eq(lmoon, bmoon);
   moon.dec += par;
 
-  const er = 1 - 0.0167 * cos(me);
   const pl = {};
   for (const n in PLN) {
     pl[n] = planetCalc(PLN[n], t, ls, er);
@@ -144,6 +183,9 @@ export function calc(t, Z) {
     tod,
     sh,
     lm,
+    ls,
+    er,
+    lmoon,
     sun,
     moon,
     pl,
@@ -183,4 +225,18 @@ export function getTargetAltAz(target, s, phi) {
 
 export function zToLatitude(Z) {
   return clamp(-Z / EARTH_RADIUS_BLOCKS, -1, 1) * 90;
+}
+
+// Minecraft axes: +X = east, -Z = north, +Y = up (same convention as dir() in SkyScene).
+// alt/az in degrees, az measured from north through east. R is large so the 1.62-block eye-height offset
+// between the feet anchor used by `facing` and the eyes is negligible (~0.09 deg at R = 1000).
+export function facingOffset(alt, az, R = 1000) {
+  return [cos(alt) * sin(az) * R, sin(alt) * R, -cos(alt) * cos(az) * R];
+}
+
+// "/tp @s ~ ~ ~ facing ~dx ~dy ~dz": turns the player toward the object without moving them.
+export function facingCommand(pos, R = 1000) {
+  const f = v => (Math.abs(v) < 0.005 ? 0 : +v.toFixed(2));
+  const [dx, dy, dz] = facingOffset(pos.alt, pos.az, R).map(f);
+  return `/tp @s ~ ~ ~ facing ~${dx} ~${dy} ~${dz}`;
 }

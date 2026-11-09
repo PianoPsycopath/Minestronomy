@@ -146,12 +146,17 @@ export const COMET_BASE = {
   texture: "textures/environment/comet",
   fluxRef: 4.2,
   fluxPow: 0.3,
+  fluxRPow: 4,          // flux = fluxScale / (r^fluxRPow * dist^2)
   brightFade: 6,        // clamp((6 - r) / 2, 0, 1)
+  elongFade: null,      // [start, span] deg: bright *= clamp((elong - start) / span, 0, 1)
+  orbitOffset: 0,       // days: Barker time is rate * (dt + orbitOffset); true perihelion = perihelionDay - orbitOffset
   visBase: -4,          // vis = clamp((visBase + visGain * bright^3 - sunAlt) / visSpan, 0, 1)
   visGain: 30,
   visSpan: 6,
-  sizeBase: 14,         // size = (base + gain * clamp(0.3 / r, 0, 1) ^ 1.5) * sizeScale
+  sizeBase: 14,         // size = (base + gain * clamp(tfRef / (r or dist), 0, 1) ^ 1.5) * sizeScale
   sizeGain: 150,
+  tfRef: 0.3,
+  tfBy: "r",            // "r" = heliocentric distance, "dist" = geocentric distance
   emitterDistance: 250, // particle offset used for the angular size
   tailSign: 1,          // Bedrock tuning knobs (kept in sync with the pack)
   tailOffset: 0,
@@ -167,7 +172,7 @@ export const COMETS = {
     ...COMET_BASE,
     perihelionDay: 60,
     period: 365.25,
-    window: null,
+    window: null,         // always "on"; fades over the last 40 d before aphelion (see cometCalc)
     rate: 0.17624,        // Barker's equation time scale
     q: 0.35,              // perihelion distance (AU)
     uOffset: 70,          // argument offset (deg)
@@ -273,15 +278,22 @@ export const COMETS = {
     short: "SUP",
     identifier: "astrum:comet_super_particle",
     ...COMET_BASE,
-    perihelionDay: 0,     // year 0 and every 100 years after (36525 d)
+    perihelionDay: 0,     // visibility window is centred on year 0 and every 100 years after (36525 d)...
+    orbitOffset: 36,      // ...but true perihelion is 36 d earlier (w = rate * (dt + 36) in the pack)
     period: 36525,
     window: 400,
     rate: 3.264033,
     q: 0.05,
-    uOffset: 330,
-    P: [0.601815, 0.798635],
-    Q: [0.069606, -0.052452, 0.996195],
-    fluxScale: 100,
+    uOffset: 24,
+    P: [0.173648, -0.984808],
+    Q: [-0.085832, -0.015134, 0.996195],
+    fluxScale: 1,
+    fluxRef: 60,
+    fluxRPow: 2,          // pack uses 1 / (r^2 * dist^2)
+    elongFade: [12, 30],  // pack dims it near the Sun: clamp((elong - 12) / 30, 0, 1)
+    tfRef: 0.12,          // pack sizes by geocentric distance: clamp(0.12 / dist, 0, 1)
+    tfBy: "dist",
+    visGain: 10,
     sizeScale: 1.3,
     tint: [1, 0.93, 0.75]
   }

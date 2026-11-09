@@ -24,12 +24,17 @@ export function getCalendarInfo(dayInt) {
   };
 }
 
+// The web's t is continuous and its day number flips at midnight (time_of_day wraps 1 -> 0).
+// Minecraft's query.day flips at sunrise (tick 0, time_of_day 0.25), so ticks 18000-23999 (midnight to
+// sunrise) belong to the PREVIOUS Minecraft day. This is the same correction the pack applies in Molang:
+//   t = query.day + query.time_of_day + (query.time_of_day < 0.25 ? 1 : 0)
 export function getTickInfo(tVal) {
   const day = Math.floor(tVal);
   const tod = tVal - day;
   const sh = tod >= 0.25 ? tod - 0.25 : tod + 0.75;
-  const todTicks = Math.round(sh * 24000) % 24000;
-  const totalTicks = day * 24000 + todTicks;
+  const mcDay = tod < 0.25 ? day - 1 : day;
+  const totalTicks = Math.round(mcDay * 24000 + sh * 24000);
+  const todTicks = ((totalTicks % 24000) + 24000) % 24000;
   return { day, todTicks, totalTicks };
 }
 
@@ -38,7 +43,7 @@ export function totalTicksToTime(totalTicks) {
   const todTicks = ((totalTicks % 24000) + 24000) % 24000;
   const sh = todTicks / 24000;
   const tod = (sh + 0.25) % 1;
-  return day + tod;
+  return day + tod + (tod < 0.25 ? 1 : 0);
 }
 
 export function hhmm24(td) {
@@ -53,4 +58,15 @@ export function hhmm12(td) {
   const ampm = h24 >= 12 ? "PM" : "AM";
   const h12 = h24 % 12 || 12;
   return `${h12}:${min} ${ampm}`;
+}
+
+// First day and (exclusive) end day of the calendar month containing `day`. Walks by day-of-month so it stays
+// correct whatever quirks getCalendarInfo has at year boundaries.
+export function getMonthSpan(day) {
+  const dom = d => getCalendarInfo(d).dayOfMonth;
+  let start = day;
+  while (dom(start - 1) === dom(start) - 1) start--;
+  let end = day;
+  while (dom(end + 1) === dom(end) + 1) end++;
+  return { start, end: end + 1 };
 }
