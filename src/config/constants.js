@@ -166,7 +166,7 @@ export const COMET_BASE = {
 export const COMETS = {
   comet: {
     key: "comet",
-    label: "Original",
+    label: "Iron",
     short: "COM",
     identifier: "astrum:comet_particle",
     ...COMET_BASE,
@@ -184,7 +184,7 @@ export const COMETS = {
   },
   comet_annual: {
     key: "comet_annual",
-    label: "Annual",
+    label: "Emerald",
     short: "ANN",
     identifier: "astrum:comet_annual_particle",
     ...COMET_BASE,
@@ -202,7 +202,7 @@ export const COMETS = {
   },
   comet_medium: {
     key: "comet_medium",
-    label: "Medium",
+    label: "Lapis",
     short: "MED",
     identifier: "astrum:comet_medium_particle",
     ...COMET_BASE,
@@ -220,7 +220,7 @@ export const COMETS = {
   },
   comet_great_red: {
     key: "comet_great_red",
-    label: "Great Red",
+    label: "Ruby",
     short: "GRD",
     identifier: "astrum:comet_great_red_particle",
     ...COMET_BASE,
@@ -238,7 +238,7 @@ export const COMETS = {
   },
   comet_great_green: {
     key: "comet_great_green",
-    label: "Great Green",
+    label: "Jade",
     short: "GGR",
     identifier: "astrum:comet_great_green_particle",
     ...COMET_BASE,
@@ -256,7 +256,7 @@ export const COMETS = {
   },
   comet_great_blue: {
     key: "comet_great_blue",
-    label: "Great Blue",
+    label: "Sapphire",
     short: "GBL",
     identifier: "astrum:comet_great_blue_particle",
     ...COMET_BASE,
