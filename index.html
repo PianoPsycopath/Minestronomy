@@ -243,13 +243,21 @@
 
     <div class="wii-day-ctrl">
       <div class="dock-header-row">
-        <span id="modeLabel" class="dock-caption">WORLD DAY</span>
+        <span id="modeLabel" class="dock-caption">CALENDAR DATE</span>
         <button id="modeToggleBtn" class="mode-switch-chip" title="Toggle between Calendar Date and Raw Ticks">
-          Switch to Ticks
+          Switch to Day No.
         </button>
       </div>
 
-      <div id="dayInputGroup" class="day-spin">
+      <div id="dateInputGroup" class="day-spin">
+        <button id="datePrev" class="wii-step-btn" title="Previous Day">−</button>
+        <input id="dateDay" class="date-day" type="number" min="1" step="1" aria-label="Day of month">
+        <select id="dateMonth" aria-label="Month"></select>
+        <input id="dateYear" class="date-year" type="number" step="1" aria-label="Year">
+        <button id="dateNext" class="wii-step-btn" title="Next Day">+</button>
+      </div>
+
+      <div id="dayInputGroup" class="day-spin" hidden>
         <button id="dayPrev" class="wii-step-btn" title="Previous Day">−</button>
         <input id="day" type="number" step="1" value="0" aria-label="World Day">
         <button id="dayNext" class="wii-step-btn" title="Next Day">+</button>

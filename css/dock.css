@@ -132,6 +132,14 @@
   border-radius: 10px;
 }
 
+.day-spin input.date-day {
+  width: 52px;
+}
+
+.day-spin input.date-year {
+  width: 68px;
+}
+
 .wii-scrubber {
   flex: 1;
   display: flex;
@@ -177,7 +185,8 @@ input[type="range"]::-webkit-slider-thumb {
   cursor: grab;
 }
 
-.wii-speed-ctrl select {
+.wii-speed-ctrl select,
+.day-spin select {
   height: 30px;
   padding: 0 10px;
   border-radius: 999px;

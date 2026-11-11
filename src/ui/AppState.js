@@ -5,6 +5,8 @@ export class AppState {
   constructor() {
     this.t = 0;
     this.playing = false;
+    // tickMode follows dockMode. Other modules read tickMode.
+    this.dockMode = "date";
     this.tickMode = false;
     this.activeTab = "sky";
     this.yaw = 180;

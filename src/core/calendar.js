@@ -17,11 +17,23 @@ export function getCalendarInfo(dayInt) {
     dowShort: DOW_SHORT[dowIdx],
     month: MONTHS[mIdx].name,
     monthShort: MONTHS[mIdx].short,
+    monthIndex: mIdx,
     dayOfMonth,
     dayOrd: ordinal(dayOfMonth),
     year,
     fullText: `${DOW_NAMES[dowIdx]}, ${MONTHS[mIdx].name} ${ordinal(dayOfMonth)}, Year ${year}`
   };
+}
+
+// Search with getCalendarInfo. A second formula can disagree with it.
+// Returns null when the date does not exist.
+export function getDayFromDate(year, monthIdx, dayOfMonth) {
+  const first = year * 365;
+  for (let d = first; d < first + 365; d++) {
+    const info = getCalendarInfo(d);
+    if (info.monthIndex === monthIdx && info.dayOfMonth === dayOfMonth) return d;
+  }
+  return null;
 }
 
 // Returns the first day and the end day (exclusive) of the month that contains the day.
