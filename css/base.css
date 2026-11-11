@@ -1,0 +1,70 @@
+:root {
+  --wii-chrome: repeating-linear-gradient(
+  0deg,
+  rgba(255, 255, 255, 0.82) 0px,
+  rgba(255, 255, 255, 0.82) 2px,
+  rgba(226, 243, 255, 0.78) 2px,
+  rgba(226, 243, 255, 0.78) 4px
+  );
+  --aero-btn: linear-gradient(180deg, #ffffff 0%, #eaf7ff 48%, #ccebff 52%, #e8f8ff 100%);
+  --aero-aqua: linear-gradient(180deg, #74e0ff 0%, #199cf5 48%, #0076d6 52%, #47cfff 100%);
+  --wii-border: #ffffff;
+  --wii-outline: rgba(0, 128, 220, 0.38);
+  --wii-text: #123052;
+  --wii-muted: #4b7196;
+  --wii-cyan: #0080e6;
+}
+
+* {
+  box-sizing: border-box;
+  user-select: none;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: "M PLUS Rounded 1c", "Segoe UI", system-ui, sans-serif;
+  color: var(--wii-text);
+  background: #070d19;
+}
+
+#c,
+#solarCanvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  cursor: grab;
+  z-index: 1;
+}
+
+#c:active,
+#solarCanvas:active {
+  cursor: grabbing;
+}
+
+#cmdPreview {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+#c[hidden],
+#solarCanvas[hidden],
+.wii-solar-hud[hidden] {
+  display: none !important;
+}
+
+#solarCanvas {
+  touch-action: none;
+}
+
+body.view-solar .find-btn,
+body.view-solar .wii-find,
+body.view-solar .wii-lock-banner {
+  display: none !important;
+}

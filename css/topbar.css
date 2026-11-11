@@ -1,0 +1,177 @@
+.wii-topbar {
+  position: fixed;
+  top: 12px;
+  left: 16px;
+  right: 16px;
+  height: 64px;
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  background: var(--wii-chrome);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 2.5px solid var(--wii-border);
+  border-radius: 999px;
+  box-shadow: 0 6px 24px rgba(0, 25, 65, 0.45), 0 0 0 1px var(--wii-outline), inset 0 2px 2px #fff;
+}
+
+.wii-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.wii-orb-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 26%, #ffffff 0%, #6ce5ff 30%, #0082eb 72%, #003e8a 100%);
+  border: 2px solid #ffffff;
+  box-shadow: 0 3px 10px rgba(0, 130, 255, 0.45), inset 0 2px 3px rgba(255, 255, 255, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+}
+
+.wii-orb-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.wii-title-stack {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.05;
+}
+
+.wii-sub-tag {
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  color: var(--wii-cyan);
+}
+
+.wii-title-stack h1 {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 900;
+  color: var(--wii-text);
+  text-shadow: 0 1px 0 #fff;
+}
+
+.wii-nav {
+  display: flex;
+  gap: 10px;
+}
+
+.wii-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 42px;
+  padding: 0 20px;
+  border-radius: 999px;
+  border: 2px solid #ffffff;
+  background: var(--aero-btn);
+  color: var(--wii-text);
+  font: 800 14px "M PLUS Rounded 1c", sans-serif;
+  box-shadow: 0 3px 8px rgba(0, 65, 130, 0.16), 0 0 0 1px rgba(0, 140, 230, 0.25), inset 0 1px 1px #fff;
+  cursor: pointer;
+  transition: transform 0.14s ease, box-shadow 0.14s ease, filter 0.14s ease;
+}
+
+.wii-tab svg {
+  width: 18px;
+  height: 18px;
+  color: var(--wii-cyan);
+}
+
+.wii-tab:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+  box-shadow: 0 5px 14px rgba(0, 150, 255, 0.32), 0 0 0 1.5px #44c4ff;
+}
+
+.wii-tab.active {
+  background: var(--aero-aqua);
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 45, 100, 0.65);
+  border-color: #d8f6ff;
+  box-shadow: 0 0 16px rgba(0, 175, 255, 0.65), inset 0 1px 2px #fff;
+}
+
+.wii-tab.active svg {
+  color: #ffffff;
+}
+
+.wii-clock-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.wii-date-pill {
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--aero-btn);
+  border: 1.5px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 60, 120, 0.14), 0 0 0 1px rgba(0, 136, 238, 0.25);
+  font: 800 12.5px "M PLUS Rounded 1c", sans-serif;
+  color: var(--wii-text);
+  cursor: pointer;
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+
+.wii-date-pill:hover {
+  filter: brightness(1.04);
+  transform: translateY(-1px);
+}
+
+.wii-digital-clock {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #0f2744 0%, #071426 100%);
+  color: #7df9ff;
+  border: 2px solid #b5ebff;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.75), 0 1px 2px #fff;
+  text-shadow: 0 0 8px rgba(0, 225, 255, 0.6);
+  white-space: nowrap;
+}
+
+.wii-lock-banner {
+  position: fixed;
+  top: 86px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 22;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 7px 16px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(16, 42, 76, 0.88), rgba(8, 22, 44, 0.92));
+  backdrop-filter: blur(10px);
+  border: 2px solid #75dcff;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), 0 0 14px rgba(0, 180, 255, 0.4);
+}
+
+.wii-lock-banner[hidden] {
+  display: none !important;
+}
+
+.lock-reticle-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #38f88f;
+  box-shadow: 0 0 8px #38f88f;
+}

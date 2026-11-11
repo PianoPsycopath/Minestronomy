@@ -1,0 +1,11 @@
+export function buildEntityMaterialJson() {
+  return {
+    materials: {
+      version: "1.0.0",
+      "starfield:stars:particles_add": {
+        "+defines": ["ALPHA_TEST", "USE_OVERLAY"],
+        "+states": ["Blending"]
+      }
+    }
+  };
+}

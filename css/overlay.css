@@ -1,0 +1,228 @@
+.wii-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  padding: 86px 20px 102px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 35%, rgba(12, 52, 108, 0.42), rgba(4, 12, 26, 0.74));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.wii-overlay[hidden] {
+  display: none !important;
+}
+
+.wii-window {
+  width: min(1240px, 96vw);
+  height: 100%;
+  max-height: 720px;
+  background: var(--wii-chrome);
+  backdrop-filter: blur(20px) saturate(190%);
+  border: 3px solid #ffffff;
+  border-radius: 30px;
+  box-shadow: 0 20px 55px rgba(0, 18, 50, 0.6), 0 0 0 1.5px var(--wii-outline), inset 0 2px 3px #fff;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.wii-window-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.wii-window-header h2 {
+  margin: 0;
+  font-size: 21px;
+  font-weight: 900;
+  color: var(--wii-text);
+  text-shadow: 0 1px 0 #fff;
+}
+
+.wii-window-header p {
+  margin: 2px 0 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--wii-muted);
+}
+
+.settings-window {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 22px;
+}
+
+.settings-column {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 0;
+}
+
+.wii-card {
+  background: rgba(255, 255, 255, 0.78);
+  border: 2px solid #ffffff;
+  border-radius: 22px;
+  padding: 16px 20px;
+  box-shadow: 0 5px 15px rgba(0, 65, 130, 0.1);
+}
+
+.wii-card h3 {
+  margin: 0 0 12px;
+  font-size: 16px;
+  font-weight: 900;
+  color: var(--wii-text);
+}
+
+.wii-field-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.wii-field-row input[type="number"] {
+  width: 130px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 1.5px solid #86c5ef;
+  font: 700 14px "JetBrains Mono", monospace;
+}
+
+.wii-info-strip {
+  margin-top: 10px;
+  padding: 7px 12px;
+  border-radius: 12px;
+  background: rgba(0, 136, 238, 0.12);
+  color: var(--wii-cyan);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.wii-slider-block {
+  display: block;
+  margin-bottom: 14px;
+}
+
+.slider-head {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.telemetry-box {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: linear-gradient(180deg, #0d213d 0%, #071326 100%);
+  border-color: #82d4ff;
+  color: #9eeeff;
+}
+
+.telemetry-box h3 {
+  color: #ffffff;
+}
+
+#out {
+  flex: 1;
+  overflow: auto;
+  margin: 0;
+  font: 500 12.5px/1.65 "JetBrains Mono", Consolas, monospace;
+  white-space: pre-wrap;
+}
+
+.export-head-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.export-head-row h3 {
+  margin: 0;
+}
+
+.card-sub {
+  margin: 2px 0 0;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--wii-muted);
+}
+
+.tex-status-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 155px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.tex-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1.5px solid #cde8ff;
+  font-size: 12px;
+}
+
+.tex-row-left {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.tex-body-name {
+  font-weight: 900;
+  color: var(--wii-text);
+  text-transform: capitalize;
+}
+
+.tex-path-code {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10.5px;
+  color: var(--wii-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tex-row-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+}
+
+.tex-badge {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.tex-badge.ok {
+  background: #d2f8e6;
+  color: #057443;
+}
+
+.tex-badge.fallback {
+  background: #e6f2ff;
+  color: #155ca0;
+}
