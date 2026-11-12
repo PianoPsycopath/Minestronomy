@@ -1,6 +1,7 @@
 import { findLunarEclipses, findMoonPlanetEvents, findOppositions, findPlanetConjunctions, findSolarEclipses } from "./eventFinders.js";
 import { nextCometPeaks } from "./cometSpans.js";
 import { visibilityOf } from "./visibility.js";
+import { COMET_KEYS, keepComets } from "./bodyFilter.js";
 
 const FINDERS = {
   lun: findLunarEclipses,
@@ -15,9 +16,10 @@ const NEXT_CHUNK_DAYS = { lun: 180, sol: 120, mm: 90, pp: 240, opp: 400 };
 
 // Returns every event in the days [d0, d1).
 // cats is a Set of kinds ("lun", "sol", "mm", "pp", "opp"). The extra value "vis" removes moon and planet events that nobody can see from the ground.
-export function findEventsInRange({ d0, d1, Z, disc, md, cats }) {
+// bodies is optional: { planets: Set, comets: Set }. A missing value selects all bodies.
+export function findEventsInRange({ d0, d1, Z, disc, md, cats, bodies }) {
   // The scan range is one day wider on each side, so a minimum at the edge is still found.
-  const range = { a: d0 - 1, b: d1 + 1, Z, disc, md };
+  const range = { a: d0 - 1, b: d1 + 1, Z, disc, md, bodies };
   const want = kind => !cats || cats.has(kind);
   const visibleOnly = !!cats && cats.has("vis");
 
@@ -31,14 +33,18 @@ export function findEventsInRange({ d0, d1, Z, disc, md, cats }) {
 }
 
 // Returns the next "count" events of one kind on or after day "from". The search moves forward in chunks.
-export function findNextEvents({ kind, from, count, Z, disc, md, visibleOnly }) {
-  if (kind === "com") return nextCometPeaks(from, count, Z);
+export function findNextEvents({ kind, from, count, Z, disc, md, visibleOnly, bodies }) {
+  if (kind === "com") {
+    if (!bodies) return nextCometPeaks(from, count, Z);
+    // The filter removes peaks after the search, so the search reads more peaks first.
+    return keepComets(nextCometPeaks(from, count * COMET_KEYS.length, Z), bodies).slice(0, count);
+  }
   const chunk = NEXT_CHUNK_DAYS[kind] || 120;
   const cats = new Set([kind]);
   if (visibleOnly) cats.add("vis");
   const out = [];
   for (let d = from; out.length < count && d < from + 8000; d += chunk) {
-    out.push(...findEventsInRange({ d0: d, d1: d + chunk, Z, disc, md, cats }));
+    out.push(...findEventsInRange({ d0: d, d1: d + chunk, Z, disc, md, cats, bodies }));
   }
   return out.slice(0, count);
 }

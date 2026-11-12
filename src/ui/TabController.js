@@ -1,5 +1,7 @@
 import { $ } from "./dom.js";
 
+const OVERLAY_TABS = new Set(["forecast", "settings"]);
+
 export class TabController {
   constructor(app) {
     this.app = app;
@@ -27,14 +29,15 @@ export class TabController {
 
   // Shows the sky canvas or the solar system canvas.
   applyView() {
-    const solar = this.app.state.activeTab === "solar";
+    const { activeTab } = this.app.state;
+    const solar = activeTab === "solar";
+    const overlay = OVERLAY_TABS.has(activeTab);
     $("c").hidden = solar;
     this.app.solarScene.canvas.hidden = !solar;
     $("solarHud").hidden = !solar;
     document.body.classList.toggle("view-solar", solar);
-    if (solar) {
-      $("findPanel").hidden = true;
-      this.app.solarHud.update();
-    }
+    document.body.classList.toggle("view-overlay", overlay);
+    if (solar || overlay) $("findPanel").hidden = true;
+    if (solar) this.app.solarHud.update();
   }
 }

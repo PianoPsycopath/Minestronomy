@@ -3,8 +3,8 @@ import { ordinal } from "./math.js";
 
 export function getCalendarInfo(dayInt) {
   const year = Math.floor(dayInt / 365);
-  let doy = (((dayInt % 365) + 365) % 365) + 1;
-  if (doy >= 365) doy -= 365;
+  // The day of the year starts at 0, so the year and the month change on the same day.
+  let doy = ((dayInt % 365) + 365) % 365;
   let mIdx = 0;
   while (mIdx < 11 && doy >= MONTHS[mIdx].days) {
     doy -= MONTHS[mIdx].days;

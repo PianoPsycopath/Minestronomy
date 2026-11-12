@@ -65,6 +65,10 @@ html, body {
 
 body.view-solar .find-btn,
 body.view-solar .wii-find,
-body.view-solar .wii-lock-banner {
+body.view-solar .wii-lock-banner,
+body.view-overlay .find-btn,
+body.view-overlay .wii-find,
+body.view-overlay .wii-lock-banner,
+body.view-overlay .wii-pick {
   display: none !important;
 }

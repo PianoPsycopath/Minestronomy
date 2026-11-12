@@ -116,7 +116,7 @@
       <div class="wii-window-header">
         <div>
           <h2>Celestial Weather Outlook</h2>
-          <p>Click an event to jump to it, a comet bar for its best view, or a day to set the sky date.</p>
+          <p>Click an event to jump to it, a comet marker to pin its day, or a day to set the sky date.</p>
         </div>
         <div class="fc-nav">
           <div class="wii-seg-group" id="viewGroup">
@@ -134,33 +134,55 @@
         </div>
       </div>
 
-      <div class="wii-filter-bar">
-        <div class="wii-seg-group" id="catGroup">
-          <button class="wii-seg active" data-cat="lun"><span class="sw-dot" style="background:#d6453d"></span>Lunar Eclipses</button>
-          <button class="wii-seg active" data-cat="sol"><span class="sw-dot" style="background:#e69a00"></span>Solar Eclipses</button>
-          <button class="wii-seg active" data-cat="mm"><span class="sw-dot" style="background:#7a5cff"></span>Moon–Planet</button>
-          <button class="wii-seg active" data-cat="pp"><span class="sw-dot" style="background:#00a8a8"></span>Planet–Planet</button>
-          <button class="wii-seg active" data-cat="opp"><span class="sw-dot" style="background:#2e9d62"></span>Oppositions &amp; Elongations</button>
-          <button class="wii-seg active" data-cat="com"><span class="sw-dot" style="background:#3a8dde"></span>Comets</button>
-          <button class="wii-seg active vis-toggle" data-cat="vis" title="Hide moon/planet events that can't be seen (daytime or below the horizon)">Visible only</button>
-        </div>
-      </div>
-
-      <div class="fc-next-bar">
-        <span class="fc-next-label">NEXT</span>
-        <div class="wii-seg-group" id="nextKindGroup">
-          <button class="wii-seg" data-next="sol">Solar</button>
-          <button class="wii-seg active" data-next="lun">Lunar</button>
-          <button class="wii-seg" data-next="mm">Moon–Planet</button>
-          <button class="wii-seg" data-next="pp">Conjunctions</button>
-          <button class="wii-seg" data-next="opp">Opp. / Elong.</button>
-          <button class="wii-seg" data-next="com">Comets</button>
-        </div>
-        <div id="nextList" class="fc-next-list"></div>
-      </div>
-
       <div class="fc-body">
-        <div id="fcBoard" class="fc-board"></div>
+        <aside class="fc-rail" aria-label="Forecast filters">
+          <input id="bodySearch" class="fc-search" type="search" placeholder="Find planet or comet…" aria-label="Find planet or comet" autocomplete="off">
+          <p id="bodySearchEmpty" class="fc-rail-empty" hidden>No matching body.</p>
+
+          <details class="fc-rail-block" open>
+            <summary>Next events</summary>
+            <div class="wii-seg-group fc-next-kinds" id="nextKindGroup">
+              <button class="wii-seg" data-next="sol">Solar</button>
+              <button class="wii-seg active" data-next="lun">Lunar</button>
+              <button class="wii-seg" data-next="mm">Moon–Planet</button>
+              <button class="wii-seg" data-next="pp">Conjunctions</button>
+              <button class="wii-seg" data-next="opp">Opp. / Elong.</button>
+              <button class="wii-seg" data-next="com">Comets</button>
+            </div>
+            <div id="nextList" class="fc-next-list"></div>
+          </details>
+
+          <details class="fc-rail-block" open>
+            <summary>Events</summary>
+            <div class="wii-seg-group fc-rail-list" id="catGroup">
+              <button class="wii-seg active" data-cat="lun"><span class="sw-dot" style="background:#d6453d"></span>Lunar Eclipses</button>
+              <button class="wii-seg active" data-cat="sol"><span class="sw-dot" style="background:#e69a00"></span>Solar Eclipses</button>
+              <button class="wii-seg active" data-cat="mm"><span class="sw-dot" style="background:#7a5cff"></span>Moon–Planet</button>
+              <button class="wii-seg active" data-cat="pp"><span class="sw-dot" style="background:#00a8a8"></span>Planet–Planet</button>
+              <button class="wii-seg active" data-cat="opp"><span class="sw-dot" style="background:#2e9d62"></span>Oppositions &amp; Elongations</button>
+              <button class="wii-seg active" data-cat="com"><span class="sw-dot" style="background:#3a8dde"></span>Comets</button>
+              <button class="wii-seg active vis-toggle" data-cat="vis" title="Hide moon/planet events that can't be seen (daytime or below the horizon)">Visible only</button>
+            </div>
+          </details>
+
+          <details class="fc-rail-block" open>
+            <summary>Bodies</summary>
+            <div id="bodyGroups" class="fc-body-groups"></div>
+          </details>
+
+          
+
+          <button id="fcReset" class="wii-pill-btn sm fc-reset" type="button">Reset filters</button>
+        </aside>
+
+        <div class="fc-main">
+          <section class="fc-cm-strip">
+            <div id="cometListTitle" class="fc-cm-strip-title">Active this week</div>
+            <div id="cometList" class="fc-cm-list"></div>
+          </section>
+          <div id="fcBoard" class="fc-board"></div>
+        </div>
+
         <aside id="fcSide" class="fc-side"></aside>
       </div>
     </div>

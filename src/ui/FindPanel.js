@@ -2,6 +2,9 @@ import { $, el, compass, tintRgb } from "./dom.js";
 import { cap } from "../core/math.js";
 import { PLN, COMETS } from "../config/index.js";
 
+const FORECAST_ICON =
+  '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>';
+
 export class FindPanel {
   constructor(app) {
     this.app = app;
@@ -33,14 +36,31 @@ export class FindPanel {
     const list = $("findList");
     if (!list) return;
     for (const o of this.objects) {
+      const item = el("div", "find-item");
       const row = el("button", "find-row");
       row.type = "button";
       row.innerHTML = `<span class="sw-dot" style="background:${o.color}"></span><span class="find-name">${o.label}</span><span class="find-alt">—</span>`;
       row.onclick = () => this.app.tracker.trackObject(o.target);
+
+      // A separate button avoids a button inside a button, which is invalid HTML.
+      const fc = el("button", "find-fc");
+      fc.type = "button";
+      fc.title = "Show in forecast";
+      fc.setAttribute("aria-label", `Show ${o.label} in forecast`);
+      fc.innerHTML = FORECAST_ICON;
+      fc.onclick = () => this.showInForecast(o.target);
+
       o.row = row;
       o.altEl = row.querySelector(".find-alt");
-      list.appendChild(row);
+      item.append(row, fc);
+      list.appendChild(item);
     }
+  }
+
+  // The tab click uses the existing tab router. This keeps the panel visibility logic in one place.
+  showInForecast(target) {
+    document.querySelector('.wii-tab[data-tab="forecast"]')?.click();
+    this.app.forecast?.focusBody(target);
   }
 
   // su, mo, and pa are the altitude and azimuth of the Sun, the Moon, and the planets and comets.
