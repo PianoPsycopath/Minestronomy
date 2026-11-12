@@ -26,6 +26,26 @@ import { OrbitCamera } from "./OrbitCamera.js";
 const ORIGIN = Object.freeze({ x: 0, y: 0, z: 0 });
 const TAIL_AXIS = new THREE.Vector3(0, -1, 0);
 
+// Solves Barker's equation for tan(true anomaly / 2).
+function tanHalfAnomaly(w) {
+  const c = Math.cbrt(Math.abs(w) / 2 + Math.sqrt((w * w) / 4 + 1));
+  return Math.sign(w) * (c - 1 / c);
+}
+
+// Equal time steps put too few points near perihelion, where the comet moves fast.
+// Equal angle steps keep the curve smooth at every distance.
+function cometPathTimes(C, center, span) {
+  const offset = C.orbitOffset || 0;
+  const anomalyAt = (dt) => 2 * Math.atan(tanHalfAnomaly(C.rate * (dt + offset)));
+  const start = anomalyAt(-span);
+  const step = (anomalyAt(span) - start) / (COMET_SAMPLES - 1);
+
+  return Array.from({ length: COMET_SAMPLES }, (_, i) => {
+    const s = Math.tan((start + step * i) / 2);
+    return center + (s * s * s + 3 * s) / C.rate - offset;
+  });
+}
+
 export class SolarSystemScene {
   constructor(canvas) {
     this.canvas = canvas;
@@ -135,8 +155,8 @@ export class SolarSystemScene {
     if (!b.pathDirty && b.pathStamp === stamp) return;
 
     const span = (C.window ?? C.period / 2) - 1;
-    const pts = Array.from({ length: COMET_SAMPLES }, (_, i) => {
-      const o = cometOrbit(C, center - span + (2 * span * i) / (COMET_SAMPLES - 1));
+    const pts = cometPathTimes(C, center, span).map((time) => {
+      const o = cometOrbit(C, time);
       return { x: o.hx, y: o.hy, z: o.hz };
     });
     this.writeLine(b.pathLine, pts);
