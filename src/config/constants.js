@@ -3,6 +3,11 @@ export const K = 3.0;
 export const OM0 = 101.1;
 export const EARTH_RADIUS_BLOCKS = 63710;
 
+export const BODY_DISC_DEFAULT_DEG = 18.2;
+export const DEFAULT_FOV_DEG = 60;
+
+export const BODY_SPRITE_HALF_PX = 64;
+
 export const STARBOX_FACES = {
   px: {
     id: "star_field_px_stars",

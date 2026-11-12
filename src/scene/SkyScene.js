@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { D, sin, cos, clamp, lerp, ang } from "../core/math.js";
-import { PLN, VIS, STARBOX_FACES, COMETS, COMET_BASE } from "../config/constants.js";
+import { PLN, VIS, STARBOX_FACES, COMETS, COMET_BASE, DEFAULT_FOV_DEG, BODY_SPRITE_HALF_PX } from "../config/constants.js";
 import { eq, altaz, getTargetAltAz, cometVisibility, cometAngularSize } from "../core/astronomy.js";
 
 function dir(p, r) {
@@ -13,7 +13,7 @@ export class SkyScene {
     this.particleLoader = particleLoader;
     this.ren = new THREE.WebGLRenderer({ canvas: this.cv, antialias: true });
     this.scene = new THREE.Scene();
-    this.cam = new THREE.PerspectiveCamera(70, 1, 0.1, 1000);
+    this.cam = new THREE.PerspectiveCamera(DEFAULT_FOV_DEG, 1, 0.1, 1000);
     this.cam.rotation.order = "YXZ";
     this.bg = new THREE.Color();
 
@@ -227,10 +227,11 @@ export class SkyScene {
     const cfg = this.particleLoader?.configs?.moon;
     this.applyMaterialBlending(this.MOON, cfg?.material || "particles_alpha");
 
-    const r = 42;
+    const half = BODY_SPRITE_HALF_PX;
+    const r = half - 1;
     const f = 1 - s.eclipse;
-    g.setTransform(1, 0, 0, 1, 64, 64);
-    g.clearRect(-64, -64, 128, 128);
+    g.setTransform(1, 0, 0, 1, half, half);
+    g.clearRect(-half, -half, half * 2, half * 2);
     g.globalAlpha = lerp(s.dayA, 0.95, s.eclipse);
 
     if (cfg?.image) {
@@ -240,25 +241,23 @@ export class SkyScene {
       const cellW = img.width / cols;
       const cellH = img.height / rows;
       const phaseIndex = ((s.ph % 8) + 8) % 8;
-      const col = phaseIndex % cols;
-      const row = Math.floor(phaseIndex / cols);
-      const sx = col * cellW;
-      const sy = row * cellH;
+      const sx = (phaseIndex % cols) * cellW;
+      const sy = Math.floor(phaseIndex / cols) * cellH;
 
       g.save();
       g.imageSmoothingEnabled = false;
-      g.drawImage(img, sx, sy, cellW, cellH, -r, -r, r * 2, r * 2);
+      g.drawImage(img, sx, sy, cellW, cellH, -half, -half, half * 2, half * 2);
 
       if (s.blood > 0.01) {
         g.globalCompositeOperation = "source-atop";
         g.fillStyle = `rgba(195, 38, 14, ${(s.blood * 0.68).toFixed(3)})`;
-        g.fillRect(-r, -r, r * 2, r * 2);
+        g.fillRect(-half, -half, half * 2, half * 2);
       }
 
       if (s.eclipse > 0.01) {
         g.globalCompositeOperation = "source-atop";
         g.fillStyle = `rgba(8, 12, 22, ${(s.eclipse * 0.85).toFixed(3)})`;
-        g.fillRect(-r, -r, r * 2, r * 2);
+        g.fillRect(-half, -half, half * 2, half * 2);
       }
       g.restore();
     } else {
@@ -278,18 +277,17 @@ export class SkyScene {
     }
 
     this.MOON.tex.needsUpdate = true;
-    return disc * 1.6;
+    return disc;
   }
 
   drawSun(disc) {
     const g = this.SUN.g;
     const cfg = this.particleLoader?.configs?.sun;
+    const half = BODY_SPRITE_HALF_PX;
     this.applyMaterialBlending(this.SUN, cfg?.material || "particles_alpha");
 
-    const size = Math.max(18.2, disc * 2.4);
-    const cr = (64 * disc) / size;
-    g.setTransform(1, 0, 0, 1, 64, 64);
-    g.clearRect(-64, -64, 128, 128);
+    g.setTransform(1, 0, 0, 1, half, half);
+    g.clearRect(-half, -half, half * 2, half * 2);
 
     if (cfg?.image) {
       const img = cfg.image;
@@ -300,24 +298,22 @@ export class SkyScene {
         const sy = ((uv.uv?.[1] || 0) / uv.texture_height) * img.height;
         const sw = ((uv.uv_size?.[0] || uv.texture_width) / uv.texture_width) * img.width;
         const sh = ((uv.uv_size?.[1] || uv.texture_height) / uv.texture_height) * img.height;
-        g.drawImage(img, sx, sy, sw, sh, -cr * 1.8, -cr * 1.8, cr * 3.6, cr * 3.6);
+        g.drawImage(img, sx, sy, sw, sh, -half, -half, half * 2, half * 2);
       } else {
-        g.drawImage(img, -cr * 1.8, -cr * 1.8, cr * 3.6, cr * 3.6);
+        g.drawImage(img, -half, -half, half * 2, half * 2);
       }
     } else {
-      const gr = g.createRadialGradient(0, 0, cr * 0.8, 0, 0, 64);
-      gr.addColorStop(0, "rgba(255,230,150,.55)");
-      gr.addColorStop(1, "rgba(255,200,100,0)");
-      g.fillStyle = gr;
-      g.fillRect(-64, -64, 128, 128);
-      g.fillStyle = "#fff6d0";
+      const fill = g.createRadialGradient(0, 0, 0, 0, 0, half - 1);
+      fill.addColorStop(0, "#fff6d0");
+      fill.addColorStop(1, "#ffd678");
+      g.fillStyle = fill;
       g.beginPath();
-      g.arc(0, 0, cr, 0, 7);
+      g.arc(0, 0, half - 1, 0, 7);
       g.fill();
     }
 
     this.SUN.tex.needsUpdate = true;
-    return size;
+    return disc;
   }
 
   drawPlanet(n, s, sa) {
@@ -454,7 +450,7 @@ export class SkyScene {
     };
 
     test({ type: "sun" }, pos.su, disc * 0.5);
-    test({ type: "moon" }, pos.mo, disc * 0.55);
+    test({ type: "moon" }, pos.mo, disc * 0.5);
     for (const n in PLN) {
       if (this.PS[n].s.material.opacity < 0.03) continue;
       const bScale = (PLN[n].billboardSize?.[0] || PLN[n].size) / 4;
