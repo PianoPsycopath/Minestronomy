@@ -4,6 +4,7 @@ import { calc } from "../../core/astronomy/index.js";
 import { getCalendarInfo } from "../../core/calendar.js";
 import { hhmm12 } from "../../core/time.js";
 import { buildEventDetail } from "./forecastEventViews.js";
+import { popIn } from "./forecastMotion.js";
 
 // The day shown in the side panel: the hovered day, else the pinned day, else today.
 function dayToShow(panel, c) {
@@ -66,5 +67,9 @@ export function renderSide(panel) {
   if (c.spans.length) {
     side.appendChild(el("div", "side-sec", "Comets in view"));
     side.appendChild(buildCometLegend(c.spans, day, panel.app.tracker));
+  }
+  if (panel.sideDay !== day) {
+    panel.sideDay = day;
+    popIn(side.querySelectorAll(".side-head, .side-ev"));
   }
 }

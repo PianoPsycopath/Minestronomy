@@ -9,6 +9,7 @@ import { buildWeekBlock, buildDayOfWeekRow } from "./forecastBoard.js";
 import { renderSide } from "./forecastSide.js";
 import { renderNextBar } from "./forecastNext.js";
 import { readSpan, paintCometMarkers, renderCometList, renderCometDay } from "./cometView.js";
+import { BoardMotion } from "./forecastMotion.js";
 
 const RESCAN_DELAY_MS = 150;
 
@@ -50,6 +51,10 @@ export class ForecastPanel {
     this.nextCount = 5;
     this.nextCache = null;
     this.timer = null;
+    this.motion = new BoardMotion($("fcBoard"));
+    this.pendingMotion = null;
+    this.rangeKey = null;
+    this.sideDay = null;
     this.bind();
     this.buildBodyBar();
   }
@@ -57,8 +62,9 @@ export class ForecastPanel {
   bind() {
     $("viewGroup").querySelectorAll(".wii-seg").forEach(btn => {
       btn.onclick = () => {
-        this.markView(btn.dataset.view);
-        this.view = btn.dataset.view;
+        const view = btn.dataset.view;
+        if (view !== this.view) this.queueMotion("morph");        this.markView(view);
+        this.view = view;
         this.update();
       };
     });
@@ -66,6 +72,7 @@ export class ForecastPanel {
     $("fcPrev").onclick = () => this.shift(-1);
     $("fcNext").onclick = () => this.shift(1);
     $("fcToday").onclick = () => {
+      this.queueMotion("fade");
       this.anchor = null;
       this.pinned = null;
       this.update();
@@ -237,7 +244,12 @@ export class ForecastPanel {
     this.timer = setTimeout(() => this.update(), RESCAN_DELAY_MS);
   }
 
+  queueMotion(kind, day) {
+    this.pendingMotion = { kind, day };
+  }
+
   shift(dir) {
+    this.queueMotion(dir > 0 ? "next" : "prev");
     const a = this.anchor ?? Math.floor(this.app.state.t);
     if (this.view === "week") {
       this.anchor = a + 7 * dir;
@@ -248,14 +260,15 @@ export class ForecastPanel {
     this.update();
   }
 
-  // Moves the board to a day and pins that day in the side panel.
   goToDay(d) {
+    this.queueMotion("fade");
     this.anchor = d;
     this.pinned = d;
     this.update();
   }
 
   showWeekOf(d) {
+    this.queueMotion("morph");
     this.view = "week";
     this.anchor = d;
     this.markView("week");
@@ -273,13 +286,21 @@ export class ForecastPanel {
     }
   }
 
-  update() {
+    update() {
+    // A queued motion must not wait for a later update, so it is cleared first.
+    const motion = this.pendingMotion;
+    this.pendingMotion = null;
     if ($("panel-forecast").hidden) return;
 
     const { Z, phi, disc, md } = readObserver();
     const t = this.app.state.t;
     const range = getForecastRange(this.view, this.anchor, t);
     const { g0, g1, m0, m1 } = range;
+
+    // Only a changed range plays a motion. A pin, a filter, or a day tick must not move the board.
+    const rangeKey = `${this.view}|${g0}|${g1}`;
+    const play = Boolean(motion) && this.rangeKey !== null && rangeKey !== this.rangeKey;
+    this.rangeKey = rangeKey;
 
     const key = [g0, g1, Z, disc, md, [...this.cats].sort().join(","), bodiesKey(this.bodies)].join("|");
     if (!this.cache || this.cache.key !== key) {
@@ -293,10 +314,10 @@ export class ForecastPanel {
     this.comets = spans.map(readSpan).filter(Boolean);
 
     this.renderRangeLabel(range);
-    // The board gets no spans. Comets show as day markers and in the rail list, not as lanes.
     this.ctx = { view: this.view, g0, g1, m0, m1, byDay: groupByDay(events), spans: [], Z, phi, todayDay: Math.floor(t) };
 
     const board = $("fcBoard");
+    if (play) this.motion.before(motion.kind);
     board.innerHTML = "";
     board.className = `fc-board ${this.view}`;
     board.appendChild(buildDayOfWeekRow());
@@ -306,5 +327,6 @@ export class ForecastPanel {
     renderCometList(this);
     renderNextBar(this);
     this.renderSide();
+    if (play) this.motion.after();
   }
 }

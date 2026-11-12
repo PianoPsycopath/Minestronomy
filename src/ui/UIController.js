@@ -13,6 +13,8 @@ import { FindPanel } from "./FindPanel.js";
 import { SolarHud } from "./SolarHud.js";
 import { TelemetryPanel } from "./TelemetryPanel.js";
 import { ForecastPanel } from "./forecast/ForecastPanel.js";
+import { initSegThumbs } from "./segThumb.js";
+import { initSound } from "./sound.js";
 
 const PANEL_REFRESH_FRAMES = 4;
 
@@ -40,6 +42,8 @@ export class UIController {
 
     this.time.updateReadouts();
     this.exportPanel.renderTextureStatusList();
+    initSegThumbs();
+    initSound();
   }
 
   renderFrame(s, observer, dt) {

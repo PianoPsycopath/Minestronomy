@@ -24,6 +24,8 @@ function buildDayCell(panel, d, ctx) {
     `fc-day${d === todayDay ? " today" : ""}${d < m0 || d >= m1 ? " outside" : ""}${d === panel.pinned ? " pinned" : ""}`
   );
 
+  cell.dataset.day = d;
+
   cell.appendChild(
     el(
       "div",
