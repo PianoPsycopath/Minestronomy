@@ -1,0 +1,253 @@
+{
+  "format_version": "1.10.0",
+  "animation_controllers": {
+    "controller.animation.astrum.stars": {
+      "initial_state": "stars_only",
+      "states": {
+        "stars_only": {
+          "particle_effects": [
+            {
+              "effect": "star_field_px_stars",
+              "locator": "locator"
+            },
+            {
+              "effect": "star_field_nx_stars",
+              "locator": "locator"
+            },
+            {
+              "effect": "star_field_py_stars",
+              "locator": "locator"
+            },
+            {
+              "effect": "star_field_ny_stars",
+              "locator": "locator"
+            },
+            {
+              "effect": "star_field_pz_stars",
+              "locator": "locator"
+            },
+            {
+              "effect": "star_field_nz_stars",
+              "locator": "locator"
+            },
+            {
+              "effect": "moon_particle",
+              "locator": "locator_moon"
+            },
+            {
+              "effect": "sun_particle",
+              "locator": "locator_sun"
+            },
+            {
+              "effect": "mars_particle",
+              "locator": "locator_mars"
+            },
+            {
+              "effect": "mercury_particle",
+              "locator": "locator_mercury"
+            },
+            {
+              "effect": "venus_particle",
+              "locator": "locator_venus"
+            },
+            {
+              "effect": "jupiter_particle",
+              "locator": "locator_jupiter"
+            },
+            {
+              "effect": "saturn_particle",
+              "locator": "locator_saturn"
+            },
+            { "effect": "comet_tail_particle", "locator": "locator_comet" },
+            { "effect": "comet_particle", "locator": "locator_comet" },
+            { "effect": "comet_annual_tail_particle", "locator": "locator_comet_annual" },
+            { "effect": "comet_annual_particle", "locator": "locator_comet_annual" },
+            { "effect": "comet_medium_tail_particle", "locator": "locator_comet_medium" },
+            { "effect": "comet_medium_particle", "locator": "locator_comet_medium" },
+            { "effect": "comet_great_red_tail_particle", "locator": "locator_comet_great_red" },
+            { "effect": "comet_great_red_particle", "locator": "locator_comet_great_red" },
+            { "effect": "comet_great_green_tail_particle", "locator": "locator_comet_great_green" },
+            { "effect": "comet_great_green_particle", "locator": "locator_comet_great_green" },
+            { "effect": "comet_great_blue_tail_particle", "locator": "locator_comet_great_blue" },
+            { "effect": "comet_great_blue_particle", "locator": "locator_comet_great_blue" },
+            { "effect": "comet_super_tail_particle", "locator": "locator_comet_super" },
+            { "effect": "comet_super_particle", "locator": "locator_comet_super" }
+          ],
+          "animations": [
+            "sky_rotation"
+          ],
+          "transitions": [
+            {
+              "zoomed": "query.is_item_name_any('slot.weapon.mainhand', 'minecraft:spyglass') && query.main_hand_item_use_duration > 0"
+            },
+            {
+              "constellations": "query.is_item_name_any('slot.weapon.mainhand', 'minecraft:spyglass')"
+            }
+          ]
+        },
+        "constellations": {
+          "particle_effects": [
+            {
+              "effect": "star_field_px_const",
+              "locator": "locator"
+            },
+            {
+              "effect": "star_field_nx_const",
+              "locator": "locator"
+            },
+            {
+              "effect": "star_field_py_const",
+              "locator": "locator"
+            },
+            {
+              "effect": "star_field_ny_const",
+              "locator": "locator"
+            },
+            {
+              "effect": "star_field_pz_const",
+              "locator": "locator"
+            },
+            {
+              "effect": "star_field_nz_const",
+              "locator": "locator"
+            },
+            {
+              "effect": "moon_particle",
+              "locator": "locator_moon"
+            },
+            {
+              "effect": "sun_particle",
+              "locator": "locator_sun"
+            },
+            {
+              "effect": "mars_particle",
+              "locator": "locator_mars"
+            },
+            {
+              "effect": "mercury_particle",
+              "locator": "locator_mercury"
+            },
+            {
+              "effect": "venus_particle",
+              "locator": "locator_venus"
+            },
+            {
+              "effect": "jupiter_particle",
+              "locator": "locator_jupiter"
+            },
+            {
+              "effect": "saturn_particle",
+              "locator": "locator_saturn"
+            },
+            { "effect": "comet_tail_particle", "locator": "locator_comet" },
+            { "effect": "comet_particle", "locator": "locator_comet" },
+            { "effect": "comet_annual_tail_particle", "locator": "locator_comet_annual" },
+            { "effect": "comet_annual_particle", "locator": "locator_comet_annual" },
+            { "effect": "comet_medium_tail_particle", "locator": "locator_comet_medium" },
+            { "effect": "comet_medium_particle", "locator": "locator_comet_medium" },
+            { "effect": "comet_great_red_tail_particle", "locator": "locator_comet_great_red" },
+            { "effect": "comet_great_red_particle", "locator": "locator_comet_great_red" },
+            { "effect": "comet_great_green_tail_particle", "locator": "locator_comet_great_green" },
+            { "effect": "comet_great_green_particle", "locator": "locator_comet_great_green" },
+            { "effect": "comet_great_blue_tail_particle", "locator": "locator_comet_great_blue" },
+            { "effect": "comet_great_blue_particle", "locator": "locator_comet_great_blue" },
+            { "effect": "comet_super_tail_particle", "locator": "locator_comet_super" },
+            { "effect": "comet_super_particle", "locator": "locator_comet_super" }
+          ],
+          "animations": [
+            "sky_rotation"
+          ],
+          "transitions": [
+            {
+              "stars_only": "!query.is_item_name_any('slot.weapon.mainhand', 'minecraft:spyglass')"
+            },
+            {
+              "zoomed": "query.main_hand_item_use_duration > 0"
+            }
+          ]
+        },
+        "zoomed": {
+          "particle_effects": [
+            {
+              "effect": "star_field_px_const",
+              "locator": "locator"
+            },
+            {
+              "effect": "star_field_nx_const",
+              "locator": "locator"
+            },
+            {
+              "effect": "star_field_py_const",
+              "locator": "locator"
+            },
+            {
+              "effect": "star_field_ny_const",
+              "locator": "locator"
+            },
+            {
+              "effect": "star_field_pz_const",
+              "locator": "locator"
+            },
+            {
+              "effect": "star_field_nz_const",
+              "locator": "locator"
+            },
+            {
+              "effect": "moon_particle",
+              "locator": "locator_moon"
+            },
+            {
+              "effect": "sun_particle",
+              "locator": "locator_sun"
+            },
+            {
+              "effect": "mars_hires_particle",
+              "locator": "locator_mars"
+            },
+            {
+              "effect": "mercury_hires_particle",
+              "locator": "locator_mercury"
+            },
+            {
+              "effect": "venus_hires_particle",
+              "locator": "locator_venus"
+            },
+            {
+              "effect": "jupiter_hires_particle",
+              "locator": "locator_jupiter"
+            },
+            {
+              "effect": "saturn_hires_particle",
+              "locator": "locator_saturn"
+            },
+            { "effect": "comet_tail_particle", "locator": "locator_comet" },
+            { "effect": "comet_particle", "locator": "locator_comet" },
+            { "effect": "comet_annual_tail_particle", "locator": "locator_comet_annual" },
+            { "effect": "comet_annual_particle", "locator": "locator_comet_annual" },
+            { "effect": "comet_medium_tail_particle", "locator": "locator_comet_medium" },
+            { "effect": "comet_medium_particle", "locator": "locator_comet_medium" },
+            { "effect": "comet_great_red_tail_particle", "locator": "locator_comet_great_red" },
+            { "effect": "comet_great_red_particle", "locator": "locator_comet_great_red" },
+            { "effect": "comet_great_green_tail_particle", "locator": "locator_comet_great_green" },
+            { "effect": "comet_great_green_particle", "locator": "locator_comet_great_green" },
+            { "effect": "comet_great_blue_tail_particle", "locator": "locator_comet_great_blue" },
+            { "effect": "comet_great_blue_particle", "locator": "locator_comet_great_blue" },
+            { "effect": "comet_super_tail_particle", "locator": "locator_comet_super" },
+            { "effect": "comet_super_particle", "locator": "locator_comet_super" }
+          ],
+          "animations": [
+            "sky_rotation"
+          ],
+          "transitions": [
+            {
+              "stars_only": "!query.is_item_name_any('slot.weapon.mainhand', 'minecraft:spyglass')"
+            },
+            {
+              "constellations": "!(query.main_hand_item_use_duration > 0)"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

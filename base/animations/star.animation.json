@@ -1,0 +1,86 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.astrum.sky_rotation": {
+			"loop": true,
+			"bones": {
+				"sky_tilt": {
+					"rotation": [ "-variable.astrum_tilt_cancel", 0, 0 ]
+				},
+				"sky_anchor": {                         
+					"rotation": [ "-this", "-this - query.body_y_rotation", "-this" ]
+				},
+				"latitude_anchor": {
+					"rotation": [
+						"(math.clamp(query.position(2) / 63710, -1, 1) * -90)",
+						0,
+						0
+					]
+				},
+				"bone_skybox": {
+					"rotation": [
+						90,
+						0,
+						"(query.time_of_day * -360) - ((query.day + query.time_of_day + (query.time_of_day < 0.25 ? 1 : 0)) / 365.25 * 360)"
+					]
+				},
+				"bone_sun_pivot": {
+					"rotation": [
+						0,
+						0,
+						"variable.astrum_sun_z"
+					]
+				},
+				"bone_sun_declination": {
+					"rotation": [
+						"variable.astrum_sun_dec",
+						0,
+						0
+					]
+				},
+				"bone_moon_pivot": {
+					"rotation": [ 
+						0, 
+						0, 
+						"variable.astrum_moon_z" 
+					]
+				},
+				"bone_moon_declination": {
+					"rotation": [ 
+						"variable.astrum_moon_dec", 
+						0, 
+						0 
+					]
+				},
+				"bone_mars_pivot": {
+					"rotation": [ 0, 0, "variable.astrum_mars_z" ]
+				},
+				"bone_mars_declination": {
+					"rotation": [ "variable.astrum_mars_dec", 0, 0 ]
+				},
+				"bone_mercury_pivot": { "rotation": [ 0, 0, "variable.astrum_mercury_z" ] },
+				"bone_mercury_declination": { "rotation": [ "variable.astrum_mercury_dec", 0, 0 ] },
+				"bone_venus_pivot": { "rotation": [ 0, 0, "variable.astrum_venus_z" ] },
+				"bone_venus_declination": { "rotation": [ "variable.astrum_venus_dec", 0, 0 ] },
+				"bone_jupiter_pivot": { "rotation": [ 0, 0, "variable.astrum_jupiter_z" ] },
+				"bone_jupiter_declination": { "rotation": [ "variable.astrum_jupiter_dec", 0, 0 ] },
+				"bone_saturn_pivot": { "rotation": [ 0, 0, "variable.astrum_saturn_z" ] },
+				"bone_saturn_declination": { "rotation": [ "variable.astrum_saturn_dec", 0, 0 ] },
+				"bone_comet_pivot": { "rotation": [ 0, 0, "variable.astrum_comet_zrot" ] },
+				"bone_comet_declination": { "rotation": [ "variable.astrum_comet_dec", 0, 0 ] },
+				"bone_comet_annual_pivot": { "rotation": [ 0, 0, "variable.astrum_comet_annual_zrot" ] },
+				"bone_comet_annual_declination": { "rotation": [ "variable.astrum_comet_annual_dec", 0, 0 ] },
+				"bone_comet_medium_pivot": { "rotation": [ 0, 0, "variable.astrum_comet_medium_zrot" ] },
+				"bone_comet_medium_declination": { "rotation": [ "variable.astrum_comet_medium_dec", 0, 0 ] },
+				"bone_comet_great_red_pivot": { "rotation": [ 0, 0, "variable.astrum_comet_great_red_zrot" ] },
+				"bone_comet_great_red_declination": { "rotation": [ "variable.astrum_comet_great_red_dec", 0, 0 ] },
+				"bone_comet_great_green_pivot": { "rotation": [ 0, 0, "variable.astrum_comet_great_green_zrot" ] },
+				"bone_comet_great_green_declination": { "rotation": [ "variable.astrum_comet_great_green_dec", 0, 0 ] },
+				"bone_comet_great_blue_pivot": { "rotation": [ 0, 0, "variable.astrum_comet_great_blue_zrot" ] },
+				"bone_comet_great_blue_declination": { "rotation": [ "variable.astrum_comet_great_blue_dec", 0, 0 ] },
+				"bone_comet_super_pivot": { "rotation": [ 0, 0, "variable.astrum_comet_super_zrot" ] },
+				"bone_comet_super_declination": { "rotation": [ "variable.astrum_comet_super_dec", 0, 0 ] }
+			}
+		}
+	}
+}

@@ -1,0 +1,56 @@
+{
+  "format_version": "1.10.0",
+  "particle_effect": {
+    "description": {
+      "identifier": "astrum:comet_great_green_tail_particle",
+      "basic_render_parameters": {
+        "material": "starfield:sun_moon",
+        "texture": "textures/environment/comet_tail"
+      }
+    },
+    "components": {
+      "minecraft:emitter_local_space": {
+        "position": true,
+        "rotation": true
+      },
+      "minecraft:emitter_rate_instant": {
+        "num_particles": 1
+      },
+      "minecraft:emitter_lifetime_looping": {
+        "active_time": 1
+      },
+      "minecraft:emitter_shape_point": {
+        "offset": [
+          0,
+          250,
+          0
+        ]
+      },
+      "minecraft:particle_lifetime_expression": {
+        "max_lifetime": 1
+      },
+      "minecraft:particle_initialization": {
+        "per_update_expression": "variable.t = query.day + query.time_of_day + (query.time_of_day < 0.25 ? 1 : 0); variable.dt = math.mod(variable.t + 852.5, 7305) - 3652.5; variable.on = math.abs(variable.dt) < 200; variable.fade = variable.on ? (math.clamp((200 - math.abs(variable.dt)) / 40, 0, 1)) : 0; variable.me = (variable.t - 3) / 365.25 * 360; variable.ls = (variable.t - 80) / 365.25 * 360 + 1.915 * math.sin(variable.me) + 0.02 * math.sin(2 * variable.me); variable.er = 1 - 0.0167 * math.cos(variable.me); variable.w = variable.on ? (0.144251 * variable.dt) : 0; variable.cb = math.pow(variable.w / 2 + math.sqrt(variable.w * variable.w / 4 + 1), 0.333333); variable.s = variable.cb - 1 / variable.cb; variable.r = math.max(0.4 * (1 + variable.s * variable.s), 0.001); variable.u = 2 * math.atan2(variable.s, 1) + 200; variable.hx = variable.r * (-0.258819 * math.cos(variable.u) + -0.167732 * math.sin(variable.u)); variable.hy = variable.r * (0.965926 * math.cos(variable.u) + -0.044944 * math.sin(variable.u)); variable.hz = variable.r * math.sin(variable.u) * 0.984808; variable.gx = variable.hx + variable.er * math.cos(variable.ls); variable.gy = variable.hy + variable.er * math.sin(variable.ls); variable.gz = variable.hz; variable.dist = math.max(math.sqrt(variable.gx * variable.gx + variable.gy * variable.gy + variable.gz * variable.gz), 0.001); variable.ey = variable.gy * math.cos(23.5) - variable.gz * math.sin(23.5); variable.ez = variable.gy * math.sin(23.5) + variable.gz * math.cos(23.5); variable.ra = math.atan2(variable.ey, variable.gx); variable.dec = math.asin(variable.ez / variable.dist); variable.ty = variable.hy * math.cos(23.5) - variable.hz * math.sin(23.5); variable.tz = variable.hy * math.sin(23.5) + variable.hz * math.cos(23.5); variable.te = -math.sin(variable.ra) * variable.hx + math.cos(variable.ra) * variable.ty; variable.tn = -math.sin(variable.dec) * (math.cos(variable.ra) * variable.hx + math.sin(variable.ra) * variable.ty) + math.cos(variable.dec) * variable.tz; variable.rot = 1 * math.atan2(variable.te, variable.tn) + 0; variable.flux = 6 / (math.pow(variable.r, 4) * variable.dist * variable.dist); variable.bright = variable.on ? math.clamp(math.pow(variable.flux / 4.2, 0.3), 0, 1) * math.clamp((6 - variable.r) / 2, 0, 1) * variable.fade : 0; variable.tf = math.clamp(0.3 / variable.r, 0, 1); variable.size = (14 + 150 * math.pow(variable.tf, 1.5)) * 1.15; variable.lm = (variable.t - 80) / 365.25 * 360; variable.phi = math.clamp(-query.position(2) / 63710, -1, 1) * 90; variable.rs = math.atan2(math.cos(23.5) * math.sin(variable.ls), math.cos(variable.ls)); variable.ds = math.asin(math.sin(23.5) * math.sin(variable.ls)); variable.hs = query.time_of_day * 360 + 180 + variable.lm - variable.rs; variable.salt = math.asin(math.sin(variable.phi) * math.sin(variable.ds) + math.cos(variable.phi) * math.cos(variable.ds) * math.cos(variable.hs)); variable.vis = math.clamp((-4 + 30 * math.pow(variable.bright, 3) - variable.salt) / 6, 0, 1); variable.fore = math.clamp(math.sqrt(variable.te * variable.te + variable.tn * variable.tn) / variable.r, 0, 1); variable.fl = math.clamp(variable.fore, 0, 1); variable.tv = math.clamp((variable.fl - 0.05) / 0.25, 0, 1); variable.sg = 1; variable.pa0 = 0; variable.dbg = -1; variable.dra = variable.rs - variable.ra; variable.pa_sun = math.atan2(math.sin(variable.dra) * math.cos(variable.ds), math.cos(variable.dec) * math.sin(variable.ds) - math.sin(variable.dec) * math.cos(variable.ds) * math.cos(variable.dra)); variable.pa_tail = variable.pa_sun + 180; variable.rot = variable.dbg >= 0 ? variable.dbg : variable.sg * (variable.pa_tail - variable.pa0);"
+      },
+      "minecraft:particle_initial_speed": 0,
+      "minecraft:particle_motion_parametric": {
+        "rotation": "variable.rot"
+      },
+      "minecraft:particle_appearance_billboard": {
+        "size": [
+          "variable.size",
+          "variable.size * math.max(variable.fl, 0.25)"
+        ],
+        "facing_camera_mode": "emitter_transform_xz"
+      },
+      "minecraft:particle_appearance_tinting": {
+        "color": [
+          0.45,
+          1,
+          0.6,
+          "query.graphics_mode_is_any('deferred') ? variable.vis * variable.bright * variable.tv : 0.0"
+        ]
+      }
+    }
+  }
+}

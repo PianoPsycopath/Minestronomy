@@ -1,0 +1,23 @@
+{
+  "format_version": "1.21.40",
+  "minecraft:lighting_settings": {
+    "description": {
+      "identifier": "astrum:global_lighting"
+    },
+    "directional_lights": {
+      "orbital": {
+        "sun": {
+          "illuminance": 0.0,
+          "color": "#000000"
+        },
+        "moon": {
+          "illuminance": 0.0,
+          "color": "#000000"
+        }
+      }
+    },
+    "emissive": {
+      "desaturation": 0.1
+    }
+  }
+}

@@ -1,0 +1,137 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.star_field",
+				"texture_width": 3072,
+				"texture_height": 2048,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 3,
+				"visible_bounds_offset": [0, 0, 0]
+			},
+			"bones": [
+				{
+					"name": "sky_tilt",
+					"pivot": [0, 0, 0]
+				},
+				{
+					"name": "sky_anchor",
+					"parent": "sky_tilt",
+					"pivot": [0, 0, 0]
+				},
+				{ 
+    			    "name": "latitude_anchor", 
+    			    "parent": "sky_anchor", 
+    			    "pivot": [0, 0, 0] 
+    			},
+    			
+				{
+					"name": "bone_skybox",
+					"parent": "latitude_anchor",
+					"pivot": [0, 0, 0],
+					"rotation": [90, 0, 0],
+					"locators": {
+						"locator": [0, 0, 0]
+					}
+				},
+				{ 
+    			    "name": "axial_tilt", 
+    			    "parent": "bone_skybox", 
+    			    "pivot": [0, 0, 0],
+    			    "rotation": [23.5, 0, 0] 
+    			},
+				{ 
+    			    "name": "bone_sun_pivot", 
+    			    "parent": "latitude_anchor", 
+    			    "pivot": [0, 0, 0],
+    			    "rotation": [0, 0, 0] 
+    			},
+				{ 
+    			    "name": "bone_sun_declination", 
+    			    "parent": "bone_sun_pivot", 
+    			    "pivot": [0, 0, 0],
+    			    "rotation": [0, 0, 0] 
+    			},
+								{
+				    "name": "bone_sun",
+				    "parent": "bone_sun_declination",
+				    "pivot": [0, 0, 0],
+				    "rotation": [0, 0, 0],
+				    "locators": {
+				        "locator_sun": [0, 0, 0]
+				    }
+				},
+				{ 
+					"name": "bone_moon_pivot", 
+					"parent": "latitude_anchor", 
+					"pivot": [0, 0, 0] 
+				},
+				{ 
+					"name": "bone_moon_declination", 
+					"parent": "bone_moon_pivot", 
+					"pivot": [0, 0, 0] 
+				},
+				{ 
+					"name": "bone_moon", 
+					"parent": "bone_moon_declination", 
+					"pivot": [0, 0, 0], 
+					"locators": { 
+						"locator_moon": [0, 0, 0] 
+					}
+				},
+				{
+					"name": "bone_mars_pivot",
+					"parent": "latitude_anchor",
+					"pivot": [0, 0, 0]
+				},
+				{
+					"name": "bone_mars_declination",
+					"parent": "bone_mars_pivot",
+					"pivot": [0, 0, 0]
+				},
+				{
+					"name": "bone_mars",
+					"parent": "bone_mars_declination",
+					"pivot": [0, 0, 0],
+					"locators": {
+						"locator_mars": [0, 0, 0]
+					}
+				},
+				{ "name": "bone_mercury_pivot", "parent": "latitude_anchor", "pivot": [0, 0, 0] },
+				{ "name": "bone_mercury_declination", "parent": "bone_mercury_pivot", "pivot": [0, 0, 0] },
+				{ "name": "bone_mercury", "parent": "bone_mercury_declination", "pivot": [0, 0, 0], "locators": { "locator_mercury": [0, 0, 0] } },
+				{ "name": "bone_venus_pivot", "parent": "latitude_anchor", "pivot": [0, 0, 0] },
+				{ "name": "bone_venus_declination", "parent": "bone_venus_pivot", "pivot": [0, 0, 0] },
+				{ "name": "bone_venus", "parent": "bone_venus_declination", "pivot": [0, 0, 0], "locators": { "locator_venus": [0, 0, 0] } },
+				{ "name": "bone_jupiter_pivot", "parent": "latitude_anchor", "pivot": [0, 0, 0] },
+				{ "name": "bone_jupiter_declination", "parent": "bone_jupiter_pivot", "pivot": [0, 0, 0] },
+				{ "name": "bone_jupiter", "parent": "bone_jupiter_declination", "pivot": [0, 0, 0], "locators": { "locator_jupiter": [0, 0, 0] } },
+				{ "name": "bone_saturn_pivot", "parent": "latitude_anchor", "pivot": [0, 0, 0] },
+				{ "name": "bone_saturn_declination", "parent": "bone_saturn_pivot", "pivot": [0, 0, 0] },
+				{ "name": "bone_saturn", "parent": "bone_saturn_declination", "pivot": [0, 0, 0], "locators": { "locator_saturn": [0, 0, 0] } },
+				{ "name": "bone_comet_pivot", "parent": "latitude_anchor", "pivot": [0, 0, 0] },
+				{ "name": "bone_comet_declination", "parent": "bone_comet_pivot", "pivot": [0, 0, 0] },
+				{ "name": "bone_comet", "parent": "bone_comet_declination", "pivot": [0, 0, 0], "locators": { "locator_comet": [0, 0, 0] } },
+				{ "name": "bone_comet_annual_pivot", "parent": "latitude_anchor", "pivot": [0, 0, 0] },
+				{ "name": "bone_comet_annual_declination", "parent": "bone_comet_annual_pivot", "pivot": [0, 0, 0] },
+				{ "name": "bone_comet_annual", "parent": "bone_comet_annual_declination", "pivot": [0, 0, 0], "locators": { "locator_comet_annual": [0, 0, 0] } },
+				{ "name": "bone_comet_medium_pivot", "parent": "latitude_anchor", "pivot": [0, 0, 0] },
+				{ "name": "bone_comet_medium_declination", "parent": "bone_comet_medium_pivot", "pivot": [0, 0, 0] },
+				{ "name": "bone_comet_medium", "parent": "bone_comet_medium_declination", "pivot": [0, 0, 0], "locators": { "locator_comet_medium": [0, 0, 0] } },
+				{ "name": "bone_comet_great_red_pivot", "parent": "latitude_anchor", "pivot": [0, 0, 0] },
+				{ "name": "bone_comet_great_red_declination", "parent": "bone_comet_great_red_pivot", "pivot": [0, 0, 0] },
+				{ "name": "bone_comet_great_red", "parent": "bone_comet_great_red_declination", "pivot": [0, 0, 0], "locators": { "locator_comet_great_red": [0, 0, 0] } },
+				{ "name": "bone_comet_great_green_pivot", "parent": "latitude_anchor", "pivot": [0, 0, 0] },
+				{ "name": "bone_comet_great_green_declination", "parent": "bone_comet_great_green_pivot", "pivot": [0, 0, 0] },
+				{ "name": "bone_comet_great_green", "parent": "bone_comet_great_green_declination", "pivot": [0, 0, 0], "locators": { "locator_comet_great_green": [0, 0, 0] } },
+				{ "name": "bone_comet_great_blue_pivot", "parent": "latitude_anchor", "pivot": [0, 0, 0] },
+				{ "name": "bone_comet_great_blue_declination", "parent": "bone_comet_great_blue_pivot", "pivot": [0, 0, 0] },
+				{ "name": "bone_comet_great_blue", "parent": "bone_comet_great_blue_declination", "pivot": [0, 0, 0], "locators": { "locator_comet_great_blue": [0, 0, 0] } },
+				{ "name": "bone_comet_super_pivot", "parent": "latitude_anchor", "pivot": [0, 0, 0] },
+				{ "name": "bone_comet_super_declination", "parent": "bone_comet_super_pivot", "pivot": [0, 0, 0] },
+				{ "name": "bone_comet_super", "parent": "bone_comet_super_declination", "pivot": [0, 0, 0], "locators": { "locator_comet_super": [0, 0, 0] } }
+			]
+		}
+	]
+}

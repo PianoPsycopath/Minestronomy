@@ -1,0 +1,7 @@
+{
+  "format_version": "1.16.100",
+  "minecraft:texture_set": {
+    "color": "const_nz",
+    "metalness_emissive_roughness": "const_nz_mer"
+  }
+}

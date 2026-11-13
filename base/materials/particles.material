@@ -1,0 +1,30 @@
+{
+  "materials": {
+    "version": "1.0.0",
+
+    "starfield:sun_moon:particles_add": {
+      "+defines": [ "ALPHA_TEST" ]
+    },
+    "minestronomy_sky:sun_moon:particles_add": {
+      "+states": [
+        "Blending",
+        "DisableDepthWrite"
+      ],
+      "depthFunc": "LessEqual"
+    },
+
+    "minestronomy_sky_always:sun_moon:particles_add": {
+      "+states": [
+        "Blending",
+        "DisableDepthWrite"
+      ],
+      "depthFunc": "Always"
+    },
+
+    "minestronomy_sky_greater:sun_moon:particles_add": {
+      "+states": [
+        "Blending"
+      ]
+    }
+  }
+}
