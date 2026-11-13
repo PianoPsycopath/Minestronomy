@@ -1,39 +1,51 @@
 import * as THREE from "three";
-import { cap } from "../../core/math.js";
-import { PLN, COMETS } from "../../config/index.js";
 import { makeLabel, makeGlowTexture } from "./labelSprites.js";
 import { makeLine } from "./lineHelpers.js";
 import { planetOrbitPoints, earthOrbitPoints } from "./orbitPoints.js";
 import { ORBIT_SAMPLES, COMET_SAMPLES } from "./solarSettings.js";
 
-const SPHERE = new THREE.SphereGeometry(1, 20, 14);
+const COMET_MARKER_SIZE = 0.7;
 
-const planetDef = n => ({
-  key: n,
-  label: cap(n),
+// These geometries are shared by all bodies, so disposal must not free them.
+const SPHERE = new THREE.SphereGeometry(1, 20, 14);
+const TAIL = new THREE.ConeGeometry(1, 1, 16, 1, true);
+TAIL.translate(0, -0.5, 0);
+
+const fixedDef = (entry) => ({ key: entry.key, label: entry.label, kind: entry.kind === "earth" ? "planet" : entry.kind, color: entry.color, size: entry.size, entry });
+
+const planetDef = (entry) => ({
+  key: entry.key,
+  label: entry.label,
   kind: "planet",
-  color: `rgb(${PLN[n].col})`,
-  size: PLN[n].size / 4
+  color: `rgb(${entry.col})`,
+  size: entry.size / 4,
+  entry
 });
 
-function bodyDefinitions() {
-  return [
-    { key: "sun", label: "Sun", kind: "sun", color: "#ffd84a", size: 2.4 },
-    planetDef("mercury"),
-    planetDef("venus"),
-    { key: "earth", label: "Earth", kind: "planet", color: "#4aa3ff", size: 1 },
-    { key: "moon", label: "Moon", kind: "moon", color: "#d8d4c8", size: 0.45 },
-    planetDef("mars"),
-    planetDef("jupiter"),
-    planetDef("saturn"),
-    ...Object.values(COMETS).map(C => ({
-      key: C.key,
-      label: `${C.label} Comet`,
-      kind: "comet",
-      color: `rgb(${C.tint.map(c => Math.round(255 * c)).join(",")})`,
-      size: 0.7
-    }))
-  ];
+const cometDef = (entry) => ({
+  key: entry.key,
+  label: `${entry.label} Comet`,
+  kind: "comet",
+  color: `rgb(${entry.tint.map((c) => Math.round(255 * c)).join(",")})`,
+  size: COMET_MARKER_SIZE,
+  entry
+});
+
+function bodyDefinitions(catalog) {
+  const earth = catalog.get("earth");
+  // Sorting by semi-major axis puts custom planets in distance order in the list.
+  const ranked = [
+    ...catalog.planets().map((entry) => ({ entry, au: entry.el[4] })),
+    { entry: earth, au: 1 }
+  ].sort((a, b) => a.au - b.au);
+
+  const defs = [fixedDef(catalog.get("sun"))];
+  for (const { entry } of ranked) {
+    defs.push(entry === earth ? fixedDef(entry) : planetDef(entry));
+    if (entry === earth) defs.push(fixedDef(catalog.get("moon")));
+  }
+  for (const entry of catalog.comets()) defs.push(cometDef(entry));
+  return defs;
 }
 
 function createSunGlow() {
@@ -47,9 +59,9 @@ function createSunGlow() {
   );
 }
 
-function createCometTail(geometry, color) {
+function createCometTail(color) {
   return new THREE.Mesh(
-    geometry,
+    TAIL,
     new THREE.MeshBasicMaterial({
       color,
       transparent: true,
@@ -62,16 +74,13 @@ function createCometTail(geometry, color) {
 }
 
 // Creates the meshes, labels, and orbit lines of all bodies and adds them to the scene.
-export function createBodies(scene) {
+export function createBodies(scene, catalog) {
   const bodies = [];
   const byKey = {};
   const orbits = [];
   let glow = null;
 
-  const tailGeometry = new THREE.ConeGeometry(1, 1, 16, 1, true);
-  tailGeometry.translate(0, -0.5, 0);
-
-  for (const def of bodyDefinitions()) {
+  for (const def of bodyDefinitions(catalog)) {
     const color = new THREE.Color(def.color);
     const body = { ...def, active: true, mesh: new THREE.Mesh(SPHERE, new THREE.MeshBasicMaterial({ color })) };
     body.sprite = makeLabel(def.label, def.color);
@@ -83,14 +92,14 @@ export function createBodies(scene) {
     }
 
     if (def.kind === "planet") {
-      body.orbitPts = def.key === "earth" ? earthOrbitPoints() : planetOrbitPoints(def.key);
+      body.orbitPts = def.key === "earth" ? earthOrbitPoints() : planetOrbitPoints(def.entry);
       body.orbitLine = makeLine(ORBIT_SAMPLES, color, 0.45, true);
       scene.add(body.orbitLine);
       orbits.push(body);
     }
 
     if (def.kind === "comet") {
-      body.tail = createCometTail(tailGeometry, color);
+      body.tail = createCometTail(color);
       body.pathLine = makeLine(COMET_SAMPLES, color, 0.5, false);
       body.pathDirty = true;
       body.pathStamp = null;
@@ -103,4 +112,21 @@ export function createBodies(scene) {
   }
 
   return { bodies, byKey, orbits, glow };
+}
+
+export function disposeBodies(scene, bodies, glow) {
+  for (const body of bodies) {
+    for (const object of [body.mesh, body.sprite, body.orbitLine, body.tail, body.pathLine]) {
+      if (!object) continue;
+      scene.remove(object);
+      object.material.map?.dispose();
+      object.material.dispose();
+      if (object.isLine) object.geometry.dispose();
+    }
+  }
+  if (glow) {
+    scene.remove(glow);
+    glow.material.map?.dispose();
+    glow.material.dispose();
+  }
 }

@@ -24,7 +24,7 @@ export class UIController {
     this.skyScene = skyScene;
     this.solarScene = solarScene;
     this.particleLoader = particleLoader;
-    this.state = new AppState();
+    this.state = new AppState(solarScene.catalog);
     this.frameN = 0;
     this.lastScannedDay = null;
 

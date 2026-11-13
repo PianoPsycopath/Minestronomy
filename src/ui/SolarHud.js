@@ -1,4 +1,5 @@
 import { $, el } from "./dom.js";
+import { SolarInspector } from "../editor/SolarInspector.js";
 
 const LIGHT_MINUTES_PER_AU = 8.317;
 
@@ -11,28 +12,23 @@ function lightTime(au) {
 export class SolarHud {
   constructor(app) {
     this.app = app;
-    const scene = app.solarScene;
+    this.scene = app.solarScene;
+    this.catalog = this.scene.catalog;
     this.rows = [];
-    const list = $("solarFocusList");
+    this.selectedKey = this.scene.focusKey;
+    this.inspector = new SolarInspector(this.catalog, $("solarInspector"));
 
-    for (const body of scene.bodies) {
-      const row = el("button", "find-row");
-      row.type = "button";
-      row.innerHTML = `<span class="sw-dot" style="background:${body.color}"></span><span class="find-name">${body.label}</span><span class="find-alt">—</span>`;
-      row.onclick = () => this.focus(body.key);
-      list.appendChild(row);
-      this.rows.push({ key: body.key, row, readout: row.querySelector(".find-alt") });
-    }
+    this.buildRows();
 
     $("solarScaleGroup").querySelectorAll(".wii-seg").forEach(btn => {
       btn.onclick = () => {
         $("solarScaleGroup").querySelectorAll(".wii-seg").forEach(b => b.classList.toggle("active", b === btn));
-        scene.setScale(btn.dataset.scale);
+        this.scene.setScale(btn.dataset.scale);
       };
     });
 
     const syncVisibility = () =>
-      scene.setVisibility({
+      this.scene.setVisibility({
         orbits: $("solarOrbits").checked,
         labels: $("solarLabels").checked,
         rings: $("solarRings").checked,
@@ -40,26 +36,72 @@ export class SolarHud {
       });
     for (const id of ["solarOrbits", "solarLabels", "solarRings", "solarComets"]) $(id).onchange = syncVisibility;
 
-    scene.onPick = key => this.focus(key);
+    $("solarAddPlanet").onclick = () => this.catalog.addPlanet();
+    $("solarAddComet").onclick = () => this.catalog.addComet();
+    $("solarResetBody").onclick = () => this.catalog.resetBody(this.selectedKey);
+    $("solarResetAll").onclick = () => {
+      if (window.confirm("Reset all bodies to defaults? Custom bodies are deleted.")) this.catalog.resetAll();
+    };
+
+    this.scene.onPick = key => this.focus(key);
+    this.catalog.subscribe(event => this.onCatalogChange(event));
+    this.select(this.selectedKey);
   }
 
+  buildRows() {
+    const list = $("solarFocusList");
+    list.replaceChildren();
+    this.rows = [];
+    for (const body of this.scene.bodies) {
+      const row = el("button", "find-row");
+      row.type = "button";
+      row.innerHTML = `<span class="sw-dot" style="background:${body.color}"></span><span class="find-name">${body.label}</span><span class="find-alt">—</span>`;
+      row.onclick = () => this.focus(body.key);
+      list.appendChild(row);
+      this.rows.push({ key: body.key, row, readout: row.querySelector(".find-alt") });
+    }
+  }
+
+  onCatalogChange({ type, key }) {
+    this.buildRows();
+    if (type === "add") this.focus(key);
+    else if (!this.catalog.has(this.selectedKey)) this.select("sun");
+    else this.syncActions();
+    this.update();
+  }
+
+  // Selection and camera focus differ. A dormant comet can be edited but cannot take the camera.
   focus(key) {
-    if (this.app.solarScene.setFocus(key)) this.update();
+    this.scene.setFocus(key);
+    this.select(key);
+  }
+
+  select(key) {
+    this.selectedKey = key;
+    this.inspector.show(key);
+    this.syncActions();
+    this.update();
+  }
+
+  syncActions() {
+    const custom = this.catalog.isCustom(this.selectedKey);
+    const button = $("solarResetBody");
+    button.textContent = custom ? "Delete body" : "Reset body";
+    button.disabled = !custom && !this.catalog.isModified(this.selectedKey);
   }
 
   update() {
-    const scene = this.app.solarScene;
-    const focusKey = scene.focusKey;
+    const scene = this.scene;
 
     for (const r of this.rows) {
       const info = scene.describe(r.key);
       if (!info) continue;
       r.readout.textContent = info.active ? `${info.sunAu.toFixed(2)} AU` : "dormant";
       r.row.classList.toggle("disabled", !info.active);
-      r.row.classList.toggle("focused", r.key === focusKey);
+      r.row.classList.toggle("focused", r.key === this.selectedKey);
     }
 
-    const info = scene.describe(focusKey);
+    const info = scene.describe(scene.focusKey);
     if (!info) return;
     $("solarInfo").innerHTML = `
       <strong>${info.label}</strong>

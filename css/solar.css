@@ -59,3 +59,54 @@
   font-weight: 700;
   color: var(--wii-muted);
 }
+
+.solar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.solar-actions .wii-pill-btn:disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.solar-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.solar-field {
+  display: grid;
+  grid-template-columns: 1fr 96px;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--wii-muted);
+}
+
+.solar-field-input {
+  width: 100%;
+  min-width: 0;
+  height: 26px;
+  padding: 0 8px;
+  border-radius: 10px;
+  border: 2px solid #ffffff;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 0 0 1px var(--wii-outline);
+  font: 700 11px "JetBrains Mono", monospace;
+  color: var(--wii-text);
+  user-select: text;
+}
+
+.solar-field-input[type="color"] {
+  padding: 1px 3px;
+  cursor: pointer;
+}
+
+.solar-field-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--wii-cyan);
+}

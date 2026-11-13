@@ -26,3 +26,5 @@ export const FOCUS_RATE = 8;
 export const DRAG_DEGREES_PER_PX = 0.3;
 export const ZOOM_STEP = 0.1;
 export const PICK_RADIUS_PX = 20;
+
+export const PREVIEW_OPACITY = 0.5;

@@ -2,7 +2,10 @@ export const DEFAULT_FOV = 70;
 
 // State that several UI modules read and write.
 export class AppState {
-  constructor() {
+  constructor(catalog) {
+    if (!catalog) throw new Error("AppState needs a catalog.");
+    // The editor and the export read the same catalog instance.
+    this.catalog = catalog;
     this.t = 0;
     this.playing = false;
     // tickMode follows dockMode. Other modules read tickMode.

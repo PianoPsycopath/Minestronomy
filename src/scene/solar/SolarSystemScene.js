@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { cos, sin } from "../../core/math.js";
 import { PLN, COMETS } from "../../config/index.js";
-import { cometOrbit, cometDt, planetOrbit } from "../../core/astronomy/index.js";
+import { cometOrbit, cometCalc, cometDt, planetOrbit } from "../../core/astronomy/index.js";
 import {
 
   COMET_SAMPLES,
@@ -14,14 +14,16 @@ import {
   TAIL_LENGTH,
   TAIL_WIDTH_RATIO,
   FOCUS_DISTANCE,
-  PICK_RADIUS_PX
+  PICK_RADIUS_PX,
+  PREVIEW_OPACITY
 } from "./solarSettings.js";
 import { makeLabel } from "./labelSprites.js";
 import { makeLine } from "./lineHelpers.js";
 import { createStarfield } from "./starfield.js";
 import { ScaleProjection } from "./scaleProjection.js";
-import { createBodies } from "./solarBodies.js";
+import { createBodies, disposeBodies } from "./solarBodies.js";
 import { OrbitCamera } from "./OrbitCamera.js";
+
 
 const ORIGIN = Object.freeze({ x: 0, y: 0, z: 0 });
 const TAIL_AXIS = new THREE.Vector3(0, -1, 0);
@@ -47,38 +49,50 @@ function cometPathTimes(C, center, span) {
 }
 
 export class SolarSystemScene {
-  constructor(canvas) {
-    this.canvas = canvas;
-    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-    this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0x050a14);
+  constructor(canvas, catalog) {
+  this.canvas = canvas;
+  this.catalog = catalog;
+  this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  this.scene = new THREE.Scene();
+  this.scene.background = new THREE.Color(0x050a14);
 
-    this.orbitCamera = new OrbitCamera();
-    this.camera = this.orbitCamera.camera;
-    this.projection = new ScaleProjection();
-    this.show = { orbits: true, labels: true, rings: true, comets: true };
-    this.focusKey = "sun";
-    this.onPick = null;
+  this.orbitCamera = new OrbitCamera();
+  this.camera = this.orbitCamera.camera;
+  this.projection = new ScaleProjection();
+  this.show = { orbits: true, labels: true, rings: true, comets: true };
+  this.focusKey = "sun";
+  this.onPick = null;
 
-    this.pos = {};
-    this.rings = [];
-    this.moonDir = new THREE.Vector3();
-    this.tmp = new THREE.Vector3();
-    this.size = { w: 0, h: 0, dpr: 0 };
+  this.pos = {};
+  this.brightness = {};
+  this.bodies = [];
+  this.bodyByKey = {};
+  this.orbits = [];
+  this.glow = null;
+  this.rings = [];
+  this.moonDir = new THREE.Vector3();
+  this.tmp = new THREE.Vector3();
+  this.size = { w: 0, h: 0, dpr: 0 };
 
-    this.scene.add(createStarfield());
-    const { bodies, byKey, orbits, glow } = createBodies(this.scene);
-    this.bodies = bodies;
-    this.bodyByKey = byKey;
-    this.orbits = orbits;
-    this.glow = glow;
-    this.buildRings();
-    this.layout();
-    this.orbitCamera.bindPointer(canvas, (x, y) => {
-      const key = this.pick(x, y);
-      if (key && this.onPick) this.onPick(key);
-    });
-  }
+  this.scene.add(createStarfield());
+  this.buildRings();
+  this.rebuild();
+  catalog.subscribe(() => this.rebuild());
+  this.orbitCamera.bindPointer(canvas, (x, y) => {
+    const key = this.pick(x, y);
+    if (key && this.onPick) this.onPick(key);
+  });
+}
+
+// A full rebuild is fast for this number of bodies. It also prevents stale label textures.
+rebuild() {
+  disposeBodies(this.scene, this.bodies, this.glow);
+  const { bodies, byKey, orbits, glow } = createBodies(this.scene, this.catalog);
+  Object.assign(this, { bodies, bodyByKey: byKey, orbits, glow, pos: {}, brightness: {} });
+  if (!byKey[this.focusKey]) this.focusKey = "sun";
+  this.layout();
+}
+
 
   buildRings() {
     for (const au of RING_AU) {
@@ -149,7 +163,7 @@ export class SolarSystemScene {
 
   // The path shows the comet orbit around the current window. It is rebuilt when the window moves or the scale changes.
   refreshCometPath(b, t) {
-    const C = COMETS[b.key];
+    const C = b.entry;
     const center = t - cometDt(C, t);
     const stamp = Math.round(center * 100);
     if (!b.pathDirty && b.pathStamp === stamp) return;
@@ -171,16 +185,17 @@ export class SolarSystemScene {
 
     this.pos.sun = ORIGIN;
     this.pos.earth = earth;
-    for (const n of Object.keys(PLN)) this.pos[n] = planetOrbit(PLN[n], s.t);
+    for (const planet of this.catalog.planets()) this.pos[planet.key] = planetOrbit(planet, s.t);
     this.pos.moon = {
       x: earth.x + this.moonDir.x * MOON_AU,
       y: earth.y + this.moonDir.y * MOON_AU,
       z: earth.z + this.moonDir.z * MOON_AU
     };
-    for (const key of Object.keys(COMETS)) {
-      const o = cometOrbit(COMETS[key], s.t);
-      this.pos[key] = { x: o.hx, y: o.hy, z: o.hz };
-      this.bodyByKey[key].active = o.on;
+    for (const comet of this.catalog.comets()) {
+      const o = cometOrbit(comet, s.t);
+      this.pos[comet.key] = { x: o.hx, y: o.hy, z: o.hz };
+      this.bodyByKey[comet.key].active = o.on;
+      this.brightness[comet.key] = cometCalc(comet, s.t, s.ls, s.er).bright;
     }
 
     for (const b of this.bodies) {
@@ -219,7 +234,7 @@ export class SolarSystemScene {
       if (b.kind === "sun") {
         this.glow.scale.setScalar(radius * 7);
       } else if (b.kind === "comet") {
-        const length = TAIL_LENGTH * (0.25 + 0.75 * s.comets[b.key].bright);
+        const length = TAIL_LENGTH * (0.25 + 0.75 * (this.brightness[b.key] ?? 0));
         this.tmp.copy(b.mesh.position).normalize();
         b.tail.position.copy(b.mesh.position);
         b.tail.quaternion.setFromUnitVectors(TAIL_AXIS, this.tmp);
@@ -271,5 +286,16 @@ export class SolarSystemScene {
       }
     }
     return best;
+  }
+  setFocus(key) {
+    const b = this.bodyByKey[key];
+    if (!b) return false;
+    this.focusKey = key;
+    this.orbitCamera.distanceGoal = FOCUS_DISTANCE[b.kind];
+    return true;
+  }
+  
+  updateCamera(dt) {
+    this.orbitCamera.update(dt, this.bodyByKey[this.focusKey].mesh.position);
   }
 }

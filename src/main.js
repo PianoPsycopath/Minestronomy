@@ -2,16 +2,24 @@ import { ParticleLoader } from "./particles/ParticleLoader.js";
 import { SkyScene } from "./scene/sky/SkyScene.js";
 import { SolarSystemScene } from "./scene/solar/SolarSystemScene.js";
 import { UIController } from "./ui/UIController.js";
+import { CelestialCatalog } from "./editor/CelestialCatalog.js";
+
 
 const MAX_FRAME_SECONDS = 0.1;
+
+
 
 async function bootstrap() {
   const particleLoader = new ParticleLoader();
   await particleLoader.loadAll();
+  const catalog = new CelestialCatalog();
+
 
   const skyScene = new SkyScene(document.getElementById("c"), particleLoader);
-  const solarScene = new SolarSystemScene(document.getElementById("solarCanvas"));
+  const solarScene = new SolarSystemScene(document.getElementById("solarCanvas"), catalog);
   const ui = new UIController(skyScene, particleLoader, solarScene);
+
+  if (import.meta.env.DEV) window.app = ui;
 
   let last = performance.now();
   function loop(now) {
