@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import { D, clamp, lerp, ang } from "../../core/math.js";
-import { PLN, COMETS } from "../../config/index.js";
 import { eq, altaz, getTargetAltAz } from "../../core/astronomy/index.js";
 import { makeSprite } from "./spriteCanvas.js";
 import { StarboxCube } from "./StarboxCube.js";
@@ -12,7 +11,7 @@ import { dir } from "./projection.js";
 
 const MIN_PLANET_DISC_DEG = 0.4;
 
-const planetBillboardScale = n => (PLN[n].billboardSize?.[0] || PLN[n].size) / 4;
+const planetBillboardScale = (body) => (body.billboardSize?.[0] || body.size) / 4;
 
 export class SkyScene {
   constructor(canvas, particleLoader) {
@@ -35,15 +34,9 @@ export class SkyScene {
     this.SUN = makeSprite(this.scene, 128, 128, 1);
     this.MOON = makeSprite(this.scene, 128, 128, 3);
     this.PS = {};
-    for (const n in PLN) this.PS[n] = makeSprite(this.scene, 64, 64, 2);
-
     this.CS = {};
-    for (const key in COMETS) {
-      const sprite = makeSprite(this.scene, 256, 256, 2);
-      sprite.s.visible = false;
-      sprite.paintedImg = undefined;
-      this.CS[key] = sprite;
-    }
+    this.planetList = null;
+    this.cometList = null;
 
     this.RETICLE = createReticle(this.scene);
 
@@ -76,6 +69,49 @@ export class SkyScene {
       s,
       options
     );
+  }
+
+  // The catalog returns a new array after each change. A new array triggers one sprite sync.
+  syncBodies(catalog) {
+    const planets = catalog.planets();
+    if (planets !== this.planetList) {
+      this.planetList = planets;
+      this.reconcileSprites(this.PS, planets, () => makeSprite(this.scene, 64, 64, 2));
+    }
+    const comets = catalog.comets();
+    if (comets !== this.cometList) {
+      this.cometList = comets;
+      this.reconcileSprites(this.CS, comets, () => {
+        const sprite = makeSprite(this.scene, 256, 256, 2);
+        sprite.s.visible = false;
+        sprite.paintedImg = undefined;
+        return sprite;
+      });
+    }
+  }
+
+  reconcileSprites(sprites, entries, create) {
+    const keys = new Set(entries.map((entry) => entry.key));
+    for (const key of Object.keys(sprites)) {
+      if (keys.has(key)) continue;
+      const { s, tex } = sprites[key];
+      this.scene.remove(s);
+      s.material.dispose();
+      tex.dispose();
+      delete sprites[key];
+    }
+    for (const key of keys) sprites[key] ??= create();
+  }
+
+  // A custom body has no loaded particle file. It borrows the image of a stock body and keeps its own material and tint.
+  bodyConfig(catalog, cfgs, body) {
+    if (!cfgs || !catalog.isCustom(body.key)) return cfgs?.[body.key];
+    const donor =
+      body.kind === "comet"
+        ? cfgs.comet
+        : cfgs[catalog.planets().find((p) => !catalog.isCustom(p.key) && cfgs[p.key]?.image)?.key];
+    if (!donor) return undefined;
+    return { ...donor, material: body.material ?? donor.material, tint: body.tint ?? donor.tint };
   }
 
   updateBackground(sunAlt) {
@@ -113,13 +149,16 @@ export class SkyScene {
   }
 
   render(s, phi, options) {
-    const { disc, md, showEcl, showEqu, xray, yaw, pitch, fov, trackedTarget } = options;
+    const { disc, md, showEcl, showEqu, xray, yaw, pitch, fov, trackedTarget, catalog } = options;
     const cfgs = this.particleLoader?.configs;
 
     const su = altaz(s.sun, s, phi);
     const mo = altaz(s.moon, s, phi);
+    this.syncBodies(catalog);
+    const planets = catalog.planets();
+    const comets = catalog.comets();
     const pa = {};
-    for (const n in PLN) pa[n] = altaz(s.pl[n], s, phi);
+    for (const p of planets) pa[p.key] = altaz(s.pl[p.key], s, phi);
 
     this.updateBackground(su.alt);
     this.groundMat.opacity = xray ? 0.25 : 1.0;
@@ -128,10 +167,11 @@ export class SkyScene {
     this.SUN.s.position.copy(dir(su, 100));
     this.SUN.s.scale.setScalar(ang(drawSun(this.SUN, cfgs?.sun, disc), 100));
 
-    for (const n in PLN) {
-      this.PS[n].s.position.copy(dir(pa[n], 99));
-      drawPlanet(this.PS[n], n, cfgs?.[n], s, su.alt);
-      this.PS[n].s.scale.setScalar(ang(Math.max(md * planetBillboardScale(n) * 2, MIN_PLANET_DISC_DEG), 99));
+    for (const p of planets) {
+      const sprite = this.PS[p.key];
+      sprite.s.position.copy(dir(pa[p.key], 99));
+      drawPlanet(sprite, p, this.bodyConfig(catalog, cfgs, p), s, su.alt);
+      sprite.s.scale.setScalar(ang(Math.max(md * planetBillboardScale(p) * 2, MIN_PLANET_DISC_DEG), 99));
     }
 
     this.MOON.s.position.copy(dir(mo, 98));
@@ -147,8 +187,8 @@ export class SkyScene {
     this.updateCamera(yaw, pitch, fov);
 
     pa.comets = {};
-    for (const key in COMETS) pa.comets[key] = altaz(s.comets[key], s, phi);
-    updateComets(this.CS, this.cam, this.particleLoader, s, phi, pa.comets, su.alt);
+    for (const C of comets) pa.comets[C.key] = altaz(s.comets[C.key], s, phi);
+    updateComets(this.CS, comets, this.cam, (C) => this.bodyConfig(catalog, cfgs, C), s, phi, pa.comets, su.alt);
 
     this.ren.render(this.scene, this.cam);
     return { su, mo, pa };

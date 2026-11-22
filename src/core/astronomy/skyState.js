@@ -6,7 +6,8 @@ import { planetCalc } from "./planets.js";
 import { cometCalc } from "./comets.js";
 
 // Computes the full sky state at world time t for an observer at block coordinate Z.
-export function calc(t, Z) {
+// Pass the catalog to include custom and edited bodies. Without it, the static configuration applies.
+export function calc(t, Z, catalog) {
   const tod = t - Math.floor(t);
   const { lm, ls, er } = solarTerms(t);
   const sun = eq(ls, 0);
@@ -17,12 +18,13 @@ export function calc(t, Z) {
   moon.dec += par;
 
   const pl = {};
-  for (const n in PLN) {
-    pl[n] = planetCalc(PLN[n], t, ls, er);
-  }
   const comets = {};
-  for (const k in COMETS) {
-    comets[k] = cometCalc(COMETS[k], t, ls, er);
+  if (catalog) {
+    for (const p of catalog.planets()) pl[p.key] = planetCalc(p, t, ls, er);
+    for (const c of catalog.comets()) comets[c.key] = cometCalc(c, t, ls, er);
+  } else {
+    for (const n in PLN) pl[n] = planetCalc(PLN[n], t, ls, er);
+    for (const k in COMETS) comets[k] = cometCalc(COMETS[k], t, ls, er);
   }
 
   const d = lmoon - ls;

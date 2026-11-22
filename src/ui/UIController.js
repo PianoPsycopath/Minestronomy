@@ -61,7 +61,8 @@ export class UIController {
       yaw: state.yaw,
       pitch: state.pitch,
       fov: state.fov,
-      trackedTarget: state.trackedTarget
+      trackedTarget: state.trackedTarget,
+      catalog: state.catalog
     });
     return state.lastRender;
   }
@@ -89,7 +90,7 @@ export class UIController {
     }
 
     const observer = readObserver();
-    const s = calc(this.state.t, observer.Z);
+    const s = calc(this.state.t, observer.Z, this.state.catalog);
     const rendered = this.renderFrame(s, observer, dt);
 
     if (this.frameN++ % PANEL_REFRESH_FRAMES === 0) this.refreshPanels(s, observer, rendered);

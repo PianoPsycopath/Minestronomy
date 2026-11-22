@@ -1,9 +1,5 @@
-// Pack-level constants. Every value here mirrors the Bedrock pack in base/.
-// Run `npm run verify:export` after changing the pack or this file. It compares the exporter output with base/.
-
 export const PACK_MANIFEST = {
   description: "Minestronomy 1.0.0",
-  // Fixed UUIDs, as in base/manifest.json. A random UUID per export would make every export a different pack in Minecraft.
   headerUuid: "f0e1c3d2-4b6a-4c5e-9f8a-1b2c3d4e5f6a",
   moduleUuid: "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d",
   headerVersion: [1, 2, 2],
@@ -11,9 +7,6 @@ export const PACK_MANIFEST = {
   minEngineVersion: [1, 21, 80]
 };
 
-// Custom particle materials, written to materials/particles.material.
-// starfield:sun_moon is the vanilla sun_moon material, modified to give the sky bloom. Key format is "<name>:<parent>".
-// The preview blends anything that ends up on particles_add additively (see isAdditiveMaterial).
 export const PACK_MATERIALS = {
   "starfield:sun_moon:particles_add": {
     "+defines": ["ALPHA_TEST"]

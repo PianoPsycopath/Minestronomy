@@ -20,13 +20,15 @@ export function altaz(b, s, phi) {
   };
 }
 
+// Returns null when the sky state has no entry for the body.
 export function getTargetAltAz(target, s, phi) {
   if (!target) return null;
-  if (target.type === "sun") return altaz(s.sun, s, phi);
-  if (target.type === "moon") return altaz(s.moon, s, phi);
-  if (target.type === "planet" && target.planet) return altaz(s.pl[target.planet], s, phi);
-  if (target.type === "comet") return altaz(s.comets[target.comet || "comet"], s, phi);
-  return null;
+  let body = null;
+  if (target.type === "sun") body = s.sun;
+  else if (target.type === "moon") body = s.moon;
+  else if (target.type === "planet") body = s.pl[target.planet];
+  else if (target.type === "comet") body = s.comets[target.comet || "comet"];
+  return body ? altaz(body, s, phi) : null;
 }
 
 export function zToLatitude(Z) {

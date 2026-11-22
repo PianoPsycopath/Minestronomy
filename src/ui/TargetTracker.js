@@ -11,6 +11,14 @@ import { readObserver } from "./observer.js";
 export class TargetTracker {
   constructor(app) {
     this.app = app;
+    app.state.catalog.subscribe(() => this.dropRemovedLock());
+  }
+
+  dropRemovedLock() {
+    const { state } = this.app;
+    const target = state.trackedTarget;
+    const key = target?.planet ?? target?.comet;
+    if (key && !state.catalog.has(key)) this.clearLock();
   }
 
   showBanner(text) {
@@ -30,13 +38,13 @@ export class TargetTracker {
   trackObject(target) {
     const { state, camera } = this.app;
     const { Z, phi } = readObserver();
-    const s = calc(state.t, Z);
-    if (target.type === "comet" && !s.comets[target.comet].on) return;
+    const s = calc(state.t, Z, state.catalog);
+    if (target.type === "comet" && !s.comets[target.comet]?.on) return;
     const pos = getTargetAltAz(target, s, phi);
     if (!pos) return;
 
     state.trackedTarget = target;
-    state.trackedLabel = labelFor(target);
+    state.trackedLabel = labelFor(target, state.catalog);
     if (pos.alt < 0) $("xray").checked = true;
     camera.moveTo(pos);
     this.showBanner(`${state.trackedLabel} • Alt ${pos.alt.toFixed(0)}° Az ${pos.az.toFixed(0)}° ${compass(pos.az)}`);
@@ -50,7 +58,7 @@ export class TargetTracker {
     tabs.switchTab("sky");
 
     const { Z, phi } = readObserver();
-    const s = calc(evData.t, Z);
+    const s = calc(evData.t, Z, state.catalog);
     state.trackedTarget = evData.target;
     state.trackedLabel = null;
     const pos = getTargetAltAz(state.trackedTarget, s, phi);

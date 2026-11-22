@@ -1,5 +1,4 @@
 import { cos, clamp, lerp } from "../../core/math.js";
-import { PLN, VIS } from "../../config/index.js";
 import { BODY_SPRITE_HALF_PX } from "../../config/constants.js";
 import { applyMaterialBlending } from "./spriteCanvas.js";
 
@@ -101,11 +100,11 @@ export function drawSun(sun, cfg, disc) {
 }
 
 // The opacity of a planet depends on its brightness and on how dark the sky is (sunAlt).
-export function drawPlanet(planet, name, cfg, s, sunAlt) {
+export function drawPlanet(planet, body, cfg, s, sunAlt) {
   const g = planet.g;
-  applyMaterialBlending(planet, cfg?.material || PLN[name].material || "particles_add");
+  applyMaterialBlending(planet, cfg?.material || body.material || "particles_add");
 
-  const c = PLN[name].col;
+  const c = body.col;
   g.setTransform(1, 0, 0, 1, 32, 32);
   g.clearRect(-32, -32, 64, 64);
 
@@ -127,7 +126,7 @@ export function drawPlanet(planet, name, cfg, s, sunAlt) {
     g.fill();
   }
 
-  const v = VIS[name];
-  planet.s.material.opacity = s.pl[name].bright * clamp((v[1] - sunAlt) / (v[1] - v[0]), 0, 1);
+  const v = body.vis;
+  planet.s.material.opacity = s.pl[body.key].bright * clamp((v[1] - sunAlt) / (v[1] - v[0]), 0, 1);
   planet.tex.needsUpdate = true;
 }

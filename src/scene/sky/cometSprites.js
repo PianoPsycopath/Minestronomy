@@ -1,5 +1,5 @@
 import { D, cos, sin, clamp, ang } from "../../core/math.js";
-import { COMETS, COMET_BASE } from "../../config/index.js";
+import { COMET_BASE } from "../../config/index.js";
 import { altaz, cometVisibility, cometAngularSize } from "../../core/astronomy/index.js";
 import { applyMaterialBlending } from "./spriteCanvas.js";
 import { dir } from "./projection.js";
@@ -7,8 +7,7 @@ import { dir } from "./projection.js";
 const COMET_RADIUS = 97;
 
 // All comets share one texture file. This function repaints the canvas only when the texture source changes.
-function paintCometTexture(sprite, key, cfg) {
-  const C = COMETS[key];
+function paintCometTexture(sprite, C, cfg) {
   const img = cfg?.image || null;
   applyMaterialBlending(sprite, cfg?.material || C.material);
 
@@ -52,16 +51,16 @@ function paintCometTexture(sprite, key, cfg) {
 }
 
 // Run this after the camera pose and aspect ratio are final for the frame.
-export function updateComets(sprites, camera, particleLoader, s, phi, cometAltAz, sunAlt) {
+export function updateComets(sprites, entries, camera, configFor, s, phi, cometAltAz, sunAlt) {
   camera.updateMatrixWorld(true);
-  for (const key in COMETS) {
-    updateComet(sprites[key], camera, particleLoader?.configs?.[key], key, s, phi, cometAltAz[key], sunAlt);
+  for (const C of entries) {
+    updateComet(sprites[C.key], camera, configFor(C), C, s, phi, cometAltAz[C.key], sunAlt);
   }
 }
 
-function updateComet(sprite, camera, cfg, key, s, phi, ca, sunAlt) {
-  const c = s.comets[key];
-  paintCometTexture(sprite, key, cfg);
+function updateComet(sprite, camera, cfg, C, s, phi, ca, sunAlt) {
+  const c = s.comets[C.key];
+  paintCometTexture(sprite, C, cfg);
 
   const op = c.bright * cometVisibility(c.bright, sunAlt);
   sprite.s.visible = op > 0.002;
