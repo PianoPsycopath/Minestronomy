@@ -4,7 +4,7 @@
     "description": {
       "identifier": "astrum:moon_particle",
       "basic_render_parameters": {
-        "material": "particles_add",
+        "material": "particles_blend",
         "texture": "textures/environment/moon_phasesASTRUM"
       }
     },
@@ -42,14 +42,15 @@
           "uv_size": [32, 32]
         }
       },
+      "minecraft:particle_appearance_lighting": {},
       "minecraft:particle_appearance_tinting": {
         "color": [
-          "1.0 - variable.eclipse",
-          "(1.0 - (variable.blood_intensity * 0.8)) * (1.0 - variable.eclipse)",
-          "(1.0 - (variable.blood_intensity * 0.8)) * (1.0 - variable.eclipse)",
-          "math.lerp(variable.day_alpha, 0.9, variable.eclipse)"
+          "(1.0 - variable.eclipse) * (query.graphics_mode_is_any('deferred') ? math.lerp(10.0, 2.0, variable.blood_intensity) : 1.0)",
+          "((1.0 - (variable.blood_intensity * 0.8)) * (1.0 - variable.eclipse)) * (query.graphics_mode_is_any('deferred') ? math.lerp(10.0, 1.0, variable.blood_intensity) : 1.0)",
+          "((1.0 - (variable.blood_intensity * 0.8)) * (1.0 - variable.eclipse)) * (query.graphics_mode_is_any('deferred') ? math.lerp(10.0, 1.0, variable.blood_intensity) : 1.0)",
+          "math.lerp(math.lerp(0.1, 1.0, variable.day_alpha), 0.9, variable.eclipse)"
         ]
       }
-    }
+          }
   }
 }

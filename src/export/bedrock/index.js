@@ -1,14 +1,15 @@
 export { buildManifestJson } from "./manifest.js";
-export { buildEntityMaterialJson } from "./materials.js";
+export { buildParticleMaterialJson } from "./materials.js";
+export { buildLightingJson } from "./lighting.js";
+export { buildTextureSetFiles } from "./textureSets.js";
 export { buildStarGeoJson } from "./starGeometry.js";
 export { buildStarAnimationJson } from "./starAnimation.js";
 export { buildStarEmitterJson } from "./starEmitter.js";
 export { buildStarRenderControllerJson } from "./renderControllers/star.js";
 export { buildCalendarRenderControllersJson } from "./renderControllers/calendar.js";
-export { buildPlayerRenderControllersJson } from "./renderControllers/player.js";
 export { buildPlayerEntityJson } from "./playerEntity.js";
 export { buildSunParticleJson } from "./particles/sun.js";
 export { buildMoonParticleJson } from "./particles/moon.js";
 export { buildPlanetParticleJson } from "./particles/planet.js";
-export { buildCometParticleJson } from "./particles/comet.js";
+export { buildCometParticleJson, buildCometTailParticleJson } from "./particles/comet.js";
 export { buildStarFieldParticleJson } from "./particles/starField.js";

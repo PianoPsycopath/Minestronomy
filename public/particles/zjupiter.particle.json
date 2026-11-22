@@ -4,7 +4,7 @@
     "description": {
       "identifier": "astrum:jupiter_hires_particle",
       "basic_render_parameters": {
-        "material": "particles_alpha",
+        "material": "starfield:sun_moon",
         "texture": "textures/environment/planet_jupiter"
       }
     },
@@ -35,8 +35,8 @@
       "minecraft:particle_initial_speed": 0,
       "minecraft:particle_appearance_billboard": {
         "size": [
-          4.5,
-          4.5
+          7,
+          7
         ],
         "facing_camera_mode": "lookat_xyz"
       },

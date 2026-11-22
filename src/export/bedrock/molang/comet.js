@@ -7,6 +7,16 @@ export function cometPhaseOffset(C) {
   return num((m + C.period) % C.period);
 }
 
+// "astrum:comet_particle" -> "astrum:comet_tail_particle"
+export function cometTailIdentifier(C) {
+  return C.identifier.replace(/_particle$/, "_tail_particle");
+}
+
+// Orbit time is rate * (dt + orbitOffset). Without an offset it is rate * dt.
+export function cometOrbitTime(C, dtVar) {
+  return C.orbitOffset ? `(${dtVar} + ${num(C.orbitOffset)})` : dtVar;
+}
+
 // Player entity Molang. Drives bone_<key>_pivot and bone_<key>_declination.
 export function buildCometMolangLines(key) {
   const C = COMETS[key];
@@ -19,9 +29,9 @@ export function buildCometMolangLines(key) {
   ];
   if (windowed) {
     lines.push(`${v("on")} = math.abs(${v("dt")}) < ${num(C.window)};`);
-    lines.push(`${v("w")} = ${v("on")} ? (${num(C.rate)} * ${v("dt")}) : 0;`);
+    lines.push(`${v("w")} = ${v("on")} ? (${num(C.rate)} * ${cometOrbitTime(C, v("dt"))}) : 0;`);
   } else {
-    lines.push(`${v("w")} = ${num(C.rate)} * ${v("dt")};`);
+    lines.push(`${v("w")} = ${num(C.rate)} * ${cometOrbitTime(C, v("dt"))};`);
   }
   lines.push(
     `${v("cb")} = math.pow(${v("w")} / 2 + math.sqrt(${v("w")} * ${v("w")} / 4 + 1), 0.333333);`,

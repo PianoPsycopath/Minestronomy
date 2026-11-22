@@ -42,41 +42,42 @@ export function buildPlanetParticleJson(name, pCfg, isHiRes = false) {
     `variable.vis = math.clamp((${v1} - variable.salt) / ${vSpan}, 0, 1);`
   ].join(" ");
 
-  const bSize = pCfg.billboardSize || [pCfg.size, pCfg.size];
-  const finalSize = isHiRes ? [bSize[0] * 2.5, bSize[1] * 2.5] : bSize;
-  const tint = pCfg.tint || [1.0, 1.0, 1.0];
+  // Low resolution: the shared planet dot, tinted. High resolution (spyglass): the planet's own texture, untinted.
+  const hires = pCfg.hires || {};
+  const size = isHiRes ? hires.size ?? pCfg.size : null;
+  const bSize = isHiRes ? [size, size] : pCfg.billboardSize || [pCfg.size, pCfg.size];
+  const tint = (isHiRes ? hires.tint : pCfg.tint) || [1.0, 1.0, 1.0];
+  const material = isHiRes ? hires.material || "particles_alpha" : pCfg.material || "starfield:sun_moon";
+  const texture = isHiRes ? hires.texture || `textures/environment/planet_${name}` : pCfg.texture || "textures/environment/planet";
+
+  const components = {
+    "minecraft:emitter_local_space": { position: true, rotation: false },
+    "minecraft:emitter_rate_instant": { num_particles: 1 },
+    "minecraft:emitter_lifetime_looping": { active_time: 1 },
+    "minecraft:emitter_shape_point": { offset: [0, 250, 0] },
+    "minecraft:particle_lifetime_expression": { max_lifetime: 1.0 },
+    "minecraft:particle_initialization": { per_update_expression: expr },
+    "minecraft:particle_initial_speed": 0,
+    "minecraft:particle_appearance_billboard": {
+      size: bSize,
+      facing_camera_mode: "lookat_xyz"
+    }
+  };
+  if (!isHiRes) {
+    components["minecraft:particle_appearance_lighting"] = {};
+  }
+  components["minecraft:particle_appearance_tinting"] = {
+    color: [tint[0], tint[1], tint[2], "query.graphics_mode_is_any('deferred') ? variable.vis * variable.bright : 0.0"]
+  };
 
   return {
     format_version: "1.10.0",
     particle_effect: {
       description: {
         identifier: isHiRes ? `astrum:${name}_hires_particle` : `astrum:${name}_particle`,
-        basic_render_parameters: {
-          material: pCfg.material || "particles_add",
-          texture: pCfg.texture || "textures/environment/planet"
-        }
+        basic_render_parameters: { material, texture }
       },
-      components: {
-        "minecraft:emitter_local_space": { position: true, rotation: false },
-        "minecraft:emitter_rate_instant": { num_particles: 1 },
-        "minecraft:emitter_lifetime_looping": { active_time: 1 },
-        "minecraft:emitter_shape_point": { offset: [0, 250, 0] },
-        "minecraft:particle_lifetime_expression": { max_lifetime: 1.0 },
-        "minecraft:particle_initialization": { per_update_expression: expr },
-        "minecraft:particle_initial_speed": 0,
-        "minecraft:particle_appearance_billboard": {
-          size: finalSize,
-          facing_camera_mode: "lookat_xyz"
-        },
-        "minecraft:particle_appearance_tinting": {
-          color: [
-            tint[0],
-            tint[1],
-            tint[2],
-            "query.graphics_mode_is_any('deferred') ? variable.vis * variable.bright : 0.0"
-          ]
-        }
-      }
+      components
     }
   };
 }

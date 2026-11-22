@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "verify:export": "node scripts/verify-export.mjs",
+    "sync:base": "node scripts/sync-base.mjs"
   },
   "dependencies": {
     "three": "^0.158.0"

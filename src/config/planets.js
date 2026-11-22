@@ -7,7 +7,14 @@ export const PLN = {
     col: "216,210,198",
     tint: [0.85, 0.82, 0.78],
     texture: "textures/environment/planet",
-    material: "particles_add"
+    material: "starfield:sun_moon",
+    // Zoomed (spyglass) version, drawn additively. Mirrors base/particles/zmercury.particle.json.
+    hires: {
+      texture: "textures/environment/planet_mercury",
+      material: "particles_add",
+      size: 4,
+      tint: [1.0, 1.0, 1.0]
+    }
   },
   venus: {
     el: [224.701, 181.9791, 131.60247, 0.00677672, 0.72333566, 3.39467605, 76.67984255],
@@ -17,7 +24,14 @@ export const PLN = {
     col: "255,247,224",
     tint: [1.0, 0.97, 0.88],
     texture: "textures/environment/planet",
-    material: "particles_add"
+    material: "starfield:sun_moon",
+    // Zoomed (spyglass) version, drawn additively. Mirrors base/particles/zvenus.particle.json.
+    hires: {
+      texture: "textures/environment/planet_venus",
+      material: "particles_add",
+      size: 6,
+      tint: [1.0, 1.0, 1.0]
+    }
   },
   mars: {
     el: [686.98, 355.45332, 336.04084, 0.0933941, 1.52371034, 1.84969142, 49.55953891],
@@ -27,7 +41,14 @@ export const PLN = {
     col: "255,89,51",
     tint: [1.0, 0.35, 0.2],
     texture: "textures/environment/planet",
-    material: "particles_add"
+    material: "starfield:sun_moon",
+    // Zoomed (spyglass) version, drawn additively. Mirrors base/particles/zmars.particle.json.
+    hires: {
+      texture: "textures/environment/planet_mars",
+      material: "particles_add",
+      size: 5,
+      tint: [1.0, 1.0, 1.0]
+    }
   },
   jupiter: {
     el: [4332.59, 34.39644, 14.72848, 0.04838624, 5.202887, 1.30439695, 100.47390909],
@@ -37,7 +58,14 @@ export const PLN = {
     col: "255,235,204",
     tint: [1.0, 0.92, 0.8],
     texture: "textures/environment/planet",
-    material: "particles_add"
+    material: "starfield:sun_moon",
+    // Zoomed (spyglass) version, drawn additively. Mirrors base/particles/zjupiter.particle.json.
+    hires: {
+      texture: "textures/environment/planet_jupiter",
+      material: "particles_add",
+      size: 7,
+      tint: [1.0, 1.0, 1.0]
+    }
   },
   saturn: {
     el: [10759.22, 49.95424, 92.59888, 0.05386179, 9.53667594, 2.48599187, 113.66242448],
@@ -47,7 +75,14 @@ export const PLN = {
     col: "255,224,153",
     tint: [1.0, 0.88, 0.6],
     texture: "textures/environment/planet",
-    material: "particles_add"
+    material: "starfield:sun_moon",
+    // Zoomed (spyglass) version, drawn additively. Mirrors base/particles/zsaturn.particle.json.
+    hires: {
+      texture: "textures/environment/planet_saturn",
+      material: "particles_add",
+      size: 9,
+      tint: [1.0, 1.0, 1.0]
+    }
   }
 };
 

@@ -20,7 +20,7 @@ export function buildStarFieldParticleJson(faceKey, faceCfg = STARBOX_FACES[face
       description: {
         identifier,
         basic_render_parameters: {
-          material: faceCfg.material || "starfield:stars",
+          material: faceCfg.material || "starfield:sun_moon",
           texture: texturePath
         }
       },

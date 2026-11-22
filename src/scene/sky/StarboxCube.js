@@ -1,7 +1,8 @@
 import * as THREE from "three";
-import { STARBOX_FACES } from "../../config/index.js";
+import { STARBOX_FACES, faceHalfExtent } from "../../config/index.js";
 import { altaz } from "../../core/astronomy/index.js";
 import { dir } from "./projection.js";
+import { faceQuaternion, starboxQuaternion } from "./starboxPlacement.js";
 
 const FALLBACK_STAR_COUNT = 180;
 const FACE_TEXTURE_SIZE = 512;
@@ -28,8 +29,9 @@ export class StarboxCube {
     tex.magFilter = THREE.LinearFilter;
     tex.minFilter = THREE.LinearMipmapLinearFilter;
 
-    const w = (fCfg.size?.[0] || 256) * 2;
-    const h = (fCfg.size?.[1] || 256) * 2;
+    // The face must reach the cube edge, or each edge shows a gap. See faceHalfExtent.
+    const w = faceHalfExtent(fCfg) * 2;
+    const h = w;
     const mat = new THREE.MeshBasicMaterial({
       map: tex,
       transparent: true,
@@ -42,7 +44,8 @@ export class StarboxCube {
     const mesh = new THREE.Mesh(new THREE.PlaneGeometry(w, h), mat);
     const [ox, oy, oz] = fCfg.offset || [0, 0, 256];
     mesh.position.set(ox, oy, oz);
-    mesh.lookAt(0, 0, 0);
+    // The image axes are the ones of the particle (see config/starboxFrame.js).
+    mesh.quaternion.copy(faceQuaternion(fCfg));
     mesh.renderOrder = 0;
     this.group.add(mesh);
 
@@ -90,14 +93,12 @@ export class StarboxCube {
     }
   }
 
-  // The cube basis is the equatorial frame: X toward RA 0, Y toward RA 90, Z toward the celestial pole.
+  // The group is the particle frame of the pack, turned so that every axis points at its catalogue direction (see config/starboxFrame.js).
   updateOrientation(s, phi, opacity) {
     const vX = dir(altaz({ ra: 0, dec: 0 }, s, phi), 1).normalize();
     const vY = dir(altaz({ ra: 90, dec: 0 }, s, phi), 1).normalize();
     const vZ = dir(altaz({ ra: 0, dec: 90 }, s, phi), 1).normalize();
-
-    const rotMatrix = new THREE.Matrix4().makeBasis(vX, vZ, vY.clone().negate());
-    this.group.quaternion.setFromRotationMatrix(rotMatrix);
+    this.group.quaternion.copy(starboxQuaternion(vX, vY, vZ));
 
     for (const face of Object.values(this.faces)) face.mat.opacity = opacity;
   }

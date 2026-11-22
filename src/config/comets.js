@@ -7,9 +7,13 @@
 // elongFade = [start, span] in degrees. Brightness is multiplied by clamp((elong - start) / span, 0, 1).
 // orbitOffset: the orbit time is rate * (dt + orbitOffset). True perihelion is perihelionDay - orbitOffset.
 // window = null means the comet is always on. It fades over the last 40 days before aphelion.
+// comaScale, tailScale: size multipliers of the coma particle and the tail particle.
 export const COMET_BASE = {
   material: "starfield:sun_moon",
-  texture: "textures/environment/comet",
+  texture: "textures/environment/comet_coma",
+  tailTexture: "textures/environment/comet_tail",
+  comaScale: 0.3,       // the coma particle is drawn at size * comaScale
+  tailScale: null,      // tail particle width and length scale. null leaves them unscaled
   fluxRef: 4.2,
   fluxPow: 0.3,
   fluxRPow: 4,
@@ -164,6 +168,7 @@ export const COMETS = {
     tfBy: "dist",
     visGain: 10,
     sizeScale: 1.3,
+    tailScale: 1,         // base/comet_super_tail_particle sizes the tail as "variable.size * 1"
     tint: [1, 0.93, 0.75]
   }
 };

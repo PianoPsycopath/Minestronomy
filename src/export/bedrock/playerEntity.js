@@ -1,6 +1,7 @@
 import { COMETS, PLN } from "../../config/index.js";
 import { buildCometMolangLines } from "./molang/comet.js";
 import { buildPlanetMolangLines } from "./molang/planet.js";
+import { cometTailIdentifier } from "./molang/comet.js";
 import { VANILLA_PRE_ANIMATION, PLAYER_ANIMATIONS } from "./playerVanillaMolang.js";
 import { ASTRUM_PRE_ANIMATION } from "./astrumMolang.js";
 
@@ -37,6 +38,7 @@ export function buildPlayerEntityJson() {
   }
   for (const [key, C] of Object.entries(COMETS)) {
     particleEffects[`${key}_particle`] = C.identifier;
+    particleEffects[`${key}_tail_particle`] = cometTailIdentifier(C);
   }
 
   return {

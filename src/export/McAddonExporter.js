@@ -1,5 +1,5 @@
 import { ZipBuilder } from "./zip/ZipBuilder.js";
-import { addEntityFiles, addParticleFiles } from "./packJson.js";
+import { addJsonFiles } from "./packJson.js";
 import { addTextureFiles } from "./packTextures.js";
 import { downloadBlob } from "./downloadBlob.js";
 
@@ -8,8 +8,7 @@ export async function exportBedrockAddon(particleLoader, skyScene, packName = "M
   const root = `${safeName}_RP`;
   const zip = new ZipBuilder();
 
-  addEntityFiles(zip, root, packName);
-  addParticleFiles(zip, root, particleLoader);
+  addJsonFiles(zip, root, { packName, rawJsons: particleLoader.rawJsons });
   await addTextureFiles(zip, root, particleLoader, skyScene);
 
   downloadBlob(zip.buildBlob("application/octet-stream"), `${safeName}.mcaddon`);

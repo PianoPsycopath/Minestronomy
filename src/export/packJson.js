@@ -1,52 +1,76 @@
 import { PLN, COMETS, CELESTIAL_DEFAULTS, STARBOX_FACES } from "../config/index.js";
 import {
-
   buildManifestJson,
-  buildEntityMaterialJson,
+  buildParticleMaterialJson,
+  buildLightingJson,
+  buildTextureSetFiles,
   buildStarGeoJson,
   buildStarAnimationJson,
   buildStarEmitterJson,
   buildStarRenderControllerJson,
   buildCalendarRenderControllersJson,
-  buildPlayerRenderControllersJson,
   buildPlayerEntityJson,
   buildCometParticleJson,
+  buildCometTailParticleJson,
   buildSunParticleJson,
   buildMoonParticleJson,
   buildPlanetParticleJson,
   buildStarFieldParticleJson
 } from "./bedrock/index.js";
 
-export function addEntityFiles(zip, root, packName) {
-  zip.addJson(`${root}/manifest.json`, buildManifestJson(packName));
-  zip.addJson(`${root}/materials/entity.material`, buildEntityMaterialJson());
-  zip.addJson(`${root}/materials/particles.material`, buildEntityMaterialJson());
-  zip.addJson(`${root}/models/entity/star.geo.json`, buildStarGeoJson());
-  zip.addJson(`${root}/animations/star.animation.json`, buildStarAnimationJson());
-  zip.addJson(`${root}/animation_controllers/star_emitter.json`, buildStarEmitterJson());
-  zip.addJson(`${root}/render_controllers/star.render_controller.json`, buildStarRenderControllerJson());
-  zip.addJson(`${root}/render_controllers/calendar.render_controllers.json`, buildCalendarRenderControllersJson());
-  zip.addJson(`${root}/render_controllers/player.render_controllers.json`, buildPlayerRenderControllersJson());
-  zip.addJson(`${root}/entity/player.entity.json`, buildPlayerEntityJson());
-}
+// Every JSON file of the pack, as [{ path, data }]. Paths are relative to the pack root and use the file names of base/.
+// rawJsons holds particle files that were loaded from public/particles. They win over the generated ones for the sun, the moon, the comets and the starbox faces.
+// This function does not touch the browser, so scripts/verify-export.mjs can run it in Node.
+export function buildPackJsonFiles({ packName = "Minestronomy", rawJsons = {} } = {}) {
+  const files = [
+    { path: "manifest.json", data: buildManifestJson(packName) },
+    { path: "materials/particles.material", data: buildParticleMaterialJson() },
+    { path: "lighting/global.json", data: buildLightingJson() },
+    { path: "models/entity/star.geo.json", data: buildStarGeoJson() },
+    { path: "animations/star.animation.json", data: buildStarAnimationJson() },
+    { path: "animation_controllers/star_emitter.json", data: buildStarEmitterJson() },
+    { path: "render_controllers/star.render_controller.json", data: buildStarRenderControllerJson() },
+    { path: "render_controllers/calendar.render_controllers.json", data: buildCalendarRenderControllersJson() },
+    { path: "entity/player.entity.json", data: buildPlayerEntityJson() }
+  ];
 
-export function addParticleFiles(zip, root, particleLoader) {
-  const raw = particleLoader.rawJsons;
-  zip.addJson(`${root}/particles/sun.particle.json`, raw.sun || buildSunParticleJson(CELESTIAL_DEFAULTS.sun));
-  zip.addJson(`${root}/particles/moon.particle.json`, raw.moon || buildMoonParticleJson(CELESTIAL_DEFAULTS.moon));
+  files.push(
+    { path: "particles/sun.particle.json", data: rawJsons.sun || buildSunParticleJson(CELESTIAL_DEFAULTS.sun) },
+    { path: "particles/moon.particle.json", data: rawJsons.moon || buildMoonParticleJson(CELESTIAL_DEFAULTS.moon) }
+  );
 
   for (const key of Object.keys(COMETS)) {
-    zip.addJson(`${root}/particles/${key}.particle.json`, raw[key] || buildCometParticleJson(key));
+    files.push(
+      { path: `particles/${key}_particle.json`, data: rawJsons[key] || buildCometParticleJson(key) },
+      { path: `particles/${key}_tail_particle.json`, data: buildCometTailParticleJson(key) }
+    );
   }
 
+  // Planets: "mars" is the low resolution particle, "zmars" the high resolution one that the spyglass switches to.
   for (const [name, pCfg] of Object.entries(PLN)) {
-    zip.addJson(`${root}/particles/${name}.particle.json`, buildPlanetParticleJson(name, pCfg, false));
-    zip.addJson(`${root}/particles/${name}_hires.particle.json`, buildPlanetParticleJson(name, pCfg, true));
+    files.push(
+      { path: `particles/${name}.particle.json`, data: buildPlanetParticleJson(name, pCfg, false) },
+      { path: `particles/z${name}.particle.json`, data: buildPlanetParticleJson(name, pCfg, true) }
+    );
   }
 
+  // Starbox faces: "star_field_px_stars" is the normal sky, "star_field_px" the constellation overlay.
   for (const [faceKey, fCfg] of Object.entries(STARBOX_FACES)) {
-    const starsJson = raw[`star_field_${faceKey}_stars`] || buildStarFieldParticleJson(faceKey, fCfg, false);
-    zip.addJson(`${root}/particles/star_field_${faceKey}_stars.particle.json`, starsJson);
-    zip.addJson(`${root}/particles/star_field_${faceKey}_const.particle.json`, buildStarFieldParticleJson(faceKey, fCfg, true));
+    files.push(
+      {
+        path: `particles/star_field_${faceKey}_stars.particle.json`,
+        data: rawJsons[`star_field_${faceKey}_stars`] || buildStarFieldParticleJson(faceKey, fCfg, false)
+      },
+      { path: `particles/star_field_${faceKey}.particle.json`, data: buildStarFieldParticleJson(faceKey, fCfg, true) }
+    );
+  }
+
+  files.push(...buildTextureSetFiles());
+  return files;
+}
+
+export function addJsonFiles(zip, root, options) {
+  for (const { path, data } of buildPackJsonFiles(options)) {
+    zip.addJson(`${root}/${path}`, data);
   }
 }

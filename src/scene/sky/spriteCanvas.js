@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { isAdditiveMaterial } from "../../config/index.js";
 
 // Creates a sprite whose texture comes from a canvas. Draw on g, then set tex.needsUpdate.
 export function makeSprite(scene, w, h, order) {
@@ -15,10 +16,8 @@ export function makeSprite(scene, w, h, order) {
 }
 
 export function applyMaterialBlending(spriteObj, materialType) {
-  const desired =
-    materialType === "particles_add" || materialType === "starfield:stars"
-      ? THREE.AdditiveBlending
-      : THREE.NormalBlending;
+  // Custom pack materials such as starfield:sun_moon derive from particles_add, so they blend additively too.
+  const desired = isAdditiveMaterial(materialType) ? THREE.AdditiveBlending : THREE.NormalBlending;
   if (spriteObj.s.material.blending !== desired) {
     spriteObj.s.material.blending = desired;
     spriteObj.s.material.needsUpdate = true;

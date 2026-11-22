@@ -4,7 +4,7 @@
     "description": {
       "identifier": "astrum:sun_particle",
       "basic_render_parameters": {
-        "material": "particles_alpha",
+        "material": "starfield:sun_moon",
         "texture": "textures/environment/sunAstrum"
       }
     },
@@ -39,14 +39,15 @@
   "uv_size": [32, 32]
 }
       },
+      "minecraft:particle_appearance_lighting": {},
       "minecraft:particle_appearance_tinting": {
-  "color": [
-    "1.0",
-    "1.0",
-    "1.0",
-    "1.0"
-  ]
-}
+        "color": [
+          "query.graphics_mode_is_any('deferred') ? 20.0 : 1.0",
+          "query.graphics_mode_is_any('deferred') ? 18.0 : 1.0",
+          "query.graphics_mode_is_any('deferred') ? 15.0 : 1.0",
+          "1.0"
+        ]
+      }
     }
   }
 }

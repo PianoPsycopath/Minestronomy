@@ -8,7 +8,7 @@ export function buildStarAnimationJson() {
       rotation: [`(math.clamp(query.position(2) / ${EARTH_RADIUS_BLOCKS}, -1, 1) * -90)`, 0, 0]
     },
     bone_skybox: {
-      rotation: [90, 0, "(query.time_of_day * -360) - ((query.day + query.time_of_day) / 365.25 * 360)"]
+      rotation: [90, 0, "(query.time_of_day * -360) - ((query.day + query.time_of_day + (query.time_of_day < 0.25 ? 1 : 0)) / 365.25 * 360)"]
     },
     bone_sun_pivot: { rotation: [0, 0, "variable.astrum_sun_z"] },
     bone_sun_declination: { rotation: ["variable.astrum_sun_dec", 0, 0] },
