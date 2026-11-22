@@ -1,6 +1,8 @@
-import { COMETS, EARTH_RADIUS_BLOCKS, PLN } from "../../config/index.js";
+import { EARTH_RADIUS_BLOCKS } from "../../config/index.js";
+import { exportBodies } from "./bodies.js";
 
-export function buildStarAnimationJson() {
+export function buildStarAnimationJson(catalog) {
+  const { planets, comets } = exportBodies(catalog);
   const bones = {
     sky_tilt: { rotation: ["-variable.astrum_tilt_cancel", 0, 0] },
     sky_anchor: { rotation: ["-this", "-this - query.body_y_rotation", "-this"] },
@@ -16,12 +18,12 @@ export function buildStarAnimationJson() {
     bone_moon_declination: { rotation: ["variable.astrum_moon_dec", 0, 0] }
   };
 
-  for (const n of Object.keys(PLN)) {
+  for (const { key: n } of planets) {
     bones[`bone_${n}_pivot`] = { rotation: [0, 0, `variable.astrum_${n}_z`] };
     bones[`bone_${n}_declination`] = { rotation: [`variable.astrum_${n}_dec`, 0, 0] };
   }
 
-  for (const key of Object.keys(COMETS)) {
+  for (const { key } of comets) {
     bones[`bone_${key}_pivot`] = { rotation: [0, 0, `variable.astrum_${key}_zrot`] };
     bones[`bone_${key}_declination`] = { rotation: [`variable.astrum_${key}_dec`, 0, 0] };
   }

@@ -13,7 +13,6 @@ const PLANET_TEMPLATE = Object.freeze({
   col: "200,200,220",
   tint: [0.78, 0.78, 0.86],
   texture: "textures/environment/planet",
-  material: "particles_add",
   vis: [-8, -2]
 });
 
@@ -40,7 +39,7 @@ function seedEntries() {
 
 const cloneMap = (source) => new Map([...source].map(([key, entry]) => [key, structuredClone(entry)]));
 
-// The catalog owns clones. The Sky View and the Forecast keep reading the static config.
+// The catalog owns clones. The Forecast keeps reading the static config.
 export class CelestialCatalog {
   constructor() {
     this.defaults = seedEntries();

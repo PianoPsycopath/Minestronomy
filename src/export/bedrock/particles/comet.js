@@ -8,9 +8,11 @@ const v = n => `variable.${n}`;
 // Days before aphelion over which a comet without a visibility window fades out.
 const ALWAYS_ON_FADE_DAYS = 40;
 
-function cometOf(key) {
-  const C = COMETS[key];
-  if (!C) throw new Error(`Unknown comet "${key}"`);
+// Accepts a comet key or a comet entry.
+function cometOf(ref) {
+  if (typeof ref !== "string") return ref;
+  const C = COMETS[ref];
+  if (!C) throw new Error(`Unknown comet "${ref}"`);
   return C;
 }
 
@@ -163,8 +165,8 @@ function particleJson({ identifier, material, texture, offsetY, expr, motion, si
 }
 
 // The bright round head of the comet. base/particles/<key>_particle.json
-export function buildCometParticleJson(key = "comet") {
-  const C = cometOf(key);
+export function buildCometParticleJson(ref = "comet") {
+  const C = cometOf(ref);
   const scaled = `variable.size * ${num(C.comaScale)}`;
   return particleJson({
     identifier: C.identifier,
@@ -180,8 +182,8 @@ export function buildCometParticleJson(key = "comet") {
 }
 
 // The tail of the comet. It turns away from the Sun and fades when seen end-on. base/particles/<key>_tail_particle.json
-export function buildCometTailParticleJson(key = "comet") {
-  const C = cometOf(key);
+export function buildCometTailParticleJson(ref = "comet") {
+  const C = cometOf(ref);
   const scale = C.tailScale == null ? "" : ` * ${num(C.tailScale)}`;
   return particleJson({
     identifier: cometTailIdentifier(C),

@@ -14,7 +14,7 @@ export function buildPlanetParticleJson(name, pCfg, isHiRes = false) {
   const sinOm = +Math.sin(Om * D).toFixed(6);
   const cosInc = +Math.cos(inc * D).toFixed(6);
   const sinInc = +Math.sin(inc * D).toFixed(6);
-  const [v0, v1] = VIS[name] || [-9, -3];
+  const [v0, v1] = pCfg.vis || VIS[name] || [-9, -3];
   const vSpan = v1 - v0;
 
   const expr = [

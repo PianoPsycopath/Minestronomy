@@ -18,8 +18,10 @@ export function cometOrbitTime(C, dtVar) {
 }
 
 // Player entity Molang. Drives bone_<key>_pivot and bone_<key>_declination.
-export function buildCometMolangLines(key) {
-  const C = COMETS[key];
+// Accepts a comet key or a comet entry.
+export function buildCometMolangLines(ref) {
+  const C = typeof ref === "string" ? COMETS[ref] : ref;
+  const key = typeof ref === "string" ? ref : C.key;
   const v = n => `variable.astrum_${key}_${n}`;
   const [P0, P1] = C.P;
   const [Q0, Q1, Q2] = C.Q;

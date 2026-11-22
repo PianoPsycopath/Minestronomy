@@ -10,7 +10,7 @@ export class ExportPanel {
       const btn = $("exportAddonBtn");
       const prev = btn.textContent;
       btn.textContent = "Packaging...";
-      await exportBedrockAddon(app.particleLoader, app.skyScene, "Minestronomy");
+      await exportBedrockAddon(app.particleLoader, app.skyScene, "Minestronomy", app.state.catalog);
       btn.textContent = "Exported!";
       setTimeout(() => {
         btn.textContent = prev;

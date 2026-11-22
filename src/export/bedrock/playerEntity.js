@@ -1,19 +1,16 @@
-import { COMETS, PLN } from "../../config/index.js";
+import { exportBodies } from "./bodies.js";
 import { buildCometMolangLines } from "./molang/comet.js";
 import { buildPlanetMolangLines } from "./molang/planet.js";
 import { cometTailIdentifier } from "./molang/comet.js";
 import { VANILLA_PRE_ANIMATION, PLAYER_ANIMATIONS } from "./playerVanillaMolang.js";
 import { ASTRUM_PRE_ANIMATION } from "./astrumMolang.js";
 
-export function buildPlayerEntityJson() {
+export function buildPlayerEntityJson(catalog) {
+  const { planets, comets } = exportBodies(catalog);
   const preAnim = [...VANILLA_PRE_ANIMATION, ...ASTRUM_PRE_ANIMATION];
 
-  for (const [n, p] of Object.entries(PLN)) {
-    preAnim.push(...buildPlanetMolangLines(n, p));
-  }
-  for (const key of Object.keys(COMETS)) {
-    preAnim.push(...buildCometMolangLines(key));
-  }
+  for (const p of planets) preAnim.push(...buildPlanetMolangLines(p.key, p));
+  for (const C of comets) preAnim.push(...buildCometMolangLines(C));
 
   const particleEffects = {
     star_field_px_stars: "astrum:star_field_px_stars",
@@ -32,13 +29,13 @@ export function buildPlayerEntityJson() {
     sun_particle: "astrum:sun_particle"
   };
 
-  for (const n of Object.keys(PLN)) {
-    particleEffects[`${n}_particle`] = `astrum:${n}_particle`;
-    particleEffects[`${n}_hires_particle`] = `astrum:${n}_hires_particle`;
+  for (const { key } of planets) {
+    particleEffects[`${key}_particle`] = `astrum:${key}_particle`;
+    particleEffects[`${key}_hires_particle`] = `astrum:${key}_hires_particle`;
   }
-  for (const [key, C] of Object.entries(COMETS)) {
-    particleEffects[`${key}_particle`] = C.identifier;
-    particleEffects[`${key}_tail_particle`] = cometTailIdentifier(C);
+  for (const C of comets) {
+    particleEffects[`${C.key}_particle`] = C.identifier;
+    particleEffects[`${C.key}_tail_particle`] = cometTailIdentifier(C);
   }
 
   return {

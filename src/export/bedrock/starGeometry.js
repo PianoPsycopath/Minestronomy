@@ -1,6 +1,8 @@
-import { COMETS, E, PLN } from "../../config/index.js";
+import { E } from "../../config/index.js";
+import { exportBodies } from "./bodies.js";
 
-export function buildStarGeoJson() {
+export function buildStarGeoJson(catalog) {
+  const { planets, comets } = exportBodies(catalog);
   const bones = [
     { name: "sky_tilt", pivot: [0, 0, 0] },
     { name: "sky_anchor", parent: "sky_tilt", pivot: [0, 0, 0] },
@@ -37,7 +39,7 @@ export function buildStarGeoJson() {
     }
   ];
 
-  for (const n of Object.keys(PLN)) {
+  for (const { key: n } of planets) {
     bones.push(
       { name: `bone_${n}_pivot`, parent: "latitude_anchor", pivot: [0, 0, 0] },
       { name: `bone_${n}_declination`, parent: `bone_${n}_pivot`, pivot: [0, 0, 0] },
@@ -50,7 +52,7 @@ export function buildStarGeoJson() {
     );
   }
 
-  for (const key of Object.keys(COMETS)) {
+  for (const { key } of comets) {
     bones.push(
       { name: `bone_${key}_pivot`, parent: "latitude_anchor", pivot: [0, 0, 0] },
       { name: `bone_${key}_declination`, parent: `bone_${key}_pivot`, pivot: [0, 0, 0] },
