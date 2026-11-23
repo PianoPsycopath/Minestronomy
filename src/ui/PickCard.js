@@ -14,7 +14,7 @@ export class PickCard {
     const { state, skyScene } = this.app;
     if (!state.lastRender) return;
     const { Z, disc, md } = readObserver();
-    const s = calc(state.t, Z);
+    const s = calc(state.t, Z, state.catalog);
     const res = skyScene.pick(x, y, state.lastRender, s, { disc, md, xray: $("xray").checked });
     this.show(res, s, x, y);
   }
@@ -24,7 +24,7 @@ export class PickCard {
     const phi = zToLatitude(+$("z").value);
     const hit = res.hit;
     const pos = hit ? getTargetAltAz(hit, s, phi) : { alt: res.alt, az: res.az };
-    const title = hit ? labelFor(hit) : "Empty sky";
+    const title = hit ? labelFor(hit, this.app.state.catalog) : "Empty sky";
     const lines = [
       `${pos.alt >= 0 ? "Above" : "Below"} horizon • Alt ${pos.alt.toFixed(1)}° • Az ${pos.az.toFixed(1)}° ${compass(pos.az)}`,
       ...(hit ? describeTarget(hit, s) : ["No visible object here. Stars aren't individually identified."])

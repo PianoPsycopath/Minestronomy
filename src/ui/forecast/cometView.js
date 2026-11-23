@@ -1,9 +1,6 @@
 import { $, el, tintRgb } from "../dom.js";
-import { COMETS } from "../../config/index.js";
 import { getCalendarInfo } from "../../core/calendar.js";
 import { cometKeyOf } from "../../forecast/bodyFilter.js";
-
-const META = new Map(Object.values(COMETS).map(c => [c.key, c]));
 
 // One table names the span fields, so a change in the span format needs one edit.
 const FIELDS = {
@@ -24,7 +21,7 @@ const pick = (span, names) => {
 
 let warned = false;
 
-export function readSpan(span) {
+export function readSpan(span, catalog) {
   const key = cometKeyOf(span);
   const start = pick(span, FIELDS.start);
   const end = pick(span, FIELDS.end);
@@ -35,7 +32,7 @@ export function readSpan(span) {
     }
     return null;
   }
-  const meta = META.get(key);
+  const meta = catalog.get(key);
   return {
     key,
     start,

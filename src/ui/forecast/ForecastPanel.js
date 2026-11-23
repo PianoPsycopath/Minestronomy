@@ -1,9 +1,8 @@
 import { $, el, tintRgb } from "../dom.js";
 import { readObserver } from "../observer.js";
 import { cap } from "../../core/math.js";
-import { PLN, COMETS } from "../../config/index.js";
 import { getCalendarInfo, getMonthSpan } from "../../core/calendar.js";
-import { EVENT_KINDS, PLANETS, allBodies, bodiesKey, keepComets, findEventsInRange, findCometSpans } from "../../forecast/index.js";
+import { EVENT_KINDS, allBodies, bodiesKey, keepComets, findEventsInRange, findCometSpans } from "../../forecast/index.js";
 import { getForecastRange } from "./forecastRange.js";
 import { buildWeekBlock, buildDayOfWeekRow } from "./forecastBoard.js";
 import { renderSide } from "./forecastSide.js";
@@ -33,13 +32,15 @@ function groupByDay(events) {
 export class ForecastPanel {
   constructor(app) {
     this.app = app;
+    this.catalog = app.state.catalog;
     this.view = "week";
     // A null anchor means the board follows the current sky day.
     this.anchor = null;
     // "vis" means: show only events that the observer can see.
     this.cats = new Set([...Object.keys(EVENT_KINDS), "vis"]);
     // The body filter works inside the category filter. "vis" applies on top of both.
-    this.bodies = allBodies();
+    this.bodies = allBodies(this.catalog);
+    this.knownKeys = { planets: new Set(), comets: new Set() };
     this.bodyChips = [];
     this.bodyGroups = [];
     this.cache = null;
@@ -57,13 +58,15 @@ export class ForecastPanel {
     this.sideDay = null;
     this.bind();
     this.buildBodyBar();
+    this.catalog.subscribe(() => this.onCatalogChange());
   }
 
   bind() {
     $("viewGroup").querySelectorAll(".wii-seg").forEach(btn => {
       btn.onclick = () => {
         const view = btn.dataset.view;
-        if (view !== this.view) this.queueMotion("morph");        this.markView(view);
+        if (view !== this.view) this.queueMotion("morph");
+        this.markView(view);
         this.view = view;
         this.update();
       };
@@ -123,14 +126,29 @@ export class ForecastPanel {
     $("fcReset").onclick = () => this.resetFilters();
   }
 
+  bodyGroupItems() {
+    return [
+      { id: "planets", label: "Planets", items: this.catalog.planets().map(p => ({ key: p.key, label: p.label ?? cap(p.key), color: `rgb(${p.col})` })) },
+      { id: "comets", label: "Comets", items: this.catalog.comets().map(C => ({ key: C.key, label: C.label, color: tintRgb(C.tint, 0, 1) })) }
+    ];
+  }
+
+  // A key that is new to the catalog starts selected. A key that left the catalog leaves the selection.
   buildBodyBar() {
     const host = $("bodyGroups");
     if (!host) return;
-    const groups = [
-      { id: "planets", label: "Planets", items: PLANETS.map(n => ({ key: n, label: cap(n), color: `rgb(${PLN[n].col})` })) },
-      { id: "comets", label: "Comets", items: Object.values(COMETS).map(C => ({ key: C.key, label: C.label, color: tintRgb(C.tint, 0, 1) })) }
-    ];
+    const groups = this.bodyGroupItems();
+    for (const g of groups) {
+      const keys = new Set(g.items.map(i => i.key));
+      const selected = this.bodies[g.id];
+      for (const k of [...selected]) if (!keys.has(k)) selected.delete(k);
+      for (const k of keys) if (!this.knownKeys[g.id].has(k)) selected.add(k);
+      this.knownKeys[g.id] = keys;
+    }
 
+    host.replaceChildren();
+    this.bodyChips = [];
+    this.bodyGroups = [];
     for (const g of groups) {
       const box = el("div", "fc-body-group");
       const head = el("div", "fc-body-head");
@@ -154,6 +172,8 @@ export class ForecastPanel {
       host.appendChild(box);
       this.bodyGroups.push({ id: g.id, box });
     }
+    const search = $("bodySearch");
+    if (search?.value) this.filterBodyChips(search.value);
     this.syncBodyBar();
   }
 
@@ -188,7 +208,7 @@ export class ForecastPanel {
   // A focus from the search or the Find Object panel narrows every filter. This restores them in one step.
   resetFilters() {
     this.cats = new Set([...Object.keys(EVENT_KINDS), "vis"]);
-    this.bodies = allBodies();
+    this.bodies = allBodies(this.catalog);
     this.syncCatButtons();
     this.syncBodyBar();
     this.update();
@@ -218,7 +238,7 @@ export class ForecastPanel {
     if (!kinds) return;
 
     this.cats = new Set(this.cats.has("vis") ? [...kinds, "vis"] : kinds);
-    this.bodies = allBodies();
+    this.bodies = allBodies(this.catalog);
     if (target.type === "planet") this.bodies.planets = new Set([target.planet]);
     if (target.type === "comet") this.bodies.comets = new Set([target.comet]);
     this.pinned = null;
@@ -227,6 +247,13 @@ export class ForecastPanel {
     this.syncBodyBar();
     this.setNextKind(kinds[0]);
     this.update();
+  }
+
+  onCatalogChange() {
+    this.buildBodyBar();
+    this.cache = null;
+    this.nextCache = null;
+    this.schedule();
   }
 
   markView(view) {
@@ -286,7 +313,7 @@ export class ForecastPanel {
     }
   }
 
-    update() {
+  update() {
     // A queued motion must not wait for a later update, so it is cleared first.
     const motion = this.pendingMotion;
     this.pendingMotion = null;
@@ -302,16 +329,16 @@ export class ForecastPanel {
     const play = Boolean(motion) && this.rangeKey !== null && rangeKey !== this.rangeKey;
     this.rangeKey = rangeKey;
 
-    const key = [g0, g1, Z, disc, md, [...this.cats].sort().join(","), bodiesKey(this.bodies)].join("|");
+    const key = [g0, g1, Z, disc, md, [...this.cats].sort().join(","), bodiesKey(this.bodies, this.catalog), this.catalog.version].join("|");
     if (!this.cache || this.cache.key !== key) {
       this.cache = {
         key,
-        events: findEventsInRange({ d0: g0, d1: g1, Z, disc, md, cats: this.cats, bodies: this.bodies }),
-        spans: this.cats.has("com") ? keepComets(findCometSpans(g0, g1, Z), this.bodies) : []
+        events: findEventsInRange({ d0: g0, d1: g1, Z, disc, md, cats: this.cats, bodies: this.bodies, catalog: this.catalog }),
+        spans: this.cats.has("com") ? keepComets(findCometSpans(g0, g1, Z, this.catalog), this.bodies) : []
       };
     }
     const { events, spans } = this.cache;
-    this.comets = spans.map(readSpan).filter(Boolean);
+    this.comets = spans.map(span => readSpan(span, this.catalog)).filter(Boolean);
 
     this.renderRangeLabel(range);
     this.ctx = { view: this.view, g0, g1, m0, m1, byDay: groupByDay(events), spans: [], Z, phi, todayDay: Math.floor(t) };

@@ -1,25 +1,22 @@
 import { CONJ_RADIUS } from "./settings.js";
-import { PLN } from "../config/index.js";
-import { cap, cos } from "../core/math.js";
+import { cos } from "../core/math.js";
 import { sepEq } from "../core/astronomy/index.js";
 
-export const PLANETS = Object.keys(PLN);
-
 // Chains planets with touching circles into groups. A group has at least two planets.
-export function planetComponents(s) {
-  const n = PLANETS.length;
-  const parent = PLANETS.map((_, i) => i);
+export function planetComponents(s, keys) {
+  const n = keys.length;
+  const parent = keys.map((_, i) => i);
   const find = i => (parent[i] === i ? i : (parent[i] = find(parent[i])));
   for (let i = 0; i < n; i++) {
     for (let j = i + 1; j < n; j++) {
-      if (sepEq(s.pl[PLANETS[i]], s.pl[PLANETS[j]]) <= 2 * CONJ_RADIUS) parent[find(i)] = find(j);
+      if (sepEq(s.pl[keys[i]], s.pl[keys[j]]) <= 2 * CONJ_RADIUS) parent[find(i)] = find(j);
     }
   }
   const groups = new Map();
   for (let i = 0; i < n; i++) {
     const r = find(i);
     if (!groups.has(r)) groups.set(r, []);
-    groups.get(r).push(PLANETS[i]);
+    groups.get(r).push(keys[i]);
   }
   return [...groups.values()].filter(g => g.length >= 2);
 }
@@ -32,7 +29,7 @@ export function spreadOf(members, s) {
   return m;
 }
 
-// Sky-plane offsets in degrees. East is to the left, as when you look up. The group center is the origin.
+// East is to the left, as when you look up. The group center is the origin.
 export function offsetsOf(members, s) {
   const ref = s.pl[members[0]];
   const pts = members.map(p => {
@@ -45,4 +42,7 @@ export function offsetsOf(members, s) {
   return pts.map(o => ({ planet: o.planet, x: o.x - mx, y: o.y - my }));
 }
 
-export const nameList = ms => (ms.length === 2 ? `${cap(ms[0])} & ${cap(ms[1])}` : `${ms.slice(0, -1).map(cap).join(", ")} & ${cap(ms[ms.length - 1])}`);
+export function nameList(members, label) {
+  const names = members.map(label);
+  return names.length === 2 ? `${names[0]} & ${names[1]}` : `${names.slice(0, -1).join(", ")} & ${names[names.length - 1]}`;
+}

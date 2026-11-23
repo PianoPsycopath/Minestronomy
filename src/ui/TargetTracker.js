@@ -1,5 +1,4 @@
 import { $, compass } from "./dom.js";
-import { COMETS } from "../config/index.js";
 import { calc, getTargetAltAz } from "../core/astronomy/index.js";
 import { getCalendarInfo } from "../core/calendar.js";
 import { getTickInfo, hhmm12 } from "../core/time.js";
@@ -73,7 +72,7 @@ export class TargetTracker {
   }
 
   focusCometSpan(sp) {
-    const C = COMETS[sp.key];
+    const C = this.app.state.catalog.get(sp.key);
     this.focusOnEvent({
       t: sp.peakT,
       title: sp.key === "comet" ? "Comet Peak View" : `${C.label} Comet Peak View`,

@@ -46,6 +46,7 @@ export class CelestialCatalog {
     this.entries = cloneMap(this.defaults);
     this.listeners = new Set();
     this.cache = null;
+    this.version = 0;
   }
 
   subscribe(listener) {
@@ -55,6 +56,7 @@ export class CelestialCatalog {
 
   emit(type, key) {
     this.cache = null;
+    this.version++;
     for (const listener of this.listeners) listener({ type, key });
   }
 

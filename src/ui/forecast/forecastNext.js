@@ -10,7 +10,8 @@ export function renderNextBar(panel) {
   const { Z, disc, md } = readObserver();
   const from = Math.floor(panel.app.state.t);
   const visibleOnly = panel.cats.has("vis");
-  const key = [panel.nextKind, panel.nextCount, Z, disc, md, visibleOnly].join("|");
+  const { catalog } = panel;
+  const key = [panel.nextKind, panel.nextCount, Z, disc, md, visibleOnly, catalog.version].join("|");
 
   let c = panel.nextCache;
   const valid = c && c.key === key && c.from <= from && (!c.list.length || c.list[0].t >= from);
@@ -18,7 +19,7 @@ export function renderNextBar(panel) {
     c = {
       key,
       from,
-      list: findNextEvents({ kind: panel.nextKind, from, count: panel.nextCount, Z, disc, md, visibleOnly })
+      list: findNextEvents({ kind: panel.nextKind, from, count: panel.nextCount, Z, disc, md, visibleOnly, catalog })
     };
     panel.nextCache = c;
   }

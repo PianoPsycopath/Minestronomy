@@ -1,9 +1,8 @@
-import { COMETS } from "../config/index.js";
 import { COMET_MIN_BRIGHT } from "./settings.js";
 import { altaz, cometCalc, cometVisibility, eq, solarTerms, zToLatitude } from "../core/astronomy/index.js";
 import { clamp } from "../core/math.js";
 
-// Samples a comet at time t. The score is high when the comet is bright, above the horizon, and the sky is dark.
+// The score is high when the comet is bright, above the horizon, and the sky is dark.
 function cometSky(C, t, phi) {
   const { lm, ls, er } = solarTerms(t);
   const s = { tod: t - Math.floor(t), lm };
@@ -16,16 +15,27 @@ function cometSky(C, t, phi) {
   return { t, alt, az, sunAlt, elong: c.elong, bright: c.bright, score };
 }
 
-const peakCache = new Map();
+// An edit to the catalog changes the version. The version change drops the cached peaks.
+const peakCaches = new WeakMap();
+
+function peakCacheOf(catalog) {
+  let entry = peakCaches.get(catalog);
+  if (!entry || entry.version !== catalog.version) {
+    entry = { version: catalog.version, map: new Map() };
+    peakCaches.set(catalog, entry);
+  }
+  return entry.map;
+}
 
 // Finds the best moment to see a comet between days d0 and d1 (inclusive).
 // A coarse pass covers the span. Two finer passes follow.
-export function cometBestView(key, d0, d1, Z) {
+export function cometBestView(key, d0, d1, Z, catalog) {
+  const cache = peakCacheOf(catalog);
   const ck = `${key}|${d0}|${d1}|${Z}`;
-  const hit = peakCache.get(ck);
+  const hit = cache.get(ck);
   if (hit) return hit;
 
-  const C = COMETS[key];
+  const C = catalog.get(key);
   const phi = zToLatitude(Z);
   let best = null;
   let brightest = null;
@@ -45,18 +55,17 @@ export function cometBestView(key, d0, d1, Z) {
     for (let m = -90; m <= 90; m += 10) consider(cometSky(C, c1 + m / 1440, phi));
   }
   const out = best.score > 0 ? { ...best, visible: true } : { ...brightest, visible: false };
-  peakCache.set(ck, out);
+  cache.set(ck, out);
   return out;
 }
 
-// Finds the spans of days on which each comet is bright enough to show.
 // For each day, the scan samples the comet at noon.
-export function findCometSpans(d0, d1, Z) {
+export function findCometSpans(d0, d1, Z, catalog) {
   // Scan past the edges, so a span that crosses an edge keeps its true length.
   const LIM = 900;
   const spans = [];
-  for (const key of Object.keys(COMETS)) {
-    const C = COMETS[key];
+  for (const C of catalog.comets()) {
+    const key = C.key;
     let seg = null;
     const push = () => {
       if (seg && seg.d1 >= d0 && seg.d0 < d1) spans.push(seg);
@@ -84,7 +93,7 @@ export function findCometSpans(d0, d1, Z) {
     if (lane < 0) lane = laneEnd.length;
     laneEnd[lane] = sp.d1;
     sp.lane = lane;
-    const pk = cometBestView(sp.key, sp.d0, sp.d1, Z);
+    const pk = cometBestView(sp.key, sp.d0, sp.d1, Z, catalog);
     sp.peakT = pk.t;
     sp.peakVisible = pk.visible;
   }
@@ -92,10 +101,10 @@ export function findCometSpans(d0, d1, Z) {
 }
 
 // Returns the next peak views of the comets after day "from", soonest first.
-export function nextCometPeaks(from, count, Z) {
+export function nextCometPeaks(from, count, Z, catalog) {
   const out = [];
-  for (const key of Object.keys(COMETS)) {
-    const C = COMETS[key];
+  for (const C of catalog.comets()) {
+    const key = C.key;
     const w = C.window != null ? C.window : C.period / 2 - 3;
     let n = Math.ceil((from - w - C.perihelionDay) / C.period);
     const returns = C.period < 800 ? 3 : 1;
@@ -111,7 +120,7 @@ export function nextCometPeaks(from, count, Z) {
         }
       }
       if (first === null) continue;
-      const pk = cometBestView(key, first, last, Z);
+      const pk = cometBestView(key, first, last, Z, catalog);
       out.push({
         kind: "com",
         t: pk.t,
